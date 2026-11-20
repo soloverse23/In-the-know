@@ -53,6 +53,8 @@ intheknow/
   hosted.py      hosted connector over HTTPS (one server for every owner, engines in RAM only)
   store.py       where the memory file lives (local file, or any Store); the engine works in memory
   cloud.py       the owner's memory file in their own Google Drive or OneDrive
+  logs.py        operations logging only: content/secrets capped and redacted, one line per tool call
+  site.py        public home and privacy pages (needed for Google verification)
   uploads.py     hosted upload page: files from phone/computer/Google Drive straight into the owner's memory
   mcp_server.py  MCP server: 31 tools, 7 prompts, resources, icon, MCP Apps UI
   ui/view.html   the in-chat app (renderer, brand, animations, actions)
@@ -66,7 +68,7 @@ docs/            brand.md + screenshots of every card
 ```bash
 uv sync
 uv run python data/synth.py            # regenerate demo data + ground truth
-uv run pytest -q                       # 112 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in, Drive/OneDrive, uploads, sync from other apps
+uv run pytest -q                       # 116 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in, Drive/OneDrive, uploads, sync from other apps, launch
 uv run python eval/run_eval.py --dry-run
 ```
 
@@ -80,6 +82,8 @@ export ITK_GOOGLE_CLIENT_ID=... ITK_GOOGLE_CLIENT_SECRET=...
 export ITK_GOOGLE_API_KEY=... ITK_GOOGLE_APP_ID=...   # optional: 'Choose from Google Drive' on the upload page
 uv run python -m intheknow.hosted --base-url https://<public-url>
 ```
+
+Docker: `docker build -t intheknow .` and run with the variables in [docs/launch-checklist.md](docs/launch-checklist.md) (one instance, EU region).
 
 ## Install in Claude Desktop
 

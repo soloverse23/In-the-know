@@ -1,6 +1,6 @@
 # Plan: Hosted connector, data in the owner's own cloud
 
-Status: R1–R5 implemented · R6 proposed · 2026-11-20
+Status: R1–R5 implemented · R6 code ready, deployment pending · 2026-11-20
 
 ## 1. Goal
 
@@ -215,6 +215,17 @@ Claude and ChatGPT already orchestrate between connectors. Our job is to make In
   - A bare `SAVEPOINT` outside a transaction would start, and on `RELEASE` commit, its own transaction. That would have broken all-or-nothing tool calls and previews. We now open the transaction first.
   - Rows from `import_records` always got `_source = file:<id>`. Synced rows now keep their app source.
 - **Tests:** server behaviour is covered by `tests/test_sync.py`. **Not done:** the paid LLM eval (`eval/run_eval.py`) has no Calendar/Gmail/Square scenarios yet. That needs real connector data and an API budget.
+
+**R6 notes (code ready; deployment needs accounts):**
+- **Docker image:** non-root, nothing written to disk, health check. Settings come from the environment.
+- **Logging ([`logs.py`](../intheknow/logs.py)):**
+  - Libraries that would log response bodies or URLs (`sse_starlette`, `httpx2`, `mcp`) are capped at WARNING.
+  - A redaction filter masks sealed tokens, bearer tokens and secrets in query strings.
+  - Each tool call writes one line: tool, ms, ok, hashed owner.
+  - A test runs a full flow at DEBUG and fails if a customer name, phone or token reaches the logs. Checked by switching the cap off: the test caught the customer name.
+- **Public pages ([`site.py`](../intheknow/site.py)):** `/` (four languages) and `/privacy`. The policy follows what the code does and includes Google's Limited Use statement. The operator's name and contact come from the environment.
+- **Steps, environment variables and smoke test:** see [launch-checklist.md](launch-checklist.md).
+- **Beta runs as exactly one instance.**
 
 The order R1 → R2 → R3 is strict. R4 and R5 can run in parallel after R3.
 

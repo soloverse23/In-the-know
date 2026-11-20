@@ -1,0 +1,15 @@
+.git
+.venv
+.env
+.env.*
+.dev-memories
+.pytest_cache
+**/__pycache__
+data
+docs
+eval
+tests
+dist
+packaging
+*.db
+*.itk

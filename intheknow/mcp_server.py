@@ -11,6 +11,7 @@ import argparse
 import base64
 import datetime as dt
 import json
+import time
 from pathlib import Path
 from typing import Annotated, Any, Callable, Literal, Optional
 
@@ -123,9 +124,10 @@ PROMPTS = {
 
 
 def build_server(engine: ContextEngine | Callable[[], ContextEngine], upload_link: Optional[Callable[[], str]] = None,
-                 **server_kw: Any) -> MCPServer:
+                 on_call: Optional[Callable[[str, float, bool], None]] = None, **server_kw: Any) -> MCPServer:
     """`engine` is one business (local mode) or a function returning the calling owner's engine (hosted mode).
     `upload_link` (hosted) makes a link to the owner's upload page; local paths are then not offered.
+    `on_call(tool, ms, ok)` is told about every tool call (operations logging; never arguments or results).
     `server_kw` is passed to MCPServer (auth settings, auth provider)."""
     current: Callable[[], ContextEngine] = (lambda: engine) if isinstance(engine, ContextEngine) else engine
     hosted = not isinstance(engine, ContextEngine)
@@ -149,10 +151,15 @@ def build_server(engine: ContextEngine | Callable[[], ContextEngine], upload_lin
         return deco
 
     def run(name: str, args: dict) -> CallToolResult:
+        t0 = time.perf_counter()
         try:
             text, view = current().call_view(name, args)
         except Exception as exc:  # noqa: BLE001 - errors go back to the model as text it can act on
+            if on_call:
+                on_call(name, (time.perf_counter() - t0) * 1000, False)
             return CallToolResult(content=[TextContent(type="text", text=f"Error: {exc}")], is_error=True)
+        if on_call:
+            on_call(name, (time.perf_counter() - t0) * 1000, True)
         if view is None:
             return CallToolResult(content=[TextContent(type="text", text=text)])
         return CallToolResult(content=[TextContent(type="text", text=text)], structured_content=view)

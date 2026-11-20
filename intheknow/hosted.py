@@ -29,10 +29,12 @@ from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions, Re
 from mcp.server.transport_security import TransportSecuritySettings
 
 from .auth import IdentityProvider, StatelessAuthProvider, providers_from_env
+from . import site
 from .cloud import cloud_store_factory
 from .context import ContextEngine
 from .mcp_server import build_server
 from .seal import Sealer
+from .logs import configure as configure_logging, log_call, owner_hash
 from .store import LocalStore, Store
 from .uploads import PickerConfig, Uploads
 
@@ -101,14 +103,19 @@ def create_app(base_url: str, sealer: Sealer, providers: dict[str, IdentityProvi
             raise PermissionError("not signed in")
         return uploads.link((token.claims or {})["identity"])
 
+    def on_call(tool: str, ms: float, ok: bool) -> None:
+        token = get_access_token()
+        log_call(tool, ms, ok, owner_hash(token.subject or "") if token else "")
+
     mcp = build_server(
         current,
         upload_link=upload_link,
+        on_call=on_call,
         auth_server_provider=auth,
         auth=AuthSettings(issuer_url=base_url, resource_server_url=auth.resource, validate_token_resource=True,
                           client_registration_options=ClientRegistrationOptions(enabled=True),
                           revocation_options=RevocationOptions(enabled=False)))
-    for path, methods, handler in auth.routes() + uploads.routes():
+    for path, methods, handler in auth.routes() + uploads.routes() + site.routes(base_url):
         mcp.custom_route(path, methods)(handler)
 
     @mcp.custom_route("/health", ["GET"])
@@ -128,11 +135,15 @@ def create_app(base_url: str, sealer: Sealer, providers: dict[str, IdentityProvi
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="In The Know hosted connector")
-    ap.add_argument("--base-url", required=True, help="Public https URL of this server, e.g. https://itk.example.com")
-    ap.add_argument("--host", default="127.0.0.1")
-    ap.add_argument("--port", type=int, default=8000)
+    env = os.environ
+    ap.add_argument("--base-url", default=env.get("ITK_BASE_URL"), help="Public https URL of this server (or ITK_BASE_URL)")
+    ap.add_argument("--host", default=env.get("ITK_HOST", "127.0.0.1"))
+    ap.add_argument("--port", type=int, default=int(env.get("PORT", "8000")))
     ap.add_argument("--dev-store", help="DEVELOPMENT ONLY: keep each owner's memory in this local folder instead of their Drive / OneDrive")
     args = ap.parse_args()
+    if not args.base_url:
+        raise SystemExit("Set --base-url or ITK_BASE_URL to this server's public https address.")
+    configure_logging(os.environ.get("ITK_LOG_LEVEL", "INFO"))
     providers = providers_from_env(dict(os.environ))
     if not providers:
         raise SystemExit("Set ITK_GOOGLE_CLIENT_ID/SECRET and/or ITK_MICROSOFT_CLIENT_ID/SECRET.")
@@ -142,7 +153,7 @@ def main() -> None:
     app = create_app(args.base_url, Sealer.from_env(), providers, stores, picker=picker)
     import uvicorn
     uvicorn.run(app, host=args.host, port=args.port, proxy_headers=True, forwarded_allow_ips="*",
-                access_log=False)                        # no request lines: URLs can carry sign-in data
+                access_log=False, log_config=None)       # no request lines (URLs carry sign-in data); our handlers stay
 
 
 if __name__ == "__main__":
