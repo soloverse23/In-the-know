@@ -192,3 +192,27 @@ def test_sealer():
     rotated = Sealer([("k2", _b64d(new_key())), ("k1", a._keys and _b64d(new_key()))])
     with pytest.raises(SealError):
         rotated.open("access", tok)                              # same kid, different key material
+
+
+def test_hosted_with_owner_drive(tmp_path):
+    from clouds import FakeCloud
+    from intheknow.cloud import cloud_store_factory
+    g, cloud = FakeGoogle(), FakeCloud()
+    sealer = Sealer([("k1", _b64d(new_key()))])
+    prov = {"google": replace(google("cid", "csecret"), authorize_url="https://accounts.google.test/auth",
+                              token_url="https://oauth2.google.test/token")}
+    app = create_app(BASE, sealer, prov, cloud_store_factory(prov, cloud.client()), today=TODAY,
+                     http_factory=lambda: httpx.AsyncClient(transport=httpx.MockTransport(g.handler)))
+    with TestClient(app, base_url=BASE, follow_redirects=False) as c:
+        client = register(c)
+        phone = MCP(c, sign_in(c, g, client, "owner-1")["access_token"])
+        assert "Salon Aurora" not in phone.call("get_context", {})
+        assert cloud.drive_memory() == []                            # connecting creates nothing in Drive
+        phone.call("setup_business", SETUP["salon_aurora"])
+        phone.call("capture", {"items": [{"type": "goal", "quote": "two chairs", "text": "two chairs"}]})
+        desktop = MCP(c, sign_in(c, g, register(c), "owner-1")["access_token"])   # same owner, another app
+        assert "Salon Aurora" in desktop.call("get_context", {})
+        assert len(app.state.engines) == 1                           # one engine per owner: their writes are serialized
+        [f] = cloud.drive_memory()
+        assert cloud.drive[f["parents"][0]]["name"] == "In The Know"
+    assert not list(tmp_path.iterdir())                              # nothing written on the server's disk

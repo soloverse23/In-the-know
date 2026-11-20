@@ -1,6 +1,6 @@
 # Plan: Hosted connector, data in the owner's own cloud
 
-Status: R1–R2 implemented · R3–R6 proposed · 2026-11-20
+Status: R1–R3 implemented · R4–R6 proposed · 2026-11-20
 
 ## 1. Goal
 
@@ -158,6 +158,23 @@ Claude and ChatGPT already orchestrate between connectors. Our job is to make In
   - the redirect URIs `<base>/callback/google` and `<base>/callback/microsoft`;
   - a public HTTPS URL (a tunnel is fine) to connect from Claude and MCP Inspector.
 - **For R6:** with more than one instance, pass a shared `request_state_security` key to the MCP server. The SDK default is a per-process key.
+
+**R3 notes (implemented):**
+- **Code:** [`cloud.py`](../intheknow/cloud.py) holds `GoogleDriveStore`, `OneDriveStore` and `ProviderSession`. The session keeps each owner's access token in RAM, renews it before it expires, renews it again on a 401, and retries once on 429 or 5xx.
+- **Where the file lives:**
+  - **Google:** `In The Know/memory.itk`, tagged with `appProperties itk=memory`, so it is found again after the owner renames or moves it.
+  - **OneDrive:** `Apps/In The Know/memory.itk`.
+- **Conflicts:**
+  - **OneDrive:** uploads send `If-Match` on the eTag, so Microsoft itself refuses a stale write. The engine then reloads and replays the call.
+  - **Google:** Drive v3 has no write precondition. We check the version just before uploading, but two *servers* writing within the same instant could still overwrite each other. On one server this cannot happen, because each owner has exactly one engine and its lock orders their calls (tested). **R6 must keep each owner on one instance** (sticky routing), or add a shared lock.
+- **Recovery:**
+  - **File in the Drive trash:** Claude tells the owner to restore it. Once restored, the next call works again.
+  - **File deleted from OneDrive:** Claude points the owner to the recycle bin.
+  - **Access removed:** Claude asks the owner to reconnect.
+  - **Several copies found:** the most recently changed one is used. Asking the owner which copy to keep is a later improvement.
+- **Reads:** read-only calls cost one metadata request each and never upload (tested).
+- **File size:** a typical memory file is 0.4–2.3 MB (the three demo businesses and a real one), so each upload is small.
+- **Tests:** the contract tests run against in-memory fakes of the Drive v3 and Graph endpoints we use ([`tests/clouds.py`](../tests/clouds.py)). **Still to do:** one run against real accounts once the Google and Microsoft apps are set up.
 
 The order R1 → R2 → R3 is strict. R4 and R5 can run in parallel after R3.
 

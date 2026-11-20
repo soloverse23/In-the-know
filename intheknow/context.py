@@ -140,7 +140,7 @@ class ContextEngine(WriteOps, EditOps, OnboardingOps, PeopleOps):
     def _reload(self) -> None:
         data, version = self.store.load()
         if data is None and self._version is not None:
-            raise RuntimeError("The business memory file is missing from storage (moved or deleted).")
+            raise RuntimeError(self.store.missing_message())
         load_into(self.conn, data)
         self._version = version
         self._mark_clean()

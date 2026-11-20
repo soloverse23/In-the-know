@@ -50,7 +50,8 @@ intheknow/
   seal.py        sealed (encrypted, expiring) tokens: the hosted server keeps no records
   auth.py        hosted sign-in: stateless OAuth server + 'Continue with Google / Microsoft' page
   hosted.py      hosted connector over HTTPS (one server for every owner, engines in RAM only)
-  store.py       where the memory file lives (local file today; owner's Drive/OneDrive next); the engine works in memory
+  store.py       where the memory file lives (local file, or any Store); the engine works in memory
+  cloud.py       the owner's memory file in their own Google Drive or OneDrive
   mcp_server.py  MCP server: 31 tools, 7 prompts, resources, icon, MCP Apps UI
   ui/view.html   the in-chat app (renderer, brand, animations, actions)
 data/synth.py    three messy demo businesses + ground truth (Bucharest salon, Lyon physio, Berlin café)
@@ -63,18 +64,18 @@ docs/            brand.md + screenshots of every card
 ```bash
 uv sync
 uv run python data/synth.py            # regenerate demo data + ground truth
-uv run pytest -q                       # 79 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in
+uv run pytest -q                       # 97 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in, Drive/OneDrive
 uv run python eval/run_eval.py --dry-run
 ```
 
 ## Hosted connector (in progress)
 
-One server for phone, web and desktop; each owner's memory lives in their own Google Drive or OneDrive (see [docs/plan-user-owned-storage.md](docs/plan-user-owned-storage.md)). Until owner storage lands (R3), it runs only with a development store:
+One server for phone, web and desktop; each owner's memory lives in their own Google Drive or OneDrive (see [docs/plan-user-owned-storage.md](docs/plan-user-owned-storage.md)). Add `--dev-store ./.dev-memories` to keep memories in a local folder instead while developing.
 
 ```bash
 export $(uv run python -m intheknow.seal)            # ITK_SEAL_KEYS
 export ITK_GOOGLE_CLIENT_ID=... ITK_GOOGLE_CLIENT_SECRET=...
-uv run python -m intheknow.hosted --base-url https://<public-url> --dev-store ./.dev-memories
+uv run python -m intheknow.hosted --base-url https://<public-url>
 ```
 
 ## Install in Claude Desktop

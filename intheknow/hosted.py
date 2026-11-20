@@ -1,12 +1,12 @@
 """The hosted connector: one HTTPS server for every owner, holding no business data.
 
-Run (development, with a public tunnel URL):
+Run:
     ITK_SEAL_KEYS=...  ITK_GOOGLE_CLIENT_ID=...  ITK_GOOGLE_CLIENT_SECRET=... \\
-    uv run python -m intheknow.hosted --base-url https://<tunnel> --dev-store ./.dev-memories
+    uv run python -m intheknow.hosted --base-url https://<public-url>
 
 Each request carries a sealed access token. The token says who the owner is and holds their
-provider grant; the owner's engine is built from their Store (R3: their Drive / OneDrive file)
-and kept in RAM only while they are active.
+provider grant; the owner's engine is built from their memory file in their own Google Drive or
+OneDrive (cloud.py) and kept in RAM only while they are active.
 """
 from __future__ import annotations
 
@@ -29,6 +29,7 @@ from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions, Re
 from mcp.server.transport_security import TransportSecuritySettings
 
 from .auth import IdentityProvider, StatelessAuthProvider, providers_from_env
+from .cloud import cloud_store_factory
 from .context import ContextEngine
 from .mcp_server import build_server
 from .seal import Sealer
@@ -117,14 +118,13 @@ def main() -> None:
     ap.add_argument("--base-url", required=True, help="Public https URL of this server, e.g. https://itk.example.com")
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8000)
-    ap.add_argument("--dev-store", help="DEVELOPMENT ONLY: keep each owner's memory as a file in this folder")
+    ap.add_argument("--dev-store", help="DEVELOPMENT ONLY: keep each owner's memory in this local folder instead of their Drive / OneDrive")
     args = ap.parse_args()
-    if not args.dev_store:
-        raise SystemExit("Owner storage in Google Drive / OneDrive arrives in R3. Until then, run with --dev-store DIR.")
     providers = providers_from_env(dict(os.environ))
     if not providers:
         raise SystemExit("Set ITK_GOOGLE_CLIENT_ID/SECRET and/or ITK_MICROSOFT_CLIENT_ID/SECRET.")
-    app = create_app(args.base_url, Sealer.from_env(), providers, dev_store_factory(args.dev_store))
+    stores = dev_store_factory(args.dev_store) if args.dev_store else cloud_store_factory(providers)
+    app = create_app(args.base_url, Sealer.from_env(), providers, stores)
     import uvicorn
     uvicorn.run(app, host=args.host, port=args.port, proxy_headers=True, forwarded_allow_ips="*",
                 access_log=False)                        # no request lines: URLs can carry sign-in data

@@ -33,6 +33,10 @@ class Store:
         """Write `data` if the stored version is still `base_version`; return the new version."""
         raise NotImplementedError
 
+    def missing_message(self) -> str:
+        """What to tell the owner when the file they had is gone."""
+        return "The business memory file is missing from storage (moved or deleted)."
+
 
 class LocalStore(Store):
     """A file on this machine. Writes are atomic (temp file + rename)."""
