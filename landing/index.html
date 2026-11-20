@@ -66,9 +66,9 @@ section{padding:88px 0}
 h2{font-size:clamp(34px,4.6vw,52px);line-height:1.05;margin-bottom:48px}
 .pairs{display:grid;gap:14px}
 .pair{display:grid;grid-template-columns:1fr 56px 1fr;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px 28px}
-.pain{color:var(--muted);font-size:18px;position:relative;width:fit-content}
-.pain::after{content:"";position:absolute;left:0;top:52%;height:2px;width:0;background:var(--signal);transition:width .7s .3s ease}
-.pair.in .pain::after{width:100%}
+.pain{color:var(--muted);font-size:18px}
+.pain s{text-decoration:none;background:linear-gradient(var(--signal),var(--signal)) 0 55%/0 2px no-repeat;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:background-size .7s .3s ease}
+.pair.in .pain s{background-size:100% 2px}
 .arrow{justify-self:center;width:36px;height:36px;border-radius:50%;background:var(--soft);display:grid;place-items:center;transition:transform .5s .6s,background .5s .6s}
 .pair.in .arrow{background:var(--ink);transform:rotate(360deg)}
 .arrow svg{width:16px;height:16px;stroke:var(--muted);transition:stroke .5s .6s}
@@ -122,7 +122,7 @@ footer a{text-decoration:none}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal,.msg{opacity:1;transform:none}
-  .pain::after{width:100%}.fix{opacity:1}
+  .pain s{background-size:100% 2px}.fix{opacity:1}
 }
 </style>
 </head>
@@ -159,11 +159,11 @@ footer a{text-decoration:none}
     <p class="eyebrow">Before → After</p>
     <h2 class="serif reveal">Stop explaining.<br>Start asking.</h2>
     <div class="pairs">
-      <div class="pair reveal"><span class="pain">Re-explaining your business in every chat</span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">It already knows</span></div>
-      <div class="pair reveal"><span class="pain">Notes lost in notebooks, WhatsApp, Excel</span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">One memory, filled by talking</span></div>
-      <div class="pair reveal"><span class="pain">AI that guesses your numbers</span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">Exact numbers, never invented</span></div>
-      <div class="pair reveal"><span class="pain">Customers quietly not coming back</span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">Told who to call, and when</span></div>
-      <div class="pair reveal"><span class="pain">Your data on someone else's server</span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">In your own Drive. We keep no copy.</span></div>
+      <div class="pair reveal"><span class="pain"><s>Re-explaining your business in every chat</s></span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">It already knows</span></div>
+      <div class="pair reveal"><span class="pain"><s>Notes lost in notebooks, WhatsApp, Excel</s></span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">One memory, filled by talking</span></div>
+      <div class="pair reveal"><span class="pain"><s>AI that guesses your numbers</s></span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">Exact numbers, never invented</span></div>
+      <div class="pair reveal"><span class="pain"><s>Customers quietly not coming back</s></span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">Told who to call, and when</span></div>
+      <div class="pair reveal"><span class="pain"><s>Your data on someone else's server</s></span><span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="fix">In your own Drive. We keep no copy.</span></div>
     </div>
   </div>
 </section>

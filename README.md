@@ -72,6 +72,16 @@ uv run pytest -q                       # 116 tests: normalizers, ground truth x3
 uv run python eval/run_eval.py --dry-run
 ```
 
+## Use it on your phone now (personal mode)
+
+No Google sign-in, no cloud account: the server runs on your Mac and ngrok makes it reachable. One memory, `~/InTheKnow/business.db` (the same file as the desktop extension). Put `ITK_NGROK_DOMAIN=<your-domain>.ngrok-free.dev` in `.env`, then:
+
+```bash
+./deploy/personal.sh        # prints your private connector address; add it in Claude → Settings → Connectors
+```
+
+The address contains a secret key: anyone who has it can use your memory. It works while the Mac is on and the window is open.
+
 ## Hosted connector (in progress)
 
 One server for phone, web and desktop; each owner's memory lives in their own Google Drive or OneDrive (see [docs/plan-user-owned-storage.md](docs/plan-user-owned-storage.md)). Add `--dev-store ./.dev-memories` to keep memories in a local folder instead while developing.

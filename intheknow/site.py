@@ -52,7 +52,8 @@ def _doc(lang: str, title: str, inner: str, https: bool) -> HTMLResponse:
     return HTMLResponse(body, headers=headers)
 
 
-def routes(base_url: str) -> list[tuple[str, list[str], Callable]]:
+def routes(base_url: str, show_connector: bool = True) -> list[tuple[str, list[str], Callable]]:
+    """`show_connector=False` (personal mode): the connector address holds a secret and is never shown."""
     base = base_url.rstrip("/")
     https = base.startswith("https://")
 
@@ -61,8 +62,8 @@ def routes(base_url: str) -> list[tuple[str, list[str], Callable]]:
         tagline, lead, connect, privacy = HOME[lang]
         contact = _env("ITK_CONTACT", "")
         inner = (f"<h1>In The Know</h1><p>{html.escape(tagline)}</p><p class=\"lead\">{html.escape(lead)}</p>"
-                 f"<p>{html.escape(connect)}</p><code>{html.escape(base)}/mcp</code>"
-                 f'<footer><a href="/privacy">{html.escape(privacy)}</a>'
+                 + (f"<p>{html.escape(connect)}</p><code>{html.escape(base)}/mcp</code>" if show_connector else "")
+                 + f'<footer><a href="/privacy">{html.escape(privacy)}</a>'
                  + (f' · <a href="mailto:{html.escape(contact)}">{html.escape(contact)}</a>' if contact else "") + "</footer>")
         return _doc(lang, "In The Know", inner, https)
 

@@ -32,6 +32,22 @@ The server is one Docker image (`Dockerfile`). It keeps no database and writes n
 
 **Secrets** (seal keys, client secrets) go into the host's secret store, never into the repo or the image.
 
+## 0. For now: personal mode (no accounts)
+
+Decided on 2026-11-20: use In The Know right away, without the Google sign-in, billing or a domain.
+
+| | |
+|---|---|
+| **Where** | On the owner's Mac. ngrok's static domain makes it reachable from Claude on phone and desktop. |
+| **Run** | `./deploy/personal.sh`: starts the server and ngrok, keeps the Mac awake, prints the address. Ctrl+C stops it. |
+| **Access** | `https://<ngrok-domain>/<ITK_PERSONAL_KEY>/mcp`. The random key, created on the first run and kept in `.env`, is the only access control. Anything without it gets 404. There are no OAuth endpoints. |
+| **Data** | `~/InTheKnow/business.db` (`ITK_DB` to change it). This is the same file as the desktop extension, so phone and desktop share one memory. |
+| **Uploads** | Work too. Links are sealed with a key held only in RAM. |
+| **Privacy** | ngrok runs with `--inspect=false`, and server logs hold no content. |
+| **Limits** | Works only while the Mac is on and the window is open. One owner. Whoever has the address has the memory. |
+
+Everything below (Cloud Run, Google and Microsoft sign-in, verification) is for when it should run for other owners.
+
 ## 2b. Decisions for the beta (2026-11-20)
 
 | Decision | Choice |

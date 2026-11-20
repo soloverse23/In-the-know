@@ -133,17 +133,64 @@ def create_app(base_url: str, sealer: Sealer, providers: dict[str, IdentityProvi
     return app
 
 
+def create_personal_app(base_url: str, db: str | Path, key: str, today=None) -> Starlette:
+    """Personal mode, for now: one owner, no sign-in, memory in a local file.
+
+    The MCP endpoint is /<key>/mcp: the long random key in the address is the only access control, so the
+    address must stay private. No Google/Microsoft accounts, no seal keys to manage (upload links are sealed
+    with a key that lives only in RAM and dies with the process).
+    """
+    if len(key) < 24 or not key.replace("-", "").replace("_", "").isalnum():
+        raise ValueError("the personal key must be at least 24 URL-safe characters")
+    base_url = base_url.rstrip("/")
+    engine = ContextEngine(db, today)
+    uploads = Uploads(Sealer([("p1", os.urandom(32))]), base_url, lambda identity: engine)
+
+    def on_call(tool: str, ms: float, ok: bool) -> None:
+        log_call(tool, ms, ok, "personal")
+
+    mcp = build_server(lambda: engine, upload_link=lambda: uploads.link({"p": "personal", "sub": "owner"}), on_call=on_call)
+    for path, methods, handler in uploads.routes() + site.routes(base_url, show_connector=False):
+        mcp.custom_route(path, methods)(handler)
+
+    @mcp.custom_route("/health", ["GET"])
+    async def health(_: Request) -> Response:
+        return JSONResponse({"ok": True})
+
+    host = urlparse(base_url).netloc
+    security = TransportSecuritySettings(
+        enable_dns_rebinding_protection=True, allowed_hosts=[host, "127.0.0.1:*", "localhost:*"],
+        allowed_origins=[f"{urlparse(base_url).scheme}://{host}", "https://claude.ai", "https://chatgpt.com",
+                         "http://127.0.0.1:*", "http://localhost:*"])
+    app = mcp.streamable_http_app(streamable_http_path=f"/{key}/mcp", transport_security=security, host="0.0.0.0")
+    app.state.engine = engine
+    return app
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="In The Know hosted connector")
     env = os.environ
     ap.add_argument("--base-url", default=env.get("ITK_BASE_URL"), help="Public https URL of this server (or ITK_BASE_URL)")
     ap.add_argument("--host", default=env.get("ITK_HOST", "127.0.0.1"))
     ap.add_argument("--port", type=int, default=int(env.get("PORT", "8000")))
+    ap.add_argument("--personal", action="store_true",
+                    help="Personal mode: one owner, no sign-in, memory in --db; the address /<ITK_PERSONAL_KEY>/mcp is the access key")
+    ap.add_argument("--db", default=env.get("ITK_DB", "~/InTheKnow/business.db"), help="Personal mode: the memory file")
     ap.add_argument("--dev-store", help="DEVELOPMENT ONLY: keep each owner's memory in this local folder instead of their Drive / OneDrive")
     args = ap.parse_args()
     if not args.base_url:
         raise SystemExit("Set --base-url or ITK_BASE_URL to this server's public https address.")
     configure_logging(os.environ.get("ITK_LOG_LEVEL", "INFO"))
+    import uvicorn
+    if args.personal:
+        key = env.get("ITK_PERSONAL_KEY", "")
+        if not key:
+            raise SystemExit("Set ITK_PERSONAL_KEY (deploy/personal.sh creates one).")
+        db = Path(args.db).expanduser()
+        db.parent.mkdir(parents=True, exist_ok=True)
+        uvicorn.run(create_personal_app(args.base_url, db, key), host=args.host, port=args.port, proxy_headers=True,
+                    forwarded_allow_ips="127.0.0.1", access_log=False, log_config=None)
+        return
     providers = providers_from_env(dict(os.environ))
     if not providers:
         raise SystemExit("Set ITK_GOOGLE_CLIENT_ID/SECRET and/or ITK_MICROSOFT_CLIENT_ID/SECRET.")
