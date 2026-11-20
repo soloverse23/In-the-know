@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link id="font-base" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14161F; --paper:#FAF8F4; --signal:#FF6B4A; --mint:#16B98A;
+  --brand:#4B5BDB; --brand2:#18B39B;
+  --bg: var(--color-background-primary, #FFFFFF);
+  --bg2: var(--color-background-secondary, #F6F4EF);
+  --line: var(--color-border-primary, #E8E4DC);
+  --text: var(--color-text-primary, #14161F);
+  --text2: var(--color-text-secondary, #6E6A62);
+  --radius: 14px; --pad: 16px; --gap: 10px;
+  --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --serif: "Instrument Serif", Georgia, serif;
+  --ok:#16A34A; --okbg:rgba(22,163,74,.10); --warn:#C27803; --warnbg:rgba(227,155,18,.13);
+  --bad:#DC2626; --badbg:rgba(220,38,38,.09); --info:#4C7DFF; --infobg:rgba(76,125,255,.10);
+  --muted: rgba(120,113,100,.10); --shadow: 0 1px 2px rgba(20,22,31,.04), 0 8px 24px -12px rgba(20,22,31,.12);
+}
+[data-theme="dark"]{
+  --bg: var(--color-background-primary, #1F1E1B); --bg2: var(--color-background-secondary, #282723);
+  --line: var(--color-border-primary, #3A3833); --text: var(--color-text-primary, #F3F1EC); --text2: var(--color-text-secondary, #A9A396);
+  --ok:#3DD68C; --okbg:rgba(61,214,140,.13); --warn:#F4B740; --warnbg:rgba(244,183,64,.14); --bad:#FF7A6E; --badbg:rgba(255,122,110,.13);
+  --info:#7EA2FF; --infobg:rgba(126,162,255,.13); --muted: rgba(220,214,200,.09); --shadow: none;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:transparent;color:var(--text);font-family:var(--font);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{padding:6px 2px 4px;max-width:880px}
+button{font:inherit;cursor:pointer}
+.tnum{font-variant-numeric:tabular-nums}
+.hd{display:flex;align-items:center;gap:12px;margin:2px 0 14px}
+.mark{width:34px;height:34px;flex:none;border-radius:10px;display:block}
+.logo{height:34px;max-width:90px;border-radius:8px;object-fit:contain}
+.hd .tt{flex:1;min-width:0}
+.hd h1{margin:0;font-size:16px;font-weight:700;letter-spacing:-.2px;overflow-wrap:anywhere}
+.hd .sub{font-size:12.5px;color:var(--text2)}
+.pill{font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--muted);color:var(--text2);white-space:nowrap;display:inline-flex;gap:6px;align-items:center}
+.live .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(22,185,138,.6)}70%{box-shadow:0 0 0 8px rgba(22,185,138,0)}100%{box-shadow:0 0 0 0 rgba(22,185,138,0)}}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:var(--pad);margin-bottom:var(--gap);box-shadow:var(--shadow);animation:rise .38s cubic-bezier(.2,.7,.2,1) both}
+.card>h2{font-size:13px;font-weight:650;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+details.card>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:650}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::after{content:"";margin-left:auto;width:7px;height:7px;border-right:2px solid var(--text2);border-bottom:2px solid var(--text2);transform:rotate(45deg);transition:.2s}
+details.card[open]>summary{margin-bottom:10px}
+details.card[open]>summary::after{transform:rotate(-135deg)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--gap);margin-bottom:var(--gap)}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);animation:rise .4s both;position:relative;overflow:hidden}
+.kpi:first-child::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--brand)}
+.kpi .l{font-size:12px;color:var(--text2);font-weight:500}
+.kpi .v{font-size:23px;font-weight:750;letter-spacing:-.6px;margin:4px 0 6px;white-space:nowrap}
+.kpi .v.neg{color:var(--bad)}
+.kpi .d{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--text2)}
+.chip{font-size:11.5px;font-weight:650;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.up{background:var(--okbg);color:var(--ok)} .down{background:var(--badbg);color:var(--bad)} .flat{background:var(--muted);color:var(--text2)}
+.alerts{display:flex;flex-direction:column;gap:8px}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--bg2);font-size:13.5px}
+.alert .ic{flex:none;width:20px;height:20px;border-radius:6px;display:grid;place-items:center;margin-top:1px}
+.alert.warn .ic{background:var(--warnbg);color:var(--warn)} .alert.info .ic{background:var(--infobg);color:var(--info)} .alert.good .ic{background:var(--okbg);color:var(--ok)}
+.alert.warn{background:linear-gradient(90deg,var(--warnbg),transparent 85%)}
+.tbl{overflow-x:auto;margin:0 -6px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-size:11.5px;font-weight:600;color:var(--text2);text-align:start;padding:6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+td.num,th.num{text-align:end}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--bg2)}
+.badge{font-size:11.5px;font-weight:650;padding:2px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:5px;background:var(--muted);color:var(--text2);white-space:nowrap}
+.b-ok{background:var(--okbg);color:var(--ok)} .b-warn{background:var(--warnbg);color:var(--warn)} .b-bad{background:var(--badbg);color:var(--bad)} .b-info{background:var(--infobg);color:var(--info)}
+.acts{display:flex;gap:4px;justify-content:flex-end;opacity:0;transition:.15s}
+tr:hover .acts,.acts:focus-within{opacity:1}
+@media (hover:none){.acts{opacity:1}}
+.ib{border:1px solid var(--line);background:var(--bg);color:var(--text2);border-radius:8px;padding:3px 8px;font-size:12px;display:inline-flex;gap:5px;align-items:center;white-space:nowrap}
+.ib:hover{border-color:var(--brand);color:var(--brand)}
+.ib.done{color:var(--ok);border-color:transparent;background:var(--okbg)}
+.more{font-size:12px;color:var(--text2);padding-top:8px}
+.btn{border:0;border-radius:10px;padding:9px 14px;font-weight:600;color:#fff;background:var(--brand);display:inline-flex;gap:8px;align-items:center}
+.btn.ghost{background:var(--muted);color:var(--text)}
+.btn.done{background:var(--okbg);color:var(--ok)}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart .lbl{font-size:11px;fill:var(--text2)}
+.chart .val{font-size:11px;font-weight:650;fill:var(--text)}
+.hbar{display:grid;grid-template-columns:minmax(80px,32%) 1fr auto;gap:8px 10px;align-items:center;font-size:13px}
+.hbar .track{height:10px;border-radius:6px;background:var(--muted);overflow:hidden}
+.hbar .fill{height:100%;border-radius:6px;background:var(--brand);transform-origin:left;animation:grow .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes grow{from{transform:scaleX(0)}}
+.notes{display:flex;flex-direction:column;gap:8px}
+.note{padding:10px 12px;border-radius:10px;background:var(--bg2)}
+.note .k{font-size:11px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.5px}
+.note .x{font-size:13.5px;white-space:pre-line}
+.note .d{font-size:11.5px;color:var(--text2)}
+.prof{display:flex;gap:14px;align-items:center}
+.av{width:54px;height:54px;flex:none;border-radius:16px;display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.prof .nm{font-size:18px;font-weight:750;letter-spacing:-.3px}
+.prof .ph{font-size:12.5px;color:var(--text2)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:8px;margin-top:14px}
+.fact{background:var(--bg2);border-radius:10px;padding:9px 11px}
+.fact .l{font-size:11.5px;color:var(--text2)} .fact .v{font-weight:650;margin-top:2px}
+.warns{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.pf{display:flex;flex-direction:column;gap:7px}
+.pfi{display:flex;gap:10px;align-items:baseline;font-size:13px}
+.pfi .badge{flex:none;min-width:92px;justify-content:center}
+.pfi .v{flex:1;min-width:0;font-weight:550;overflow-wrap:anywhere}
+.pfi .m{font-size:11.5px;color:var(--text2);white-space:nowrap}
+.pfi .q{display:block;font-weight:400;font-size:12px;color:var(--text2);margin-top:1px}
+.gaps{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px;font-size:12.5px;color:var(--text2)}
+.ppl{display:flex;flex-direction:column;gap:8px}
+.ppi{display:flex;gap:10px;align-items:center}
+.ppi .av{width:30px;height:30px;font-size:13px;border-radius:10px}
+.ppi .x{font-size:12.5px;color:var(--text2)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tl{position:relative;padding-left:18px}
+.tl::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tli{position:relative;display:flex;gap:10px;align-items:baseline;padding:5px 0;font-size:13px}
+.tli::before{content:"";position:absolute;left:-17px;top:11px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid var(--brand)}
+.tli .dt{color:var(--text2);min-width:96px} .tli .t{flex:1;font-weight:550} .tli .s{color:var(--text2)}
+.feed{display:flex;flex-direction:column;gap:8px}
+.fi{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:var(--radius);border:1px solid var(--line);background:var(--bg);box-shadow:var(--shadow);animation:rise .35s both;position:relative;overflow:hidden}
+.compact{display:flex;flex-direction:column;gap:6px;margin:2px 0 6px}
+.ci{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:13px;animation:rise .3s both}
+.ci .ok{width:20px;height:20px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--okbg);color:var(--ok)}
+.ci.known .ok{background:var(--muted);color:var(--text2)}
+.ci .h{font-weight:650;white-space:nowrap}
+.ci .cx{flex:1;min-width:0;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fi .ic{width:36px;height:36px;flex:none;border-radius:11px;display:grid;place-items:center;background:var(--bg2);color:var(--brand)}
+.fi .bd{flex:1;min-width:0}
+.fi .h{font-weight:650;font-size:13.5px}
+.fi .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.fi .c{font-size:12px;padding:3px 9px;border-radius:8px;background:var(--bg2);display:inline-flex;gap:5px;align-items:center;max-width:100%}
+.fi .nt{font-size:12px;color:var(--text2);margin-top:5px}
+.fi .rt{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex:none}
+.fi.pending::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(127,127,127,.09),transparent);animation:sh 1.2s infinite}
+@keyframes sh{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.fi.saved{border-color:color-mix(in srgb,var(--ok) 35%,var(--line))}
+.fi.clarify{border-color:color-mix(in srgb,var(--warn) 45%,var(--line));background:linear-gradient(90deg,var(--warnbg),transparent 70%),var(--bg)}
+.fi.error{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.fi.undone{opacity:.55}
+.check{display:inline-flex;animation:pop .5s cubic-bezier(.2,1.7,.4,1) both}
+@keyframes pop{from{transform:scale(0)}}
+.spin{width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fh .nm{font-weight:650;overflow-wrap:anywhere}
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0 6px}
+.stat .n{font-size:19px;font-weight:750;letter-spacing:-.4px} .stat .l{font-size:11.5px;color:var(--text2)}
+.maps{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.map{font-size:12px;border:1px solid var(--line);border-radius:8px;padding:2px 8px;background:var(--bg2)}
+.map b{color:var(--brand);font-weight:600}
+.bar{height:5px;border-radius:5px;background:var(--muted);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;width:38%;border-radius:5px;background:linear-gradient(90deg,var(--brand),var(--brand2));animation:slide 1.1s ease-in-out infinite}
+@keyframes slide{from{transform:translateX(-110%)}to{transform:translateX(280%)}}
+.prog{height:8px;border-radius:8px;background:var(--muted);overflow:hidden}
+.prog i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .8s}
+.hero{position:relative;overflow:hidden;border-radius:calc(var(--radius) + 4px);padding:24px 22px;margin-bottom:var(--gap);color:#FAF8F4;
+  background:radial-gradient(120% 160% at 100% 0%,color-mix(in srgb,var(--brand) 55%,#14161F) 0%,#14161F 62%);animation:rise .4s both}
+.hero h2{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.08;margin:0 0 8px;letter-spacing:-.2px}
+.hero p{margin:0;opacity:.78;font-size:13.5px;max-width:520px}
+.hero .glow{position:absolute;right:-40px;top:-50px;width:180px;height:180px;border-radius:50%;background:var(--signal);filter:blur(70px);opacity:.38}
+.hero .m{position:absolute;right:18px;bottom:16px;opacity:.9}
+.steps{display:flex;flex-direction:column;gap:2px}
+.step{display:flex;gap:12px;align-items:center;padding:9px 10px;border-radius:10px;font-size:13.5px}
+.step .b{width:22px;height:22px;flex:none;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--text2)}
+.step.done .b{background:var(--ok);border-color:var(--ok);color:#fff}
+.step.done .x{color:var(--text2)}
+.step.current{background:var(--bg2);font-weight:650}
+.step.current .b{border-color:var(--brand);color:var(--brand);box-shadow:0 0 0 4px color-mix(in srgb,var(--brand) 18%,transparent)}
+.copy pre{white-space:pre-wrap;margin:0;padding:12px 14px;border-radius:10px;background:var(--bg2);font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;max-height:260px;overflow:auto}
+.ol{margin:12px 0 0;padding-left:20px} .ol li{margin:4px 0;font-size:13px}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.tip{padding:12px;border-radius:10px;background:var(--bg2);font-size:13px}
+.ents{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.ent{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.ent .hh{display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:650}
+.ent .fl{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.ent .f{font-size:11.5px;padding:2px 7px;border-radius:6px;background:var(--bg2);color:var(--text2)}
+.chg{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.kv .it{background:var(--bg2);border-radius:10px;padding:9px 11px}
+.kv .l{font-size:11.5px;color:var(--text2)} .kv .v{font-weight:700;font-size:16px;margin-top:2px}
+.sw{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.swc{width:44px;height:44px;border-radius:12px;border:1px solid var(--line)}
+.ft{display:flex;align-items:center;gap:7px;justify-content:center;font-size:11.5px;color:var(--text2);margin:12px 0 2px;opacity:.85}
+.skel{height:12px;border-radius:6px;background:var(--muted);margin:9px 0;animation:fade 1.1s ease-in-out infinite alternate}
+@keyframes fade{from{opacity:.4}to{opacity:1}}
+.muted{color:var(--text2)} .empty{color:var(--text2);font-size:13px} .ua{unicode-bidi:plaintext}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><div class="card"><div class="skel" style="width:40%"></div><div class="skel"></div><div class="skel" style="width:70%"></div></div></div>
+<script>
+(() => {
+"use strict";
+const I18N = /*I18N*/{}/*END*/;
+const MARK = (s = 34) => `<svg class="mark" width="${s}" height="${s}" viewBox="0 0 32 32" aria-label="In The Know"><rect width="32" height="32" rx="9" fill="#14161F"/><path d="M8.5 20.5c2.6-6.2 12.4-6.2 15 0" stroke="#FAF8F4" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="16" cy="12.4" r="3.3" fill="#FF6B4A"/></svg>`;
+const ICON = {
+  person:'<path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0"/>', tag:'<path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+  money:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>', calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  staff:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M17 11a3 3 0 1 0-1-5.8M18 20a5 5 0 0 0-3-4.6"/>', note:'<path d="M5 3h10l4 4v14H5z"/><path d="M9 12h6M9 16h6"/>',
+  phone:'<path d="M6 3h4l2 5-2.5 1.5a11 11 0 0 0 5 5L16 12l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2Z"/>', cost:'<path d="M12 3v18M17 7H9.5a3 3 0 0 0 0 6h5a3 3 0 0 1 0 6H6"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7"/>', warn:'<path d="M12 4 2.5 20h19L12 4Z"/><path d="M12 10v4M12 17v.5"/>', info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/>',
+  up:'<path d="M5 15l7-7 7 7"/>', undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>', msg:'<path d="M4 5h16v11H8l-4 4z"/>', copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/>',
+  file:'<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/>',
+  transaction:'<path d="M4 7h13l-3-3M20 17H7l3 3"/>', customer_note:'<path d="M5 3h10l4 4v14H5z"/><path d="M9 12h6M9 16h6"/>', customer_info:'<path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0"/>',
+  offering:'<path d="M3 12V4h8l10 10-8 8L3 12Z"/><circle cx="7.5" cy="7.5" r="1.5"/>', expense:'<path d="M12 3v18M17 7H9.5a3 3 0 0 0 0 6h5a3 3 0 0 1 0 6H6"/>',
+  goal:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>', policy:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>',
+  fact:'<path d="M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M12 9v4M12 16v.5"/>', decision:'<path d="M6 21V4M6 4h11l-2 4 2 4H6"/>', staff_kind:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/>',
+  record:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/>', spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>'
+};
+const ic = (n, s = 16) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n] || ICON.spark}</svg>`;
+
+const app = document.getElementById("app");
+const S = { tool: null, args: {}, env: null, lang: "en", cur: "EUR", labels: {} };
+let nextId = 1; const pending = {};
+const post = (m) => window.parent.postMessage(m, "*");
+const rpc = (method, params) => new Promise((res, rej) => {
+  const id = nextId++; pending[id] = { res, rej }; post({ jsonrpc: "2.0", id, method, params });
+  setTimeout(() => { if (pending[id]) { delete pending[id]; rej(new Error("timeout")); } }, 30000);
+});
+const notify = (method, params) => post({ jsonrpc: "2.0", method, params: params || {} });
+
+const LOC = { en: "en-GB", fr: "fr-FR", ro: "ro-RO", de: "de-DE" };
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const loc = () => LOC[S.lang] || "en-GB";
+function money(minor) {
+  if (minor == null) return "—";
+  const v = minor / 100, whole = Number.isInteger(v);
+  const o = { minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: 2 };
+  if (S.cur === "RON") return new Intl.NumberFormat(loc(), o).format(v) + " lei";
+  try { return new Intl.NumberFormat(loc(), { style: "currency", currency: S.cur, ...o }).format(v); } catch { return v.toFixed(2) + " " + S.cur; }
+}
+function short(minor) {
+  if (minor == null) return "—"; const v = minor / 100;
+  if (Math.abs(v) < 100) return money(minor);
+  if (Math.abs(v) < 1000000) return money(Math.round(v) * 100);
+  const n = new Intl.NumberFormat(loc(), { notation: "compact", maximumFractionDigits: 1 }).format(v);
+  if (S.cur === "RON") return n + " lei";
+  const sym = { EUR: "€", USD: "$", GBP: "£" }[S.cur] || S.cur;
+  return S.lang === "en" ? (v < 0 ? "-" + sym + n.replace("-", "") : sym + n) : n + " " + sym;
+}
+const num = (x, d) => x == null ? "—" : new Intl.NumberFormat(loc(), { maximumFractionDigits: d ?? (Number.isInteger(x) ? 0 : 1) }).format(x);
+const pct = (x) => x == null ? "—" : new Intl.NumberFormat(loc(), { maximumFractionDigits: 1 }).format(x) + (S.lang === "en" ? "%" : " %");
+const date = (iso) => { if (!iso) return "—"; return new Intl.DateTimeFormat(loc(), { day: "numeric", month: "short", year: "numeric" }).format(new Date(String(iso).slice(0, 10) + "T12:00:00")); };
+const monthL = (ym) => new Intl.DateTimeFormat(loc(), { month: "short", year: "2-digit" }).format(new Date(ym + "-15T12:00:00"));
+const daysAgo = (n) => n === 0 ? t("ui.today") : t("ui.days_ago", { n: num(n) });
+function t(key, p) {
+  let s = (I18N[S.lang] && I18N[S.lang][key]) || (I18N.en && I18N.en[key]) || key;
+  if (p) for (const [k, v] of Object.entries(p)) s = s.split("{" + k + "}").join(val(v));
+  return s;
+}
+function val(v) {
+  if (v && typeof v === "object") {
+    if ("$m" in v) return money(v.$m); if ("$n" in v) return num(v.$n); if ("$p" in v) return pct(v.$p);
+    if ("$d" in v) return date(v.$d); if ("$mo" in v) return monthL(v.$mo);
+    if ("$e" in v) { const l = S.labels[v.$e]; return (l && l[S.lang] && l[S.lang][0]) || v[S.lang] || v.en || v.$e; }
+    if ("raw" in v) return String(v.raw); if ("t" in v) return t(v.t, v.p);
+  }
+  return v == null ? "" : String(v);
+}
+const tx = (x) => x == null ? "" : (typeof x === "string" ? x : ("t" in x ? t(x.t, x.p) : ("raw" in x ? String(x.raw) : val(x))));
+const NUMERIC = ["money", "number", "percent", "days"];
+function cell(v, fmt) {
+  if (v == null || v === "") return '<span class="muted">—</span>';
+  if (typeof v === "object") return esc(tx(v));
+  switch (fmt) {
+    case "money": return `<span class="tnum">${esc(money(v))}</span>`;
+    case "percent": return `<span class="tnum">${esc(pct(v))}</span>`;
+    case "number": return `<span class="tnum">${esc(num(v))}</span>`;
+    case "date": return `<span class="tnum">${esc(date(v))}</span>`;
+    case "days": return `<span class="tnum">${esc(daysAgo(v))}</span>`;
+    case "phone": return `<span class="tnum">${esc(v)}</span>`;
+    default: return `<span class="ua">${esc(v)}</span>`;
+  }
+}
+
+function applyBrand(b) {
+  if (!b) return; const r = document.documentElement.style;
+  if (b.primary) r.setProperty("--brand", b.primary); if (b.accent) r.setProperty("--brand2", b.accent);
+  const rad = { none: 4, sm: 8, md: 14, lg: 18, xl: 24 }[b.radius]; if (rad != null) r.setProperty("--radius", rad + "px");
+  const den = { compact: ["12px", "8px"], comfortable: ["16px", "10px"], airy: ["20px", "14px"] }[b.density]; if (den) { r.setProperty("--pad", den[0]); r.setProperty("--gap", den[1]); }
+  if (b.font && b.font !== "Inter" && !document.getElementById("font-brand")) {
+    const l = document.createElement("link"); l.id = "font-brand"; l.rel = "stylesheet";
+    l.href = "https://fonts.googleapis.com/css2?family=" + encodeURIComponent(b.font).replace(/%20/g, "+") + ":wght@400;500;600;700;800&display=swap";
+    document.head.appendChild(l); r.setProperty("--font", `"${b.font}", Inter, system-ui, sans-serif`);
+  }
+  if (b.mode === "light" || b.mode === "dark") document.documentElement.dataset.theme = b.mode;
+}
+function header(title, sub, live) {
+  const b = (S.env && S.env.brand) || {};
+  const lead = b.logo ? `<img class="logo" src="${esc(b.logo)}" alt="">` : MARK();
+  return `<div class="hd">${lead}<div class="tt"><h1 class="ua">${esc(tx(title))}</h1>${sub ? `<div class="sub ua">${esc(tx(sub))}</div>` : ""}</div>
+    ${live ? `<span class="pill live"><span class="dot"></span>${esc(live)}</span>` : ""}</div>`;
+}
+const footer = () => (S.env && S.env.brand && S.env.brand.show_brand === false) ? "" :
+  `<div class="ft">${MARK(14)}<span>${esc(S.env && S.env.business ? t("ui.footer", { name: S.env.business }) : "In The Know")}</span></div>`;
+function card(b, inner) { return `<div class="card">${b.title ? `<h2 class="ua">${esc(tx(b.title))}</h2>` : ""}${inner}</div>`; }
+
+const R = {
+  kpis(b) {
+    const items = (b.items || []).map((k, i) => {
+      const fmt = k.fmt, v = k.value, d = k.delta, goodUp = k.good !== "down";
+      const cls = d == null || d === 0 ? "flat" : ((d > 0) === goodUp ? "up" : "down");
+      const dtxt = d == null ? "—" : (d > 0 ? "▲ " : d < 0 ? "▼ " : "") + (fmt === "percent" ? num(Math.abs(d), 1) + " pt" : pct(Math.abs(d)));
+      const show = (x) => fmt === "money" ? short(x) : fmt === "percent" ? pct(x) : num(x);
+      const label = k.label_text ? (k.label_text[S.lang] || k.label_text.en || k.key) : t(k.label);
+      return `<div class="kpi" style="animation-delay:${i * 55}ms"><div class="l">${esc(label)}</div>
+        <div class="v tnum${(typeof v === "number" && v < 0) ? " neg" : ""}" title="${esc(fmt === "money" ? money(v) : "")}">${esc(show(v))}</div>
+        <div class="d"><span class="chip ${cls}">${esc(dtxt)}</span>${k.prev != null ? `<span>${esc(t("ui.before"))}: ${esc(show(k.prev))}</span>` : ""}</div></div>`;
+    }).join("");
+    return (b.title ? `<h2 style="font-size:13px;margin:6px 2px 8px">${esc(tx(b.title))}</h2>` : "") + `<div class="kpis">${items}</div>`;
+  },
+  alerts(b) {
+    if (!b.items || !b.items.length) return "";
+    const it = b.items.map(a => `<div class="alert ${a.level || "info"}"><span class="ic">${ic(a.level === "warn" ? "warn" : a.level === "good" ? "up" : "info", 13)}</span><span class="ua">${esc(t(a.t, a.p))}</span></div>`).join("");
+    return card(b, `<div class="alerts">${it}</div>`);
+  },
+  notes(b) {
+    const it = b.items.map(n => `<div class="note">${n.kind ? `<div class="k">${esc(t("kind." + n.kind))}</div>` : (n.title ? `<div class="k ua">${esc(n.title)}</div>` : "")}
+      <div class="x ua">${esc(n.text)}</div>${n.date ? `<div class="d">${esc(date(n.date))}</div>` : ""}</div>`).join("");
+    if (b.collapsed) return `<details class="card"><summary>${esc(tx(b.title))}</summary><div class="notes">${it}</div></details>`;
+    return card(b, `<div class="notes">${it}</div>`);
+  },
+  chart(b) {
+    const s = b.series || []; if (!s.length) return "";
+    const lab = (x) => b.label_fmt === "month" ? monthL(x) : b.label_fmt === "hour" ? x + "h" : b.label_fmt === "weekday" ? t("ui.weekday." + x) : x;
+    const fv = (v) => b.fmt === "money" ? short(v) : num(v);
+    let body;
+    if (b.label_fmt === "text") {
+      const max = Math.max(...s.map(x => Math.abs(x.value)), 1);
+      body = `<div class="hbar">${s.map((x, i) => `<div class="ua" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(x.label)}</div>
+        <div class="track"><div class="fill" style="width:${Math.max(2, Math.abs(x.value) / max * 100)}%;animation-delay:${i * 50}ms"></div></div><div class="tnum muted">${esc(fv(x.value))}</div>`).join("")}</div>`;
+    } else {
+      const W = Math.max(300, Math.min(840, (app.clientWidth || 600) - 40)), H = W < 480 ? 150 : 170, P = 22, n = s.length, gap = n > 10 ? 6 : 12, bw = (W - gap * (n - 1)) / n;
+      const max = Math.max(...s.map(x => x.value), 1);
+      const bars = s.map((x, i) => {
+        const h = Math.max(2, (Math.max(0, x.value) / max) * (H - P * 2)), X = i * (bw + gap), Y = H - P - h;
+        const peak = x.value === max, last = b.label_fmt === "month" && i === n - 1;
+        return `<g><rect x="${X.toFixed(1)}" y="${Y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="${Math.min(6, bw / 3).toFixed(1)}" fill="${last || peak ? "var(--brand)" : "color-mix(in srgb,var(--brand) 26%,transparent)"}">
+          <animate attributeName="height" from="0" to="${h}" dur=".6s" fill="freeze"/><animate attributeName="y" from="${H - P}" to="${Y}" dur=".6s" fill="freeze"/><title>${esc(lab(x.label))}: ${esc(fv(x.value))}</title></rect>
+          ${(last || peak) && n <= 16 ? `<text class="val" x="${(X + bw / 2).toFixed(1)}" y="${(Y - 6).toFixed(1)}" text-anchor="middle">${esc(fv(x.value))}</text>` : ""}
+          ${(W >= 480 ? n <= 14 : n <= 7) || i % 2 === 0 ? `<text class="lbl" x="${(X + bw / 2).toFixed(1)}" y="${H - 4}" text-anchor="middle">${esc(lab(x.label))}</text>` : ""}</g>`;
+      }).join("");
+      body = `<div class="chart"><svg viewBox="0 -10 ${W} ${H + 10}" role="img">${bars}</svg></div>`;
+    }
+    return card(b, body);
+  },
+  table(b) {
+    const cols = b.columns, acts = b.actions || [];
+    const head = cols.map(c => `<th class="${NUMERIC.includes(c.fmt) ? "num" : ""}">${esc(c.raw || t(c.t))}</th>`).join("") + (acts.length ? "<th></th>" : "");
+    const rows = (b.rows || []).map(r => {
+      const tds = cols.map(c => {
+        const v = r[c.k];
+        if (c.k === "due" && r.overdue) return `<td><span class="badge b-bad">${esc(date(v))}</span></td>`;
+        if (c.fmt === "badge" && v && typeof v === "object") return `<td><span class="badge ${v.t === "status.active" ? "b-ok" : "b-warn"}">${esc(tx(v))}</span></td>`;
+        return `<td class="${NUMERIC.includes(c.fmt) ? "num" : ""}">${cell(v, c.fmt)}</td>`;
+      }).join("");
+      const a = acts.includes("done") ? `<td><div class="acts" style="opacity:1"><button class="ib" data-act="done" data-id="${r._id}">${ic("check", 13)}${esc(t("ui.done"))}</button></div></td>` :
+        acts.length ? `<td>${r.name ? `<div class="acts">${acts.includes("message") ? `<button class="ib" data-act="message" data-name="${esc(r.name)}">${ic("msg", 13)}${esc(t("ui.message"))}</button>` : ""}${acts.includes("contacted") ? `<button class="ib" data-act="contacted" data-name="${esc(r.name)}" title="${esc(t("ui.contacted"))}" aria-label="${esc(t("ui.contacted"))}">${ic("check", 13)}</button>` : ""}</div>` : ""}</td>` : "";
+      return `<tr>${tds}${a}</tr>`;
+    }).join("");
+    const more = b.more ? `<div class="more">${esc(t("ui.more", { n: num(b.more) }))}</div>` : "";
+    const inner = `<div class="tbl"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>${more}`;
+    if (b.collapsed) return `<details class="card"><summary>${esc(tx(b.title))} <span class="pill">${esc(t("ui.rows", { n: num((b.rows || []).length) }))}</span></summary>${inner}</details>`;
+    return card(b, inner);
+  },
+  entity(b) {
+    const st = { active_regular: "b-ok", active: "b-ok", at_risk: "b-warn", lapsed_regular: "b-bad", inactive: "b-warn" }[b.status] || "";
+    const facts = b.facts.filter(f => f.v != null && f.v !== "").map(f => {
+      const v = f.fmt === "money" ? money(f.v) : f.fmt === "date" ? date(f.v) : f.fmt === "number" ? (f.t === "fact.rhythm" ? t("ui.every", { n: num(Math.round(f.v)) }) : num(f.v)) : f.v;
+      return `<div class="fact"><div class="l">${esc(t(f.t))}</div><div class="v ua">${esc(v)}</div></div>`;
+    }).join("");
+    const extra = Object.entries(b.extra || {}).filter(([k]) => !k.startsWith("__")).map(([k, v]) => `<span class="badge">${esc(k.replace(/_/g, " "))}: ${esc(v)}</span>`).join("");
+    const notes = (b.notes || []).map(n => `<div class="note"><div class="x ua">${esc(n)}</div></div>`).join("");
+    const warns = (b.warnings || []).map(w => { const bad = /overdue|staff_left/.test(w.t); return `<div class="alert ${bad ? "warn" : "info"}"><span class="ic">${ic(bad ? "warn" : "info", 13)}</span><span>${esc(t(w.t, w.p))}</span></div>`; }).join("");
+    return `<div class="card"><div class="prof"><div class="av">${esc((b.name || "?").trim()[0])}</div><div class="tt" style="flex:1;min-width:0">
+      <div class="nm ua">${esc(b.name)}</div><div class="ph tnum">${esc(b.subtitle || "")}</div></div><span class="badge ${st}">${esc(t("status." + b.status))}</span></div>
+      <div class="facts">${facts}</div>${extra ? `<div class="row" style="margin-top:10px">${extra}</div>` : ""}
+      ${notes ? `<div class="notes" style="margin-top:12px">${notes}</div>` : ""}${warns ? `<div class="warns">${warns}</div>` : ""}
+      <div class="row" style="margin-top:14px"><button class="btn" data-act="message" data-name="${esc(b.name)}">${ic("msg", 15)}${esc(t("ui.message"))}</button>
+      <button class="btn ghost" data-act="contacted" data-name="${esc(b.name)}">${ic("check", 15)}${esc(t("ui.contacted"))}</button></div></div>`;
+  },
+  facts(b) {
+    const cls = { must: "b-ok", must_not: "b-bad", likes: "b-info", dislikes: "b-warn" };
+    const rows = (b.items || []).map(f => {
+      const kind = f.label[S.lang] || f.label.en, conf = f.confidence === "stated" ? " ?" : f.confidence === "inferred" ? " ~" : "";
+      const meta = [f.date ? date(f.date) : "", f.previous ? t("ui.was", { v: f.previous.value }) : ""].filter(Boolean).join(" · ");
+      const tip = f.confidence === "stated" ? t("ui.stated") : f.confidence === "inferred" ? t("ui.inferred") : "";
+      return `<div class="pfi"><span class="badge ${cls[f.polarity] || ""}">${esc(kind)}${f.sensitivity === "special" ? " 🔒" : ""}</span>
+        <span class="v ua" title="${esc(tip)}">${f.key ? `<span class="muted">${esc(f.key.replace(/_/g, " "))}: </span>` : ""}${esc(f.value)}${esc(conf)}
+        ${f.quote && f.quote !== f.value ? `<span class="q">“${esc(f.quote)}”</span>` : ""}</span><span class="m tnum">${esc(meta)}</span></div>`;
+    }).join("");
+    const masked = (b.masked || []).map(m => `<div class="pfi"><span class="badge">${esc(m.label[S.lang] || m.label.en)} 🔒</span><span class="v muted">${esc(t("ui.sensitive_hidden", { n: num(m.n) }))}</span></div>`).join("");
+    const gaps = (b.missing || []).length ? `<div class="gaps"><span>${esc(t("ui.not_known"))}:</span>${b.missing.map(m => `<span class="badge">${esc(m.label[S.lang] || m.label.en)}</span>`).join("")}</div>` : "";
+    return card(b, `<div class="pf">${rows}${masked}</div>${gaps}`);
+  },
+  relations(b) {
+    return card(b, `<div class="ppl">${b.items.map(r => `<div class="ppi"><div class="av">${esc((r.name || "?").trim()[0])}</div><div style="flex:1;min-width:0">
+      <div class="ua"><b>${esc(r.name)}</b> · ${esc(r.label[S.lang] || r.label.en)} ${esc(b.person || "")}</div>
+      ${(r.facts || []).length ? `<div class="x ua">${r.facts.map(f => (f.polarity === "likes" ? "+ " : f.polarity === "dislikes" ? "− " : f.polarity === "must" ? "✓ " : "✕ ") + esc(f.value)).join(" · ")}</div>` : ""}</div></div>`).join("")}</div>`);
+  },
+  timeline(b) {
+    if (!b.items || !b.items.length) return "";
+    return card(b, `<div class="tl">${b.items.map(i => `<div class="tli"><span class="dt tnum">${esc(date(i.date))}</span><span class="t ua">${esc(i.title || "—")}</span>
+      <span class="s ua">${esc(i.sub || "")}</span><span class="tnum">${i.status && i.status !== "done" ? `<span class="badge b-warn">${esc(i.status.replace("_", " "))}</span>` : esc(money(i.amount))}</span></div>`).join("")}</div>`);
+  },
+  feed(b) {
+    const c = (s) => b.items.filter(i => i.status === s).length;
+    if (!c("clarify") && !c("error") && b.items.length <= 4) {
+      return `<div class="compact">${b.items.map((i, n) => compactItem(i, n)).join("")}</div>`;
+    }
+    const sum = b.items.length > 1 ? `<div class="row" style="margin:0 0 10px">${c("saved") ? `<span class="badge b-ok">${ic("check", 12)} ${esc(t("ui.status.saved"))} · ${num(c("saved"))}</span>` : ""}
+      ${c("known") ? `<span class="badge">${esc(t("ui.status.known"))} · ${num(c("known"))}</span>` : ""}${c("clarify") ? `<span class="badge b-warn">${esc(t("ui.status.clarify"))} · ${num(c("clarify"))}</span>` : ""}</div>` : "";
+    return sum + `<div class="feed">${b.items.map((i, n) => feedItem(i, n)).join("")}</div>`;
+  },
+  files(b) { return b.items.map((f, i) => fileCard(f, i)).join(""); },
+  checklist(b) {
+    const steps = b.items.map((s, i) => `<div class="step ${s.state}"><span class="b">${s.state === "done" ? ic("check", 12) : i + 1}</span><span class="x">${esc(t(s.t))}</span></div>`).join("");
+    return `<div class="card"><div class="prog" style="margin-bottom:12px"><i style="width:${Math.round(b.progress * 100)}%"></i></div><div class="steps">${steps}</div></div>`;
+  },
+  hero(b) { return `<div class="hero"><div class="glow"></div><h2>${esc(t(b.t, b.p))}</h2><p>${esc(t("onb.hero_tagline"))}</p><div class="m">${MARK(28)}</div></div>`; },
+  copy(b) {
+    return `<div class="card copy"><h2>${esc(tx(b.title))}</h2><pre class="ua" id="cp">${esc(b.text)}</pre>
+      <div class="row" style="margin-top:10px"><button class="btn" data-act="copy">${ic("copy", 15)}${esc(t("ui.copy"))}</button></div>
+      ${(b.steps || []).length ? `<ol class="ol">${b.steps.map(s => `<li>${esc(t(s))}</li>`).join("")}</ol>` : ""}</div>`;
+  },
+  tips(b) { return card(b, `<div class="tips">${b.items.map(i => `<div class="tip">${esc(tx(i))}</div>`).join("")}</div>`); },
+  schema(b) {
+    const ents = (b.entities || []).map(e => `<div class="ent"><div class="hh"><span class="ua">${esc(e.label || e.name)}</span><span class="badge">${esc(t("ui.role." + e.role))}${e.rows != null ? " · " + num(e.rows) : ""}</span></div>
+      <div class="fl">${e.fields.map(f => `<span class="f">${esc(fieldLabel(f))}</span>`).join("")}</div></div>`).join("");
+    const ch = (b.changes || []).map(c => `<div class="chg"><span>${esc(c.op === "add_field" ? "+ " + (c.entity || "") + " · " + (c.field || "") : c.op === "create_entity" ? "+ " + (c.entity || "") : c.op)}</span>
+      ${c.undoable ? `<button class="ib" data-act="undo" data-id="${esc(c.id)}">${ic("undo", 13)}${esc(t("ui.undo"))}</button>` : `<span class="badge">${esc(c.status)}</span>`}</div>`).join("");
+    return card(b, `<div class="ents">${ents}</div>${ch ? `<div style="margin-top:10px">${ch}</div>` : ""}`);
+  },
+  questions(b) {
+    if (!b.items || !b.items.length) return "";
+    const q = b.items.map(x => `<div class="chg"><span><span class="badge b-info">${esc(t("ui.qkind." + x.kind))}</span> <span class="ua">${esc(x.payload && x.payload.names ? x.payload.names.slice(0, 8).join(", ") + (x.payload.names.length > 8 ? " +" + (x.payload.names.length - 8) : "") : (x.payload && x.payload.name ? x.payload.name : x.text))}</span></span>
+      <span class="row">${["new_party", "new_parties", "fact_conflict"].includes(x.kind) ? `<button class="ib" data-act="q" data-id="${x.id}" data-r="confirm">${ic("check", 13)}${esc(t("ui.confirm"))}</button>` : ""}
+      <button class="ib" data-act="q" data-id="${x.id}" data-r="dismiss">${esc(t("ui.dismiss"))}</button></span></div>`).join("");
+    return card(b, q);
+  },
+  kv(b) { return card(b, `<div class="kv">${b.items.map(i => `<div class="it"><div class="l ua">${esc(i.raw || t(i.t))}</div><div class="v">${cell(i.v, i.fmt)}</div></div>`).join("")}</div>`); },
+  text(b) { return `<div class="card"><div class="ua">${esc(t(b.t, b.p))}</div></div>`; },
+  progress(b) { return `<div class="card"><div class="prog"><i style="width:${Math.round(b.value * 100)}%"></i></div><div class="more">${esc(t("ui.progress", { p: num(Math.round(b.value * 100)) }))}</div></div>`; },
+  design(b) {
+    const br = b.brand || {};
+    return `<div class="card"><h2>${esc(t("ui.brand"))}</h2><div class="sw"><div class="swc" style="background:${esc(br.primary)}"></div><div class="swc" style="background:${esc(br.accent)}"></div>
+      <span class="badge">${esc(br.font || "Inter")}</span><span class="badge">${esc(br.radius)}</span><span class="badge">${esc(br.density)}</span><span class="badge">${esc(br.mode)}</span></div></div>
+      <div class="kpis"><div class="kpi"><div class="l">${esc(t("kpi.revenue"))} · ${esc(t("ui.design_preview"))}</div><div class="v">${esc(short(1234500))}</div><div class="d"><span class="chip up">▲ ${esc(pct(8.4))}</span></div></div>
+      <div class="kpi"><div class="l">${esc(t("kpi.net_profit"))} · ${esc(t("ui.design_preview"))}</div><div class="v">${esc(short(284000))}</div><div class="d"><span class="chip up">▲ ${esc(pct(3.1))}</span></div></div></div>
+      <div class="card"><h2>${esc(t("ui.layout"))}</h2><div class="row">${((b.brief || {}).sections || []).map((s, i) => `<span class="badge">${i + 1}. ${esc(s)}</span>`).join("")}</div>
+      ${(b.views || []).length ? `<h2 style="margin-top:12px">${esc(t("ui.dashboards"))}</h2><div class="row">${b.views.map(v => `<span class="badge b-info">${esc(v)}</span>`).join("")}</div>` : ""}
+      <div class="row" style="margin-top:12px"><button class="ib" data-act="undo" data-id="design">${ic("undo", 13)}${esc(t("ui.undo"))}</button></div></div>`;
+  },
+};
+function compactItem(i, n) {
+  const kind = i.kind === "staff" ? "staff_kind" : i.kind;
+  const chips = (i.chips || []).map(c => esc(typeof c.v === "object" ? val(c.v) : c.v)).join(" · ");
+  const undo = i.undo && i.status === "saved" ? `<button class="ib" data-act="undo" data-id="${esc(i.undo)}">${ic("undo", 12)}${esc(t("ui.undo"))}</button>` : "";
+  return `<div class="ci ${i.status}" style="animation-delay:${n * 60}ms"><span class="ok">${i.status === "saved" ? ic("check", 13) : ic(ICON[kind] ? kind : "record", 13)}</span>
+    <span class="h">${esc(t(i.t, i.p))}</span><span class="cx ua">${chips}</span>${undo}</div>`;
+}
+function feedItem(i, n, pendingText) {
+  const st = pendingText != null ? "pending" : i.status;
+  const kind = i.kind === "staff" ? "staff_kind" : i.kind;
+  const icon = ic(i.kind === "undo" ? "undo" : (ICON[kind] ? kind : "record"), 18);
+  const head = pendingText != null ? pendingText : t(i.t, i.p);
+  const chips = (i.chips || []).map(c => `<span class="c">${c.icon ? ic(c.icon, 12) : ""}<span class="ua">${esc(typeof c.v === "object" ? val(c.v) : c.v)}</span></span>`).join("");
+  const badge = pendingText != null ? `<span class="badge"><span class="spin"></span>${esc(t("ui.status.pending"))}</span>`
+    : `<span class="badge ${{ saved: "b-ok", clarify: "b-warn", error: "b-bad" }[st] || ""}">${st === "saved" ? `<span class="check">${ic("check", 12)}</span>` : ""}${esc(t("ui.status." + st))}</span>`;
+  const undo = i.undo && st === "saved" ? `<button class="ib" data-act="undo" data-id="${esc(i.undo)}">${ic("undo", 12)}${esc(t("ui.undo"))}</button>` : "";
+  return `<div class="fi ${st}" style="animation-delay:${n * 70}ms"><div class="ic">${icon}</div><div class="bd"><div class="h ua">${esc(head)}</div>
+    ${chips ? `<div class="chips">${chips}</div>` : ""}${i.note ? `<div class="nt">${esc(tx(i.note))}</div>` : ""}</div><div class="rt">${badge}${undo}</div></div>`;
+}
+function targetLabel(m) {
+  if (m.target === "extra") return t("ui.extra");
+  let s = m.tk ? t(m.tk) : (m.label ? (m.label[S.lang] || m.label.en) : m.target.replace(".name", "").replace(/_/g, " "));
+  if (m.sub) s += " · " + t(m.sub);
+  return s;
+}
+const fieldLabel = (f) => f.tk ? t(f.tk) : (f.ref && S.env && S.env.entity_labels && S.env.entity_labels[f.ref]) ? S.env.entity_labels[f.ref][S.lang] :
+  ((f.label && (f.label[S.lang] || f.label.en)) || f.name.replace(/_/g, " "));
+function fileCard(f, i) {
+  const ok = !["unknown", "skipped"].includes(f.entity);
+  const label = f.entity_label ? (f.entity_label[S.lang] || f.entity_label.en) : f.entity === "knowledge" ? t("ui.notes_sections") : f.entity === "unknown" ? t("ui.qkind.unknown_file") : f.entity;
+  const st = (n, l, color) => `<div class="stat"><div class="n tnum"${color ? ` style="color:${color}"` : ""}>${esc(num(n))}</div><div class="l">${esc(l)}</div></div>`;
+  let body = "";
+  if (f.already) body = `<div class="more">${esc(t("ui.already"))}</div>`;
+  else if (f.entity === "knowledge") body = `<div class="stats">${st(f.loaded, t("ui.notes_sections"))}</div>`;
+  else if (f.entity === "unknown") body = `<p class="empty">${esc(t("ui.unknown_file"))}</p>${f.headers ? `<div class="maps">${f.headers.map(h => `<span class="map ua">${esc(h)}</span>`).join("")}</div>` : ""}`;
+  else if (ok) {
+    body = `<div class="stats">${st(f.loaded, t("ui.new"))}${f.updated ? st(f.updated, t("ui.updated")) : ""}${f.duplicate ? st(f.duplicate, t("ui.duplicates")) : ""}
+      ${f.flagged ? st(f.flagged, t("ui.rejected"), "var(--warn)") : ""}${f.questions ? st(f.questions, t("ui.questions"), "var(--info)") : ""}
+      ${f.date_range && f.date_range.length ? `<div class="stat"><div class="n" style="font-size:13.5px;padding-top:4px">${esc(date(f.date_range[0]))} – ${esc(date(f.date_range[1]))}</div><div class="l">${esc(t("ui.dates"))}</div></div>` : ""}</div>
+      <div class="maps">${(f.mapping || []).filter(m => m.target !== "ignore").map(m => `<span class="map"><span class="ua">${esc(m.h)}</span> → <b>${esc(targetLabel(m))}</b></span>`).join("")}</div>
+      ${(f.new_fields || []).map(nf => `<div class="chg"><span>${ic("spark", 13)} ${esc(t("ui.new_field", { field: nf.field, header: nf.header }))}</span><button class="ib" data-act="undo" data-id="${nf.change_id}">${ic("undo", 12)}${esc(t("ui.undo"))}</button></div>`).join("")}`;
+  }
+  return `<div class="card" style="animation-delay:${i * 80}ms"><div class="fh">${ic(ok ? "file" : "warn", 18)}<span class="nm ua">${esc(f.name)}</span><span class="badge ${ok ? "b-ok" : "b-warn"}">${esc(label)}</span></div>${body}</div>`;
+}
+
+function render(env) {
+  S.env = env; S.lang = env.lang || S.lang; S.cur = env.currency || S.cur; S.labels = env.labels || {};
+  document.documentElement.lang = S.lang; applyBrand(env.brand);
+  const blocks = (env.blocks || []).filter(Boolean).map(b => (R[b.type] ? R[b.type](b) : "")).join("");
+  const quiet = env.view === "capture" && blocks.startsWith('<div class="compact">');   // small confirmation, no header/footer
+  app.innerHTML = quiet ? blocks : header(env.title, env.subtitle) + blocks + footer();
+}
+function renderPending(args) {
+  const tool = S.tool;
+  if (tool === "capture" && args.items) {
+    const map = { visit: "transaction", sale: "transaction", appointment: "transaction", service: "offering", product: "offering" };
+    const items = args.items.map((it, n) => feedItem({ kind: map[it.type] || it.type,
+      chips: ["customer", "offering", "service", "product", "amount", "price", "date", "staff", "category", "text"].filter(k => it[k]).map(k => ({ v: it[k] })) },
+      n, it.quote ? "“" + it.quote.slice(0, 90) + (it.quote.length > 90 ? "…" : "") + "”" : t("ui.saving"))).join("");
+    app.innerHTML = header({ t: "view.capture" }, { t: "ui.saving" }, t("ui.live")) + `<div class="feed">${items}</div>` + footer();
+  } else if (tool === "add_data" || tool === "import_records") {
+    const names = (args.paths || []).concat(args.filename ? [args.filename] : []).concat(tool === "import_records" ? [args.source || "photo"] : []);
+    app.innerHTML = header({ t: "view.import" }, { t: "ui.importing" }, t("ui.working")) +
+      names.map(n => `<div class="card"><div class="fh">${ic("file", 18)}<span class="nm ua">${esc(n)}</span></div><div class="bar"><i></i></div></div>`).join("") + footer();
+  } else {
+    app.innerHTML = header({ raw: "In The Know" }, { t: "ui.working" }, t("ui.working")) + `<div class="card"><div class="skel" style="width:35%"></div><div class="skel"></div><div class="skel" style="width:80%"></div></div>`;
+  }
+}
+function onResult(r) {
+  const text = (r.content || []).filter(c => c.type === "text").map(c => c.text).join("\n");
+  if (r.isError) { app.innerHTML = header({ t: "ui.error" }) + `<div class="card"><div class="alert warn"><span class="ic">${ic("warn", 13)}</span><span class="ua">${esc(text)}</span></div></div>`; return; }
+  if (r.structuredContent && r.structuredContent.blocks) render(r.structuredContent);
+  else app.innerHTML = header({ raw: "In The Know" }) + `<div class="card"><pre class="ua" style="white-space:pre-wrap;margin:0">${esc(text)}</pre></div>`;
+}
+function applyContext(ctx) {
+  if (!ctx) return;
+  const forced = S.env && S.env.brand && ["light", "dark"].includes(S.env.brand.mode);
+  if (ctx.theme && !forced) document.documentElement.dataset.theme = ctx.theme;
+  const vars = ctx.styles && ctx.styles.variables;
+  if (vars) for (const [k, v] of Object.entries(vars)) if (v && k.startsWith("--color")) document.documentElement.style.setProperty(k, v);
+  if (ctx.toolInfo && ctx.toolInfo.tool && ctx.toolInfo.tool.name) S.tool = ctx.toolInfo.tool.name;
+  if (ctx.locale && !S.env) { const l = String(ctx.locale).slice(0, 2); if (I18N[l]) S.lang = l; }
+}
+
+document.addEventListener("click", async (e) => {
+  const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+  const act = b.dataset.act;
+  try {
+    if (act === "message") {
+      b.disabled = true; await rpc("ui/message", { role: "user", content: { type: "text", text: t("ui.message_prompt", { name: b.dataset.name }) } });
+      b.classList.add("done"); b.innerHTML = ic("check", 13) + esc(t("ui.contacted_done"));
+    } else if (act === "contacted") {
+      b.disabled = true; await rpc("tools/call", { name: "mark_contacted", arguments: { customer: b.dataset.name } });
+      b.classList.add("done"); b.innerHTML = ic("check", 13) + (b.classList.contains("btn") ? esc(t("ui.contacted_done")) : "");
+    } else if (act === "undo") {
+      b.disabled = true; await rpc("tools/call", { name: "undo_change", arguments: { change_id: String(b.dataset.id) } });
+      const fi = b.closest(".fi"); if (fi) { fi.className = "fi undone"; const bd = fi.querySelector(".rt .badge"); if (bd) bd.outerHTML = `<span class="badge">${esc(t("ui.status.undone"))}</span>`; }
+      b.outerHTML = `<span class="badge">${esc(t("ui.undone"))}</span>`;
+    } else if (act === "done") {
+      b.disabled = true; await rpc("tools/call", { name: "complete_task", arguments: { task_id: Number(b.dataset.id) } });
+      const row = b.closest("tr"); if (row) row.style.opacity = ".45"; b.classList.add("done");
+    } else if (act === "q") {
+      b.disabled = true; await rpc("tools/call", { name: "resolve_question", arguments: { question_ids: [Number(b.dataset.id)], resolution: b.dataset.r } });
+      const row = b.closest(".chg"); if (row) row.style.opacity = ".45"; b.classList.add("done");
+    } else if (act === "copy") {
+      const el = document.getElementById("cp");
+      try { await navigator.clipboard.writeText(el.textContent); } catch { const rg = document.createRange(); rg.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(rg); document.execCommand("copy"); }
+      b.innerHTML = ic("check", 15) + esc(t("ui.copied"));
+    }
+  } catch (err) { b.disabled = false; b.title = String((err && err.message) || err); }
+});
+
+window.addEventListener("message", (e) => {
+  const m = e.data; if (!m || m.jsonrpc !== "2.0") return;
+  if (m.id != null && !m.method) { const p = pending[m.id]; if (p) { delete pending[m.id]; m.error ? p.rej(m.error) : p.res(m.result); } return; }
+  switch (m.method) {
+    case "ui/notifications/tool-input": S.args = (m.params && m.params.arguments) || {}; renderPending(S.args); break;
+    case "ui/notifications/tool-input-partial": break;
+    case "ui/notifications/tool-result": onResult(m.params || {}); break;
+    case "ui/notifications/tool-cancelled": app.innerHTML = header({ raw: "In The Know" }, { t: "undo.nothing" }); break;
+    case "ui/notifications/host-context-changed": applyContext(m.params); break;
+    default: if (m.id != null) post({ jsonrpc: "2.0", id: m.id, result: {} });
+  }
+});
+new ResizeObserver(() => notify("ui/notifications/size-changed", { width: Math.ceil(document.documentElement.scrollWidth), height: Math.ceil(document.documentElement.scrollHeight) })).observe(document.body);
+if (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) document.documentElement.dataset.theme = "dark";
+rpc("ui/initialize", { protocolVersion: "2026-01-26", appInfo: { name: "in-the-know", version: "1.0.0" }, clientInfo: { name: "in-the-know", version: "1.0.0" },
+  appCapabilities: { availableDisplayModes: ["inline"] }, capabilities: {} })
+  .then(r => applyContext(r && r.hostContext)).catch(() => {}).finally(() => notify("ui/notifications/initialized", {}));
+window.__itk = { render, renderPending, S };
+})();
+</script>
+</body>
+</html>

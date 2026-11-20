@@ -1,0 +1,678 @@
+Date,Client,Phone,Service,Stylist,Amount (RON)
+2025-11-01,Maria Ionescu,+40 724 131 244,Haircut,Andreea,120.00
+2025-11-01,Corina Constantin,0761 993 085,Manicure,Andreea,90.00
+2025-11-01,Andreea Stoica,0762-531-641,Hair color,Diana,350.00
+2025-11-03,Ioana Popescu,0734-126-225,Makeup,Bianca,300.00
+2025-11-03,Oana Dumitru,+40 765 988 662,Keratin,Cristina,800.00
+2025-11-03,Ioana Dumitru,0788887352,Blow dry,Cristina,80.00
+2025-11-03,Diana Stoica,+40 778 103 402,Manicure,Cristina,90.00
+2025-11-03,Alina Ionescu,0749-170-674,Hair color,Cristina,380.00
+2025-11-03,Irina Diaconu,0732153045,Makeup,Cristina,300.00
+2025-11-03,Simona Gheorghe,0753 629 959,Haircut,Cristina,120.00
+2025-11-03,Cristina Șerban,0764 420 015,Haircut,Bianca,120.00
+2025-11-03,Mihaela Marin,0748945742,Haircut,Andreea,140.00
+2025-11-03,Mihaela Moldovan,+40 782 682 144,Blow dry,Diana,80.00
+2025-11-03,Corina Moldovan,0782-195-674,Keratin,Cristina,800.00
+2025-11-03,Ioana Marin,0758978157,Highlights,Diana,550.00
+2025-11-03,Andreea Rusu,+40 778 116 093,Haircut,Bianca,120.00
+2025-11-03,Bianca Matei,0783711484,Makeup,Cristina,300.00
+2025-11-04,Bianca Popa,0750523389,Pedicure,Cristina,120.00
+2025-11-04,Raluca Stan,0764-172-132,Hair color,Cristina,350.00
+2025-11-04,Camelia Matei,0754 266 931,Haircut,Andreea,150.00
+2025-11-04,Simona Moldovan,0797 636 265,Hair color,Bianca,350.00
+2025-11-04,Teodora Stan,0756 559 398,Hair color,Andreea,350.00
+2025-11-05,Maria Ionescu,0733 809 570,Pedicure,Andreea,120.00
+2025-11-05,Cristina Diaconu,0736-858-490,Highlights,Cristina,550.00
+2025-11-05,Ana Vasile,+40 797 884 256,Haircut,Bianca,120.00
+2025-11-05,Cristina Popa,0795824161,Haircut,Cristina,120.00
+2025-11-05,Elena Munteanu,0782-177-680,Keratin,Andreea,800.00
+2025-11-05,Bianca Munteanu,0730 993 140,Manicure,Diana,120.00
+2025-11-05,Larisa Diaconu,0724 747 453,Haircut,Cristina,150.00
+2025-11-05,Camelia Popescu,0779-401-603,Highlights,Andreea,550.00
+2025-11-06,Oana Lungu,0748245051,Makeup,Cristina,300.00
+2025-11-06,Diana Stan,0779-290-556,Makeup,Cristina,300.00
+2025-11-06,Teodora Rusu,0764546173,Highlights,Cristina,550.00
+2025-11-06,Roxana Stoica,0758-114-835,Highlights,Cristina,550.00
+2025-11-06,Cristina Gheorghe,+40 753 792 509,Haircut,Bianca,170.00
+2025-11-07,Teodora Ionescu,0764 335 113,Haircut,Andreea,120.00
+2025-11-07,Ioana Popa,+40 757 332 360,Manicure,Cristina,90.00
+2025-11-07,Andreea Stan,0783-851-413,Hair color,Cristina,350.00
+2025-11-08,Andreea Munteanu,+40 730 678 856,Manicure,Cristina,90.00
+2025-11-08,Elena Ionescu,0749910620,Makeup,Cristina,300.00
+2025-11-08,Alina Stoica,0788-864-544,Haircut,Cristina,120.00
+2025-11-08,Elena Moldovan,0794692683,Hair color,Cristina,350.00
+2025-11-08,Corina Diaconu,+40 738 550 664,Haircut,Cristina,120.00
+2025-11-08,Elena Vasile,0725 553 014,Hair color,Cristina,350.00
+2025-11-08,Teodora Neagu,0764-448-588,Blow dry,Diana,80.00
+2025-11-10,Diana Constantin,0725103717,Haircut,Cristina,120.00
+2025-11-10,Diana Diaconu,+40 721 217 308,Hair color,Bianca,370.00
+2025-11-10,Maria Gheorghe,0773-508-396,Eyebrows,Andreea,40.00
+2025-11-10,Corina Popescu,0759 703 766,Pedicure,Diana,120.00
+2025-11-10,Ana Neagu,0747-472-060,Hair color,Cristina,350.00
+2025-11-10,Gabriela Constantin,0749 226 516,Haircut,Andreea,120.00
+2025-11-10,Cristina Neagu,+40 755 859 782,Makeup,Cristina,300.00
+2025-11-10,Teodora Marin,0736768854,Haircut,Andreea,120.00
+2025-11-10,Ștefania Lungu,0799-893-188,Keratin,Andreea,800.00
+2025-11-10,Larisa Matei,0778-678-043,Hair color,Bianca,350.00
+2025-11-11,Andreea Marin,0784738551,Haircut,Cristina,120.00
+2025-11-11,Gabriela Gheorghe,0727-707-314,Highlights,Cristina,550.00
+2025-11-11,Cristina Matei,0733-470-858,Pedicure,Diana,120.00
+2025-11-11,Irina Marin,0795-549-660,Highlights,Andreea,550.00
+2025-11-12,Elena Popescu,0778-751-332,Makeup,Cristina,300.00
+2025-11-12,Ana Popa,0756640490,Highlights,Cristina,550.00
+2025-11-12,Simona Țurcanu,+40 768 391 773,Haircut,Andreea,120.00
+2025-11-12,Oana Nistor,0765-702-733,Makeup,Cristina,350.00
+2025-11-13,Simona Neagu,0722217301,Makeup,Cristina,300.00
+2025-11-13,Diana Gheorghe,+40 732 201 639,Makeup,Cristina,300.00
+2025-11-13,Raluca Dumitru,0733878480,Blow dry,Cristina,80.00
+2025-11-13,Raluca Lungu,0785 519 093,Makeup,Cristina,300.00
+2025-11-13,Oana Marin,+40 790 233 470,Eyebrows,Diana,40.00
+2025-11-13,Mihaela Munteanu,+40 739 840 734,Blow dry,Diana,80.00
+2025-11-13,Raluca Țurcanu,0734 910 075,Manicure,Andreea,90.00
+2025-11-14,Elena Țurcanu,+40 799 429 164,Manicure,Cristina,90.00
+2025-11-14,Alexandra Popescu,+40 733 916 232,Haircut,Diana,120.00
+2025-11-14,Larisa Șerban,0763 293 319,Haircut,Diana,120.00
+2025-11-14,Elena Matei,0735685181,Keratin,Bianca,800.00
+2025-11-14,Alina Stan,0754-966-785,Haircut,Bianca,120.00
+2025-11-15,Irina Stan,+40 753 246 413,Blow dry,Cristina,80.00
+2025-11-15,Mihaela Popa,0763122056,Makeup,Cristina,300.00
+2025-11-15,Mihaela Constantin,0786608136,Haircut,Diana,120.00
+2025-11-15,Gabriela Matei,0754 452 161,Keratin,Andreea,800.00
+2025-11-15,Ioana Lungu,0758890075,Manicure,Diana,90.00
+2025-11-15,Cristina Popescu,0799 259 784,Haircut,Andreea,120.00
+2025-11-15,Ioana Moldovan,0777822858,Hair color,Andreea,350.00
+2025-11-15,Maria Marin,0765-493-049,Haircut,Diana,120.00
+2025-11-17,Teodora Matei,0761983794,Haircut,Cristina,120.00
+2025-11-17,Raluca Popa,0747694731,Hair color,Cristina,350.00
+2025-11-17,Camelia Moldovan,0796166613,Hair color,Cristina,400.00
+2025-11-17,Mihaela Nistor,0730 189 814,Hair color,Cristina,350.00
+2025-11-17,Maria Dumitru,+40 727 522 179,Hair color,Cristina,350.00
+2025-11-17,Simona Matei,0753 515 011,Pedicure,Cristina,120.00
+2025-11-17,Gabriela Vasile,0787-108-203,Keratin,Cristina,800.00
+2025-11-17,Corina Marin,0771 674 553,Manicure,Bianca,90.00
+2025-11-17,Corina Vasile,+40 761 587 575,Hair color,Bianca,370.00
+2025-11-17,Alexandra Vasile,0788-128-276,Highlights,Andreea,600.00
+2025-11-17,Gabriela Șerban,+40 729 820 775,Pedicure,Bianca,140.00
+2025-11-18,Camelia Neagu,+40 790 273 148,Highlights,Cristina,550.00
+2025-11-18,Ana Stoica,0772-125-990,Blow dry,Cristina,80.00
+2025-11-18,Ștefania Moldovan,+40 790 567 574,Haircut,Diana,140.00
+2025-11-18,Irina Dumitru,0779 822 131,Blow dry,Cristina,80.00
+2025-11-19,Alina Diaconu,+40 773 331 148,Highlights,Cristina,550.00
+2025-11-19,Raluca Șerban,0766270555,Hair color,Cristina,350.00
+2025-11-19,Oana Popescu,0769 378 085,Haircut,Cristina,120.00
+2025-11-19,Raluca Stoica,+40 794 378 361,Haircut,Diana,120.00
+2025-11-19,Irina Moldovan,0793303880,Blow dry,Diana,80.00
+2025-11-19,Mihaela Dumitru,0778 239 816,Blow dry,Cristina,80.00
+2025-11-19,Diana Neagu,0723-507-746,Blow dry,Diana,80.00
+2025-11-19,Corina Ionescu,0764 658 623,Blow dry,Andreea,80.00
+2025-11-19,Corina Munteanu,0749-997-594,Haircut,Diana,150.00
+2025-11-19,Larisa Diaconu,0724 747 453,Haircut,Cristina,120.00
+2025-11-20,Maria Ionescu,0724131244,Blow dry,Andreea,80.00
+2025-11-20,Mihaela Stoica,0772-609-231,Haircut,Cristina,120.00
+2025-11-20,Andreea Moldovan,0766 766 459,Blow dry,Diana,80.00
+2025-11-20,Mihaela Șerban,0792-739-979,Hair color,Andreea,350.00
+2025-11-20,Camelia Constantin,+40 793 142 185,Hair color,Diana,350.00
+2025-11-20,Ana Marin,0790 114 338,Hair color,Bianca,350.00
+2025-11-20,Camelia Stan,0783 138 817,Hair color,Cristina,350.00
+2025-11-20,Andreea Dumitru,0776274446,Eyebrows,Andreea,40.00
+2025-11-20,Bianca Neagu,0756913423,Eyebrows,Cristina,40.00
+2025-11-21,Diana Țurcanu,0755263032,Eyebrows,Cristina,40.00
+2025-11-21,Cristina Marin,0771-804-314,Hair color,Cristina,350.00
+2025-11-21,Alina Ionescu,0749 170 674,Manicure,Cristina,90.00
+2025-11-21,Corina Neagu,0784-994-141,Haircut,Cristina,120.00
+2025-11-21,Diana Popescu,0786 945 687,Haircut,Bianca,120.00
+2025-11-21,Ștefania Constantin,0798947458,Blow dry,Diana,80.00
+2025-11-24,Raluca Stan,0764-172-132,Hair color,Cristina,350.00
+2025-11-24,Simona Moldovan,+40 797 636 265,Manicure,Bianca,90.00
+2025-11-25,Bianca Popa,+40 750 523 389,Eyebrows,Cristina,40.00
+2025-11-25,Cristina Gheorghe,0753 792 509,Haircut,Bianca,120.00
+2025-11-26,Cristina Șerban,0764-420-015,Haircut,Bianca,120.00
+2025-11-29,Alina Stoica,0788-864-544,Haircut,Cristina,120.00
+2025-11-29,Andreea Marin,0784 738 551,Haircut,Cristina,120.00
+2025-12-01,Diana Stan,0779 290 556,Haircut,Cristina,120.00
+2025-12-02,Diana Diaconu,0721217308,Hair color,Bianca,350.00
+2025-12-02,Mihaela Moldovan,0782 682 144,Blow dry,Diana,80.00
+2025-12-02,Bianca Munteanu,0730993140,Manicure,Diana,90.00
+2025-12-03,Ioana Popescu,0734-126-225,Hair color,Bianca,350.00
+2025-12-03,Oana Nistor,+40 765 702 733,Makeup,Cristina,300.00
+2025-12-04,Oana Dumitru,+40 765 988 662,Keratin,Cristina,800.00
+2025-12-04,Oana Marin,0790233470,Pedicure,Diana,120.00
+2025-12-04,Bianca Matei,0783 711 484,Haircut,Cristina,120.00
+2025-12-05,Corina Constantin,0761 993 085,Manicure,Andreea,90.00
+2025-12-06,Mihaela Marin,+40 748 945 742,Haircut,Andreea,170.00
+2025-12-06,Larisa Șerban,+40 763 293 319,Haircut,Diana,120.00
+2025-12-06,Gabriela Țurcanu,0773284171,Haircut,Cristina,120.00
+2025-12-08,Ioana Dumitru,0788887352,Blow dry,Cristina,80.00
+2025-12-08,Alina Ionescu,0749-170-674,Manicure,Cristina,90.00
+2025-12-08,Corina Diaconu,+40 738 550 664,Keratin,Cristina,800.00
+2025-12-08,Ana Neagu,0747 472 060,Hair color,Cristina,350.00
+2025-12-08,Corina Moldovan,0782-195-674,Hair color,Cristina,350.00
+2025-12-08,Andreea Stan,0783851413,Eyebrows,Cristina,40.00
+2025-12-09,Elena Ionescu,0749910620,Makeup,Cristina,300.00
+2025-12-09,Raluca Stoica,0794-378-361,Haircut,Diana,120.00
+2025-12-10,Maria Ionescu,+40 724 131 244,Haircut,Andreea,120.00
+2025-12-10,Larisa Matei,0778-678-043,Hair color,Bianca,400.00
+2025-12-11,Corina Marin,0771 674 553,Makeup,Bianca,300.00
+2025-12-13,Mihaela Munteanu,0739-840-734,Haircut,Diana,120.00
+2025-12-13,Camelia Stan,+40 783 138 817,Hair color,Cristina,350.00
+2025-12-15,Diana Țurcanu,0755263032,Eyebrows,Cristina,40.00
+2025-12-15,Teodora Matei,0761983794,Highlights,Cristina,550.00
+2025-12-15,Simona Moldovan,0797636265,Hair color,Bianca,350.00
+2025-12-15,Ștefania Moldovan,0790567574,Blow dry,Diana,80.00
+2025-12-15,Diana Stan,0779-290-556,Haircut,Cristina,120.00
+2025-12-15,Ioana Popa,0757332360,Blow dry,Cristina,80.00
+2025-12-15,Teodora Marin,0736 768 854,Haircut,Andreea,120.00
+2025-12-15,Cristina Gheorghe,0753792509,Keratin,Bianca,800.00
+2025-12-15,Gabriela Șerban,0729-820-775,Pedicure,Bianca,120.00
+2025-12-15,Bianca Neagu,+40 756 913 423,Keratin,Cristina,800.00
+2025-12-16,Andreea Munteanu,0730678856,Manicure,Cristina,90.00
+2025-12-16,Raluca Șerban,0766270555,Hair color,Cristina,350.00
+2025-12-16,Irina Stan,0753 246 413,Blow dry,Cristina,80.00
+2025-12-16,Ana Stoica,0772 125 990,Blow dry,Cristina,80.00
+2025-12-16,Elena Stan,0748-809-176,Haircut,Diana,120.00
+2025-12-17,Gabriela Matei,0754452161,Pedicure,Andreea,120.00
+2025-12-17,Cristina Popescu,+40 799 259 784,Haircut,Andreea,120.00
+2025-12-17,Camelia Constantin,+40 793 142 185,Hair color,Diana,350.00
+2025-12-17,Larisa Diaconu,0724747453,Haircut,Cristina,120.00
+2025-12-17,Raluca Diaconu,0735 576 877,Eyebrows,Cristina,40.00
+2025-12-18,Cristina Matei,0733-470-858,Pedicure,Diana,120.00
+2025-12-18,Alina Stan,0754966785,Haircut,Bianca,120.00
+2025-12-19,Simona Matei,0753515011,Blow dry,Cristina,80.00
+2025-12-19,Irina Dumitru,0779 822 131,Blow dry,Cristina,80.00
+2025-12-19,Teodora Neagu,0764448588,Blow dry,Diana,80.00
+2025-12-20,Andreea Marin,0784-738-551,Eyebrows,Cristina,40.00
+2025-12-20,Simona Neagu,+40 722 217 301,Makeup,Cristina,300.00
+2025-12-20,Bianca Popa,+40 750 523 389,Eyebrows,Cristina,40.00
+2025-12-20,Simona Gheorghe,0753-629-959,Haircut,Cristina,120.00
+2025-12-20,Diana Constantin,+40 725 103 717,Highlights,Cristina,550.00
+2025-12-20,Irina Marin,0795549660,Highlights,Andreea,550.00
+2025-12-20,Mihaela Neagu,0723-749-641,Hair color,Bianca,350.00
+2025-12-22,Raluca Stan,0764 172 132,Hair color,Cristina,350.00
+2025-12-22,Mihaela Dumitru,0778 239 816,Haircut,Cristina,120.00
+2025-12-22,Diana Neagu,0723 507 746,Makeup,Diana,300.00
+2025-12-22,Ștefania Lungu,0799 893 188,Keratin,Andreea,800.00
+2025-12-23,Alexandra Vasile,0788128276,Highlights,Andreea,550.00
+2025-12-24,Corina Vasile,0761587575,Hair color,Bianca,350.00
+2025-12-25,Ioana Marin,0758 978 157,Eyebrows,Diana,40.00
+2025-12-26,Maria Ionescu,0724131244,Keratin,Andreea,800.00
+2025-12-26,Camelia Neagu,0790-273-148,Hair color,Cristina,350.00
+2025-12-26,Gabriela Neagu,0734-201-913,Pedicure,Bianca,120.00
+2025-12-27,Diana Diaconu,0721-217-308,Manicure,Bianca,90.00
+2025-12-27,Raluca Țurcanu,0734 910 075,Manicure,Andreea,90.00
+2025-12-29,Alina Stoica,0788 864 544,Haircut,Cristina,120.00
+2025-12-29,Camelia Moldovan,0796 166 613,Hair color,Cristina,350.00
+2025-12-29,Mihaela Stoica,0772609231,Haircut,Cristina,120.00
+2025-12-29,Oana Popescu,+40 769 378 085,Hair color,Cristina,350.00
+2025-12-29,Raluca Stoica,+40 794 378 361,Keratin,Diana,800.00
+2025-12-29,Mihaela Moldovan,0782682144,Blow dry,Diana,80.00
+2025-12-29,Larisa Șerban,0763 293 319,Haircut,Diana,120.00
+2025-12-29,Elena Matei,0735 685 181,Keratin,Bianca,800.00
+2025-12-29,Bianca Munteanu,0730993140,Manicure,Diana,90.00
+2025-12-29,Gabriela Țurcanu,0773-284-171,Haircut,Cristina,120.00
+2025-12-31,Alina Ionescu,0749-170-674,Keratin,Cristina,800.00
+2025-12-31,Elena Munteanu,0782177680,Keratin,Andreea,800.00
+2025-12-31,Andreea Rusu,0778116093,Haircut,Bianca,120.00
+2026-01-01,Elena Popescu,0778-751-332,Makeup,Cristina,300.00
+2026-01-01,Corina Ionescu,0764-658-623,Blow dry,Andreea,80.00
+2026-01-01,Andreea Moldovan,+40 766 766 459,Blow dry,Diana,80.00
+2026-01-01,Cristina Neagu,+40 755 859 782,Highlights,Cristina,550.00
+2026-01-01,Bianca Matei,+40 783 711 484,Haircut,Cristina,120.00
+2026-01-01,Oana Nistor,0765 702 733,Makeup,Cristina,300.00
+2026-01-02,Cristina Șerban,0764-420-015,Haircut,Bianca,120.00
+2026-01-02,Oana Marin,0790 233 470,Hair color,Diana,350.00
+2026-01-02,Corina Marin,0771674553,Hair color,Bianca,350.00
+2026-01-02,Alexandra Popescu,0733 916 232,Haircut,Diana,140.00
+2026-01-02,Corina Constantin,0761 993 085,Manicure,Andreea,90.00
+2026-01-02,Bianca Neagu,0756913423,Keratin,Cristina,800.00
+2026-01-03,Diana Stan,0779 290 556,Haircut,Cristina,120.00
+2026-01-03,Simona Țurcanu,0768 391 773,Highlights,Andreea,550.00
+2026-01-03,Cristina Gheorghe,+40 753 792 509,Haircut,Bianca,120.00
+2026-01-05,Oana Dumitru,0765988662,Keratin,Cristina,800.00
+2026-01-05,Diana Stoica,0778103402,Manicure,Cristina,90.00
+2026-01-05,Cristina Diaconu,0736858490,Highlights,Cristina,550.00
+2026-01-05,Corina Diaconu,0738550664,Pedicure,Cristina,120.00
+2026-01-05,Roxana Stoica,0758-114-835,Highlights,Cristina,550.00
+2026-01-05,Maria Marin,0765-493-049,Haircut,Diana,120.00
+2026-01-06,Mihaela Marin,0748945742,Haircut,Andreea,120.00
+2026-01-06,Ana Neagu,0747-472-060,Hair color,Cristina,350.00
+2026-01-06,Andreea Stoica,0762 531 641,Hair color,Diana,350.00
+2026-01-06,Corina Munteanu,+40 749 997 594,Haircut,Diana,120.00
+2026-01-06,Larisa Vasile,+40 772 393 328,Blow dry,Bianca,80.00
+2026-01-07,Ioana Popescu,0734 126 225,Hair color,Bianca,350.00
+2026-01-07,Teodora Matei,+40 761 983 794,Haircut,Cristina,120.00
+2026-01-07,Diana Popescu,0786 945 687,Blow dry,Bianca,80.00
+2026-01-07,Maria Gheorghe,0773 508 396,Eyebrows,Andreea,40.00
+2026-01-07,Cristina Popescu,+40 799 259 784,Highlights,Andreea,550.00
+2026-01-07,Ștefania Constantin,0798 947 458,Makeup,Diana,300.00
+2026-01-07,Larisa Diaconu,+40 724 747 453,Haircut,Cristina,120.00
+2026-01-08,Raluca Dumitru,0733878480,Haircut,Cristina,120.00
+2026-01-08,Camelia Matei,+40 754 266 931,Haircut,Andreea,120.00
+2026-01-08,Ioana Lungu,+40 758 890 075,Manicure,Diana,90.00
+2026-01-08,Teodora Stan,0756559398,Hair color,Andreea,380.00
+2026-01-08,Camelia Stan,+40 783 138 817,Hair color,Cristina,350.00
+2026-01-09,Ioana Dumitru,0788 887 352,Blow dry,Cristina,100.00
+2026-01-09,Elena Moldovan,0794-692-683,Hair color,Cristina,350.00
+2026-01-09,Simona Moldovan,0797636265,Hair color,Bianca,350.00
+2026-01-09,Ștefania Moldovan,+40 790 567 574,Manicure,Diana,90.00
+2026-01-09,Camelia Popescu,0779401603,Highlights,Andreea,550.00
+2026-01-10,Oana Lungu,0748245051,Hair color,Cristina,350.00
+2026-01-10,Andreea Marin,0784 738 551,Haircut,Cristina,120.00
+2026-01-10,Ana Stoica,0772 125 990,Blow dry,Cristina,80.00
+2026-01-10,Larisa Matei,+40 778 678 043,Hair color,Bianca,350.00
+2026-01-12,Maria Ionescu,+40 733 809 570,Highlights,Andreea,550.00
+2026-01-12,Alina Diaconu,0773331148,Highlights,Cristina,550.00
+2026-01-12,Diana Țurcanu,0755263032,Highlights,Cristina,550.00
+2026-01-12,Elena Ionescu,0749910620,Makeup,Cristina,300.00
+2026-01-12,Irina Stan,0753 246 413,Eyebrows,Cristina,40.00
+2026-01-12,Gabriela Șerban,0729820775,Pedicure,Bianca,120.00
+2026-01-13,Corina Neagu,+40 784 994 141,Haircut,Cristina,120.00
+2026-01-13,Bianca Popa,+40 750 523 389,Eyebrows,Cristina,40.00
+2026-01-13,Mihaela Munteanu,0739-840-734,Haircut,Diana,120.00
+2026-01-13,Alina Stan,0754966785,Haircut,Bianca,120.00
+2026-01-14,Maria Ionescu,0724 131 244,Haircut,Andreea,120.00
+2026-01-14,Ana Vasile,0797-884-256,Haircut,Bianca,120.00
+2026-01-15,Diana Gheorghe,0732 201 639,Hair color,Cristina,350.00
+2026-01-15,Ana Marin,0790 114 338,Hair color,Bianca,350.00
+2026-01-15,Raluca Gheorghe,0735989227,Haircut,Bianca,120.00
+2026-01-16,Andreea Munteanu,0730678856,Manicure,Cristina,90.00
+2026-01-16,Corina Popescu,0759703766,Pedicure,Diana,120.00
+2026-01-16,Camelia Constantin,0793-142-185,Hair color,Diana,350.00
+2026-01-16,Alexandra Nistor,0746 171 942,Haircut,Bianca,120.00
+2026-01-17,Diana Diaconu,0721217308,Pedicure,Bianca,120.00
+2026-01-17,Larisa Șerban,0763293319,Eyebrows,Diana,40.00
+2026-01-19,Mihaela Popa,0763122056,Highlights,Cristina,550.00
+2026-01-19,Simona Matei,0753515011,Blow dry,Cristina,80.00
+2026-01-19,Diana Neagu,+40 723 507 746,Blow dry,Diana,80.00
+2026-01-19,Cristina Popa,0795 824 161,Haircut,Cristina,120.00
+2026-01-19,Teodora Rusu,0764 546 173,Highlights,Cristina,550.00
+2026-01-19,Ioana Moldovan,0777822858,Hair color,Andreea,400.00
+2026-01-19,Andreea Stan,0783-851-413,Hair color,Cristina,350.00
+2026-01-19,Gabriela Țurcanu,0773 284 171,Haircut,Cristina,150.00
+2026-01-19,Raluca Diaconu,0735-576-877,Blow dry,Cristina,80.00
+2026-01-19,Gabriela Neagu,0734201913,Pedicure,Bianca,120.00
+2026-01-20,Mihaela Nistor,0730189814,Blow dry,Cristina,80.00
+2026-01-20,Irina Dumitru,0779 822 131,Blow dry,Cristina,80.00
+2026-01-21,Simona Neagu,0722217301,Manicure,Cristina,90.00
+2026-01-21,Irina Diaconu,0732-153-045,Keratin,Cristina,800.00
+2026-01-21,Cristina Șerban,0764420015,Haircut,Bianca,120.00
+2026-01-21,Ioana Popa,0757332360,Blow dry,Cristina,80.00
+2026-01-21,Alexandra Stan,0789 362 829,Haircut,Andreea,120.00
+2026-01-22,Raluca Popa,+40 747 694 731,Hair color,Cristina,350.00
+2026-01-22,Raluca Stoica,0794-378-361,Haircut,Diana,120.00
+2026-01-22,Simona Popescu,+40 742 378 258,Haircut,Diana,120.00
+2026-01-23,Maria Dumitru,0727522179,Hair color,Cristina,350.00
+2026-01-23,Raluca Stan,0764-172-132,Haircut,Cristina,120.00
+2026-01-23,Corina Marin,0771674553,Highlights,Bianca,550.00
+2026-01-23,Irina Marin,+40 795 549 660,Highlights,Andreea,550.00
+2026-01-24,Alina Ionescu,+40 749 170 674,Manicure,Cristina,90.00
+2026-01-24,Diana Constantin,0725-103-717,Blow dry,Cristina,80.00
+2026-01-24,Larisa Vasile,0772393328,Blow dry,Bianca,80.00
+2026-01-26,Cristina Marin,+40 771 804 314,Hair color,Cristina,350.00
+2026-01-26,Simona Gheorghe,0753-629-959,Haircut,Cristina,120.00
+2026-01-26,Raluca Lungu,0785519093,Makeup,Cristina,300.00
+2026-01-26,Simona Moldovan,0797636265,Hair color,Bianca,350.00
+2026-01-26,Diana Stan,0779-290-556,Haircut,Cristina,120.00
+2026-01-26,Corina Moldovan,0782195674,Hair color,Cristina,350.00
+2026-01-26,Andreea Dumitru,+40 776 274 446,Haircut,Andreea,120.00
+2026-01-27,Alina Stoica,+40 788 864 544,Hair color,Cristina,400.00
+2026-01-27,Bianca Neagu,0756-913-423,Keratin,Cristina,830.00
+2026-01-28,Camelia Neagu,0790 273 148,Pedicure,Cristina,120.00
+2026-01-28,Corina Constantin,0761993085,Pedicure,Andreea,120.00
+2026-01-28,Ștefania Matei,+40 798 145 471,Eyebrows,Cristina,40.00
+2026-01-29,Gabriela Matei,+40 754 452 161,Pedicure,Andreea,120.00
+2026-01-29,Cristina Popescu,+40 799 259 784,Haircut,Andreea,120.00
+2026-01-29,Cristina Gheorghe,+40 753 792 509,Haircut,Bianca,120.00
+2026-01-29,Oana Nistor,0765702733,Makeup,Cristina,300.00
+2026-01-30,Raluca Șerban,0766 270 555,Eyebrows,Cristina,70.00
+2026-01-30,Mihaela Constantin,0786608136,Blow dry,Diana,80.00
+2026-01-30,Teodora Ionescu,0764335113,Haircut,Andreea,120.00
+2026-01-30,Teodora Marin,0736-768-854,Haircut,Andreea,120.00
+2026-01-30,Larisa Munteanu,+40 774 819 425,Hair color,Diana,350.00
+2026-01-31,Mihaela Moldovan,+40 782 682 144,Eyebrows,Diana,40.00
+2026-01-31,Elena Matei,0735 685 181,Keratin,Bianca,800.00
+2026-01-31,Larisa Diaconu,0724 747 453,Haircut,Cristina,120.00
+2026-01-31,Bianca Matei,0783-711-484,Haircut,Cristina,120.00
+2026-02-02,Gabriela Constantin,0749-226-516,Haircut,Andreea,120.00
+2026-02-02,Elena Vasile,0725-553-014,Pedicure,Cristina,170.00
+2026-02-02,Ștefania Lungu,+40 799 893 188,Keratin,Andreea,800.00
+2026-02-02,Camelia Stan,+40 783 138 817,Hair color,Cristina,400.00
+2026-02-02,Bianca Munteanu,0730 993 140,Manicure,Diana,120.00
+2026-02-03,Maria Ionescu,0724 131 244,Highlights,Andreea,550.00
+2026-02-03,Gabriela Vasile,0787-108-203,Manicure,Cristina,90.00
+2026-02-03,Andreea Moldovan,0766766459,Blow dry,Diana,80.00
+2026-02-03,Mihaela Șerban,0792 739 979,Hair color,Andreea,350.00
+2026-02-04,Ioana Popescu,+40 734 126 225,Hair color,Bianca,350.00
+2026-02-04,Teodora Matei,0761 983 794,Haircut,Cristina,120.00
+2026-02-04,Ana Popa,+40 756 640 490,Keratin,Cristina,800.00
+2026-02-04,Ana Neagu,0747472060,Hair color,Cristina,350.00
+2026-02-04,Larisa Matei,0778-678-043,Hair color,Bianca,350.00
+2026-02-05,Gabriela Gheorghe,0727-707-314,Haircut,Cristina,170.00
+2026-02-05,Bianca Popa,0750-523-389,Eyebrows,Cristina,40.00
+2026-02-05,Mihaela Dumitru,0778 239 816,Highlights,Cristina,550.00
+2026-02-05,Gabriela Șerban,0729-820-775,Pedicure,Bianca,120.00
+2026-02-05,Alina Stan,+40 754 966 785,Haircut,Bianca,120.00
+2026-02-06,Diana Țurcanu,0755 263 032,Eyebrows,Cristina,40.00
+2026-02-06,Diana Diaconu,0721 217 308,Eyebrows,Bianca,90.00
+2026-02-06,Corina Diaconu,0738550664,Haircut,Cristina,120.00
+2026-02-06,Oana Marin,0790233470,Hair color,Diana,350.00
+2026-02-06,Mihaela Marin,0748 945 742,Haircut,Andreea,120.00
+2026-02-06,Ștefania Moldovan,0790 567 574,Haircut,Diana,120.00
+2026-02-06,Alexandra Vasile,0788 128 276,Makeup,Andreea,300.00
+2026-02-06,Raluca Țurcanu,0734 910 075,Manicure,Andreea,90.00
+2026-02-07,Mihaela Stoica,0772 609 231,Hair color,Cristina,350.00
+2026-02-07,Raluca Stoica,+40 794 378 361,Eyebrows,Diana,40.00
+2026-02-07,Larisa Șerban,0763 293 319,Haircut,Diana,120.00
+2026-02-07,Teodora Neagu,+40 764 448 588,Blow dry,Diana,100.00
+2026-02-09,Irina Stan,0753-246-413,Blow dry,Cristina,80.00
+2026-02-09,Camelia Moldovan,+40 796 166 613,Haircut,Cristina,120.00
+2026-02-09,Elena Stan,0748-809-176,Blow dry,Diana,80.00
+2026-02-09,Gabriela Neagu,0734201913,Pedicure,Bianca,120.00
+2026-02-10,Oana Popescu,0769378085,Haircut,Cristina,120.00
+2026-02-10,Gabriela Țurcanu,0773 284 171,Haircut,Cristina,120.00
+2026-02-11,Elena Moldovan,+40 794 692 683,Manicure,Cristina,90.00
+2026-02-11,Ana Stoica,0772-125-990,Pedicure,Cristina,120.00
+2026-02-11,Alexandra Popescu,0733-916-232,Haircut,Diana,120.00
+2026-02-12,Alina Ionescu,+40 749 170 674,Manicure,Cristina,90.00
+2026-02-12,Simona Moldovan,0797 636 265,Keratin,Bianca,830.00
+2026-02-12,Corina Vasile,+40 761 587 575,Hair color,Bianca,370.00
+2026-02-12,Corina Ionescu,0764658623,Blow dry,Andreea,130.00
+2026-02-12,Simona Popescu,0742378258,Haircut,Diana,120.00
+2026-02-13,Elena Ionescu,0749 910 620,Makeup,Cristina,300.00
+2026-02-13,Elena Țurcanu,+40 799 429 164,Manicure,Cristina,90.00
+2026-02-13,Irina Moldovan,0793303880,Blow dry,Diana,80.00
+2026-02-14,Andreea Marin,0784-738-551,Haircut,Cristina,120.00
+2026-02-14,Mihaela Munteanu,0739-840-734,Keratin,Diana,800.00
+2026-02-14,Andreea Stan,+40 783 851 413,Hair color,Cristina,350.00
+2026-02-16,Cristina Șerban,0764 420 015,Haircut,Bianca,120.00
+2026-02-16,Corina Marin,0771-674-553,Hair color,Bianca,350.00
+2026-02-16,Simona Țurcanu,0768-391-773,Haircut,Andreea,120.00
+2026-02-16,Camelia Constantin,0793142185,Hair color,Diana,350.00
+2026-02-16,Maria Marin,0765-493-049,Haircut,Diana,120.00
+2026-02-16,Larisa Vasile,+40 772 393 328,Blow dry,Bianca,80.00
+2026-02-16,Larisa Munteanu,+40 774 819 425,Hair color,Diana,350.00
+2026-02-16,Cristina Moldovan,0777339592,Hair color,Diana,350.00
+2026-02-17,Bianca Matei,+40 783 711 484,Haircut,Cristina,120.00
+2026-02-17,Mihaela Neagu,+40 723 749 641,Hair color,Bianca,350.00
+2026-02-18,Simona Matei,0753515011,Blow dry,Cristina,80.00
+2026-02-18,Camelia Stan,0783138817,Keratin,Cristina,800.00
+2026-02-18,Raluca Diaconu,0735576877,Blow dry,Cristina,80.00
+2026-02-18,Roxana Stan,0780170394,Highlights,Andreea,550.00
+2026-02-19,Cristina Matei,0733-470-858,Pedicure,Diana,120.00
+2026-02-19,Cristina Gheorghe,0753 792 509,Haircut,Bianca,120.00
+2026-02-19,Alexandra Stan,0789362829,Haircut,Andreea,120.00
+2026-02-19,Teodora Țurcanu,+40 735 530 764,Makeup,Diana,300.00
+2026-02-20,Bianca Popa,0750 523 389,Eyebrows,Cristina,40.00
+2026-02-20,Diana Neagu,0723 507 746,Blow dry,Diana,80.00
+2026-02-20,Roxana Dumitru,0793 632 060,Keratin,Diana,800.00
+2026-02-21,Alina Diaconu,0773-331-148,Highlights,Cristina,550.00
+2026-02-21,Ioana Dumitru,0788-887-352,Blow dry,Cristina,80.00
+2026-02-21,Ioana Lungu,0758890075,Manicure,Diana,90.00
+2026-02-21,Diana Stan,+40 779 290 556,Haircut,Cristina,120.00
+2026-02-21,Cristina Popescu,0799259784,Makeup,Andreea,300.00
+2026-02-21,Corina Munteanu,0749 997 594,Hair color,Diana,280.00
+2026-02-21,Andreea Constantin,0793337144,Hair color,Andreea,280.00
+2026-02-23,Teodora Matei,0761 983 794,Haircut,Cristina,120.00
+2026-02-23,Maria Gheorghe,+40 773 508 396,Eyebrows,Andreea,40.00
+2026-02-23,Corina Constantin,0761 993 085,Manicure,Andreea,90.00
+2026-02-23,Ioana Popa,0757-332-360,Blow dry,Cristina,110.00
+2026-02-23,Larisa Diaconu,0724747453,Haircut,Cristina,120.00
+2026-02-23,Roxana Popescu,0743250210,Hair color,Andreea,280.00
+2026-02-24,Maria Ionescu,0724-131-244,Haircut,Andreea,120.00
+2026-02-24,Oana Dumitru,0765-988-662,Makeup,Cristina,300.00
+2026-02-24,Diana Diaconu,0721-217-308,Blow dry,Bianca,80.00
+2026-02-24,Irina Dumitru,0779 822 131,Blow dry,Cristina,80.00
+2026-02-24,Larisa Matei,0778-678-043,Hair color,Bianca,280.00
+2026-02-24,Ștefania Gheorghe,+40 768 540 226,Hair color,Cristina,280.00
+2026-02-25,Raluca Stan,0764172132,Hair color,Cristina,280.00
+2026-02-25,Irina Marin,0795549660,Highlights,Andreea,550.00
+2026-02-25,Bianca Neagu,+40 756 913 423,Keratin,Cristina,800.00
+2026-02-26,Andreea Munteanu,0730678856,Manicure,Cristina,90.00
+2026-02-26,Alina Stoica,0788-864-544,Haircut,Cristina,120.00
+2026-02-26,Simona Neagu,0722217301,Manicure,Cristina,90.00
+2026-02-26,Elena Popescu,+40 778 751 332,Blow dry,Cristina,80.00
+2026-02-26,Ioana Marin,0758-978-157,Haircut,Diana,120.00
+2026-02-26,Andreea Rusu,0778 116 093,Pedicure,Bianca,120.00
+2026-02-27,Corina Diaconu,0738 550 664,Manicure,Cristina,90.00
+2026-02-27,Maria Popa,0754-564-637,Hair color,Diana,280.00
+2026-02-28,Raluca Stoica,0794378361,Haircut,Diana,120.00
+2026-02-28,Gabriela Matei,+40 754 452 161,Pedicure,Andreea,120.00
+2026-02-28,Mihaela Moldovan,0782-682-144,Blow dry,Diana,80.00
+2026-02-28,Larisa Șerban,+40 763 293 319,Haircut,Diana,120.00
+2026-02-28,Bianca Munteanu,0730 993 140,Manicure,Diana,90.00
+2026-02-28,Roxana Moldovan,0734-397-005,Hair color,Diana,280.00
+2026-03-02,Ioana Popescu,0734-126-225,Hair color,Bianca,280.00
+2026-03-02,Alina Ionescu,+40 749 170 674,Manicure,Cristina,90.00
+2026-03-02,Raluca Dumitru,0733 878 480,Blow dry,Cristina,80.00
+2026-03-02,Ștefania Moldovan,0790 567 574,Hair color,Diana,280.00
+2026-03-02,Cristina Neagu,0755-859-782,Eyebrows,Cristina,40.00
+2026-03-02,Ioana Moldovan,+40 777 822 858,Manicure,Andreea,90.00
+2026-03-02,Alina Stan,0754-966-785,Haircut,Bianca,120.00
+2026-03-02,Oana Nistor,0765702733,Makeup,Cristina,300.00
+2026-03-02,Larisa Vasile,0772 393 328,Blow dry,Bianca,80.00
+2026-03-02,Raluca Gheorghe,0735 989 227,Haircut,Bianca,120.00
+2026-03-03,Simona Popescu,0742-378-258,Haircut,Diana,120.00
+2026-03-03,Cristina Stan,0752-403-507,Eyebrows,Diana,40.00
+2026-03-03,Oana Diaconu,0749-624-563,Keratin,Cristina,800.00
+2026-03-04,Oana Lungu,0748 245 051,Hair color,Cristina,280.00
+2026-03-04,Diana Constantin,0725 103 717,Blow dry,Cristina,80.00
+2026-03-04,Oana Marin,0790 233 470,Hair color,Diana,280.00
+2026-03-04,Ioana Șerban,0729428267,Hair color,Diana,280.00
+2026-03-05,Mihaela Marin,0748-945-742,Haircut,Andreea,120.00
+2026-03-05,Mihaela Dumitru,0778 239 816,Blow dry,Cristina,80.00
+2026-03-05,Ioana Țurcanu,0741940247,Hair color,Cristina,280.00
+2026-03-05,Andreea Matei,0775-717-476,Haircut,Diana,120.00
+2026-03-06,Camelia Neagu,+40 790 273 148,Highlights,Cristina,550.00
+2026-03-06,Corina Marin,+40 771 674 553,Pedicure,Bianca,120.00
+2026-03-06,Elena Munteanu,0782-177-680,Keratin,Andreea,800.00
+2026-03-06,Ștefania Dumitru,0787-634-723,Hair color,Cristina,280.00
+2026-03-07,Cristina Gheorghe,0753-792-509,Haircut,Bianca,120.00
+2026-03-07,Alexandra Matei,+40 733 253 557,Hair color,Bianca,280.00
+2026-03-09,Diana Țurcanu,0755263032,Eyebrows,Cristina,40.00
+2026-03-09,Irina Stan,+40 753 246 413,Highlights,Cristina,600.00
+2026-03-09,Andreea Marin,0784 738 551,Haircut,Cristina,120.00
+2026-03-09,Cristina Diaconu,0736-858-490,Highlights,Cristina,550.00
+2026-03-09,Mihaela Munteanu,+40 739 840 734,Haircut,Diana,120.00
+2026-03-09,Teodora Marin,0736-768-854,Haircut,Andreea,120.00
+2026-03-09,Gabriela Șerban,0729820775,Pedicure,Bianca,120.00
+2026-03-09,Ștefania Lungu,0799 893 188,Keratin,Andreea,800.00
+2026-03-09,Gabriela Țurcanu,+40 773 284 171,Blow dry,Cristina,80.00
+2026-03-09,Gabriela Neagu,0734201913,Pedicure,Bianca,140.00
+2026-03-09,Larisa Munteanu,0774819425,Hair color,Diana,280.00
+2026-03-09,Irina Nistor,0794 570 711,Hair color,Cristina,280.00
+2026-03-10,Raluca Șerban,0766 270 555,Hair color,Cristina,280.00
+2026-03-10,Simona Moldovan,0797 636 265,Hair color,Bianca,280.00
+2026-03-10,Alina Marin,0755720148,Highlights,Andreea,550.00
+2026-03-11,Bianca Popa,+40 750 523 389,Eyebrows,Cristina,40.00
+2026-03-11,Ana Neagu,0747472060,Hair color,Cristina,280.00
+2026-03-11,Gabriela Popa,+40 731 744 883,Hair color,Diana,280.00
+2026-03-12,Ștefania Constantin,0798947458,Manicure,Diana,90.00
+2026-03-12,Camelia Constantin,0793 142 185,Hair color,Diana,280.00
+2026-03-12,Cristina Țurcanu,0797-598-733,Hair color,Andreea,280.00
+2026-03-13,Diana Popescu,0786945687,Blow dry,Bianca,80.00
+2026-03-13,Elena Matei,0735685181,Keratin,Bianca,800.00
+2026-03-13,Raluca Țurcanu,0734-910-075,Haircut,Andreea,170.00
+2026-03-13,Alexandra Nistor,0746171942,Haircut,Bianca,120.00
+2026-03-13,Elena Rusu,0742141043,Hair color,Diana,280.00
+2026-03-14,Diana Stoica,0778103402,Manicure,Cristina,90.00
+2026-03-14,Roxana Stan,0780170394,Pedicure,Andreea,120.00
+2026-03-14,Camelia Vasile,0726927564,Highlights,Andreea,550.00
+2026-03-16,Mihaela Nistor,+40 730 189 814,Manicure,Cristina,90.00
+2026-03-16,Mihaela Popa,+40 763 122 056,Highlights,Cristina,550.00
+2026-03-16,Ana Stoica,+40 772 125 990,Haircut,Cristina,120.00
+2026-03-16,Diana Stan,0779290556,Haircut,Cristina,120.00
+2026-03-16,Cristina Popescu,0799259784,Pedicure,Andreea,120.00
+2026-03-16,Andreea Moldovan,+40 766 766 459,Blow dry,Diana,80.00
+2026-03-16,Corina Moldovan,0782 195 674,Hair color,Cristina,280.00
+2026-03-16,Camelia Popescu,+40 779 401 603,Highlights,Andreea,550.00
+2026-03-16,Alexandra Stan,0789362829,Haircut,Andreea,170.00
+2026-03-16,Raluca Vasile,0739449555,Manicure,Bianca,90.00
+2026-03-17,Elena Ionescu,0749 910 620,Makeup,Cristina,300.00
+2026-03-17,Teodora Matei,+40 761 983 794,Eyebrows,Cristina,40.00
+2026-03-17,Mihaela Moldovan,0782-682-144,Blow dry,Diana,100.00
+2026-03-17,Raluca Diaconu,0735 576 877,Haircut,Cristina,120.00
+2026-03-17,Oana Stan,0796843266,Highlights,Diana,550.00
+2026-03-18,Diana Diaconu,0721 217 308,Haircut,Bianca,120.00
+2026-03-18,Ioana Lungu,0758 890 075,Manicure,Diana,90.00
+2026-03-18,Alexandra Vasile,0788-128-276,Highlights,Andreea,550.00
+2026-03-18,Ana Marin,0790-114-338,Hair color,Bianca,280.00
+2026-03-18,Larisa Diaconu,0724 747 453,Haircut,Cristina,120.00
+2026-03-18,Camelia Rusu,+40 731 777 406,Hair color,Cristina,280.00
+2026-03-19,Simona Gheorghe,0753 629 959,Haircut,Cristina,120.00
+2026-03-19,Corina Vasile,0761-587-575,Hair color,Bianca,280.00
+2026-03-19,Larisa Șerban,0763-293-319,Haircut,Diana,120.00
+2026-03-19,Larisa Matei,0778-678-043,Hair color,Bianca,310.00
+2026-03-20,Camelia Moldovan,0796-166-613,Highlights,Cristina,550.00
+2026-03-20,Corina Constantin,0761-993-085,Manicure,Andreea,90.00
+2026-03-20,Andreea Stoica,0762531641,Hair color,Diana,280.00
+2026-03-20,Andreea Stan,0783 851 413,Makeup,Cristina,300.00
+2026-03-20,Elena Marin,+40 732 632 351,Hair color,Andreea,280.00
+2026-03-21,Maria Ionescu,+40 724 131 244,Haircut,Andreea,120.00
+2026-03-21,Corina Neagu,0784994141,Haircut,Cristina,120.00
+2026-03-21,Raluca Stan,0764 172 132,Hair color,Cristina,350.00
+2026-03-21,Alexandra Popescu,0733-916-232,Haircut,Diana,120.00
+2026-03-21,Bianca Matei,0783-711-484,Haircut,Cristina,120.00
+2026-03-23,Raluca Stoica,+40 794 378 361,Haircut,Diana,120.00
+2026-03-23,Roxana Stoica,+40 758 114 835,Highlights,Cristina,550.00
+2026-03-23,Camelia Stan,0783138817,Hair color,Cristina,350.00
+2026-03-23,Bianca Neagu,0756 913 423,Keratin,Cristina,820.00
+2026-03-23,Larisa Vasile,0772 393 328,Blow dry,Bianca,80.00
+2026-03-25,Alina Ionescu,0749-170-674,Manicure,Cristina,90.00
+2026-03-25,Irina Diaconu,0732 153 045,Makeup,Cristina,300.00
+2026-03-25,Simona Matei,0753 515 011,Blow dry,Cristina,80.00
+2026-03-25,Cristina Șerban,0764420015,Haircut,Bianca,120.00
+2026-03-25,Corina Marin,0771674553,Hair color,Bianca,350.00
+2026-03-25,Cristina Gheorghe,0753-792-509,Keratin,Bianca,800.00
+2026-03-25,Alina Stan,0754966785,Makeup,Bianca,300.00
+2026-03-25,Corina Munteanu,0749-997-594,Haircut,Diana,120.00
+2026-03-26,Alina Stoica,0788864544,Haircut,Cristina,120.00
+2026-03-26,Diana Neagu,0723507746,Blow dry,Diana,80.00
+2026-03-26,Irina Marin,+40 795 549 660,Highlights,Andreea,550.00
+2026-03-27,Maria Ionescu,+40 733 809 570,Pedicure,Andreea,120.00
+2026-03-27,Simona Neagu,0722217301,Manicure,Cristina,90.00
+2026-03-27,Simona Moldovan,0797636265,Hair color,Bianca,350.00
+2026-03-27,Teodora Neagu,0764448588,Blow dry,Diana,80.00
+2026-03-27,Simona Popescu,+40 742 378 258,Haircut,Diana,120.00
+2026-03-28,Ioana Popescu,0734-126-225,Hair color,Bianca,400.00
+2026-03-28,Oana Popescu,0769 378 085,Haircut,Cristina,120.00
+2026-03-28,Oana Marin,0790233470,Hair color,Diana,350.00
+2026-03-28,Ștefania Moldovan,0790567574,Eyebrows,Diana,40.00
+2026-03-28,Corina Ionescu,+40 764 658 623,Makeup,Andreea,300.00
+2026-03-28,Irina Dumitru,0779822131,Blow dry,Cristina,80.00
+2026-03-28,Bianca Munteanu,0730-993-140,Manicure,Diana,90.00
+2026-03-28,Teodora Țurcanu,0735 530 764,Manicure,Diana,90.00
+2026-03-30,Andreea Munteanu,0730678856,Manicure,Cristina,90.00
+2026-03-30,Bianca Popa,0750-523-389,Eyebrows,Cristina,40.00
+2026-03-30,Larisa Munteanu,0774 819 425,Hair color,Diana,350.00
+2026-03-31,Alina Diaconu,+40 773 331 148,Highlights,Cristina,550.00
+2026-03-31,Oana Dumitru,0765 988 662,Keratin,Cristina,800.00
+2026-03-31,Andreea Marin,0784-738-551,Haircut,Cristina,120.00
+2026-04-01,Mihaela Marin,0748 945 742,Haircut,Andreea,120.00
+2026-04-01,Teodora Stan,0756 559 398,Hair color,Andreea,350.00
+2026-04-01,Gabriela Țurcanu,+40 773 284 171,Haircut,Cristina,120.00
+2026-04-02,Ioana Dumitru,0788 887 352,Hair color,Cristina,350.00
+2026-04-02,Mihaela Stoica,+40 772 609 231,Pedicure,Cristina,120.00
+2026-04-02,Corina Diaconu,0738550664,Highlights,Cristina,550.00
+2026-04-02,Camelia Matei,0754 266 931,Haircut,Andreea,120.00
+2026-04-02,Mihaela Munteanu,0739 840 734,Highlights,Diana,550.00
+2026-04-02,Teodora Ionescu,+40 764 335 113,Haircut,Andreea,120.00
+2026-04-02,Ioana Popa,0757 332 360,Blow dry,Cristina,80.00
+2026-04-03,Elena Moldovan,0794-692-683,Pedicure,Cristina,120.00
+2026-04-03,Diana Stan,+40 779 290 556,Pedicure,Cristina,120.00
+2026-04-04,Diana Diaconu,+40 721 217 308,Eyebrows,Bianca,40.00
+2026-04-04,Maria Marin,0765493049,Haircut,Diana,120.00
+2026-04-06,Gabriela Gheorghe,0727 707 314,Eyebrows,Cristina,60.00
+2026-04-06,Gabriela Matei,0754-452-161,Pedicure,Andreea,120.00
+2026-04-06,Ana Vasile,0797884256,Haircut,Bianca,140.00
+2026-04-06,Gabriela Șerban,0729 820 775,Eyebrows,Bianca,40.00
+2026-04-06,Larisa Diaconu,0724747453,Haircut,Cristina,120.00
+2026-04-07,Irina Stan,0753 246 413,Pedicure,Cristina,120.00
+2026-04-07,Diana Gheorghe,0732-201-639,Hair color,Cristina,350.00
+2026-04-07,Cristina Popa,0795824161,Haircut,Cristina,120.00
+2026-04-07,Oana Nistor,+40 765 702 733,Makeup,Cristina,300.00
+2026-04-07,Roxana Stan,0780170394,Haircut,Andreea,120.00
+2026-04-08,Raluca Șerban,0766 270 555,Manicure,Cristina,90.00
+2026-04-08,Raluca Stoica,0794-378-361,Highlights,Diana,550.00
+2026-04-08,Corina Popescu,0759703766,Pedicure,Diana,120.00
+2026-04-08,Larisa Șerban,0763-293-319,Haircut,Diana,120.00
+2026-04-09,Maria Ionescu,0724 131 244,Haircut,Andreea,120.00
+2026-04-09,Teodora Matei,0761 983 794,Haircut,Cristina,120.00
+2026-04-09,Ana Stoica,0772 125 990,Blow dry,Cristina,80.00
+2026-04-09,Gabriela Neagu,+40 734 201 913,Pedicure,Bianca,120.00
+2026-04-09,Cristina Moldovan,0777-339-592,Hair color,Diana,350.00
+2026-04-10,Simona Țurcanu,+40 768 391 773,Haircut,Andreea,120.00
+2026-04-10,Ana Neagu,+40 747 472 060,Hair color,Cristina,350.00
+2026-04-10,Larisa Matei,0778-678-043,Hair color,Bianca,350.00
+2026-04-10,Elena Stan,0748 809 176,Blow dry,Diana,80.00
+2026-04-10,Alexandra Stan,+40 789 362 829,Haircut,Andreea,120.00
+2026-04-10,Cristina Stan,0752-403-507,Hair color,Diana,350.00
+2026-04-11,Maria Gheorghe,0773508396,Eyebrows,Andreea,40.00
+2026-04-11,Camelia Constantin,+40 793 142 185,Hair color,Diana,350.00
+2026-04-11,Alexandra Nistor,0746 171 942,Haircut,Bianca,170.00
+2026-04-13,Camelia Neagu,0790-273-148,Highlights,Cristina,550.00
+2026-04-13,Maria Dumitru,+40 727 522 179,Haircut,Cristina,120.00
+2026-04-13,Diana Constantin,0725 103 717,Blow dry,Cristina,80.00
+2026-04-13,Simona Moldovan,0797 636 265,Hair color,Bianca,350.00
+2026-04-13,Cristina Popescu,0799-259-784,Haircut,Andreea,120.00
+2026-04-13,Mihaela Moldovan,0782682144,Keratin,Diana,800.00
+2026-04-13,Mihaela Neagu,0723 749 641,Blow dry,Bianca,80.00
+2026-04-13,Larisa Vasile,0772-393-328,Blow dry,Bianca,80.00
+2026-04-14,Ana Popa,+40 756 640 490,Keratin,Cristina,800.00
+2026-04-14,Ștefania Lungu,0799893188,Keratin,Andreea,800.00
+2026-04-14,Bianca Matei,0783-711-484,Haircut,Cristina,120.00
+2026-04-15,Oana Lungu,0748-245-051,Hair color,Cristina,350.00
+2026-04-15,Alina Ionescu,0749170674,Hair color,Cristina,350.00
+2026-04-16,Diana Țurcanu,0755 263 032,Hair color,Cristina,350.00
+2026-04-16,Mihaela Dumitru,0778 239 816,Blow dry,Cristina,130.00
+2026-04-16,Raluca Gheorghe,+40 735 989 227,Blow dry,Bianca,80.00
+2026-04-17,Bianca Popa,+40 750 523 389,Eyebrows,Cristina,40.00
+2026-04-17,Raluca Stan,+40 764 172 132,Hair color,Cristina,350.00
+2026-04-17,Corina Marin,0771674553,Hair color,Bianca,350.00
+2026-04-17,Larisa Munteanu,0774819425,Hair color,Diana,350.00
+2026-04-17,Ioana Țurcanu,0741 940 247,Hair color,Cristina,350.00
+2026-04-18,Corina Constantin,0761-993-085,Manicure,Andreea,90.00
+2026-04-18,Cristina Gheorghe,0753 792 509,Haircut,Bianca,170.00
+2026-04-18,Andreea Stan,0783-851-413,Haircut,Cristina,120.00
+2026-04-20,Elena Ionescu,0749910620,Makeup,Cristina,300.00
+2026-04-20,Cristina Marin,0771804314,Hair color,Cristina,380.00
+2026-04-20,Elena Popescu,0778 751 332,Makeup,Cristina,300.00
+2026-04-20,Teodora Rusu,0764546173,Highlights,Cristina,550.00
+2026-04-20,Alina Stan,0754 966 785,Pedicure,Bianca,120.00
+2026-04-20,Camelia Stan,0783138817,Hair color,Cristina,370.00
+2026-04-21,Simona Matei,+40 753 515 011,Blow dry,Cristina,80.00
+2026-04-21,Diana Diaconu,0721 217 308,Eyebrows,Bianca,40.00
+2026-04-21,Ștefania Moldovan,0790-567-574,Haircut,Diana,120.00
+2026-04-21,Raluca Diaconu,0735 576 877,Blow dry,Cristina,80.00
+2026-04-21,Simona Popescu,+40 742 378 258,Haircut,Diana,120.00
+2026-04-22,Alina Stoica,+40 788 864 544,Haircut,Cristina,120.00
+2026-04-22,Cristina Matei,0733-470-858,Pedicure,Diana,120.00
+2026-04-22,Diana Stan,0779290556,Haircut,Cristina,120.00
+2026-04-22,Gabriela Constantin,0749226516,Haircut,Andreea,120.00
+2026-04-22,Teodora Marin,0736 768 854,Haircut,Andreea,120.00
+2026-04-23,Andreea Marin,+40 784 738 551,Haircut,Cristina,120.00
+2026-04-23,Cristina Șerban,+40 764 420 015,Haircut,Bianca,120.00
+2026-04-23,Mihaela Șerban,0792-739-979,Makeup,Andreea,300.00
+2026-04-23,Raluca Țurcanu,+40 734 910 075,Manicure,Andreea,90.00
+2026-04-24,Camelia Moldovan,+40 796 166 613,Hair color,Cristina,350.00
+2026-04-25,Elena Țurcanu,0799429164,Manicure,Cristina,90.00
+2026-04-25,Oana Marin,0790233470,Hair color,Diana,350.00
+2026-04-25,Mihaela Constantin,0786 608 136,Haircut,Diana,120.00
+2026-04-25,Andreea Moldovan,0766 766 459,Blow dry,Diana,80.00
+2026-04-27,Raluca Dumitru,0733878480,Makeup,Cristina,300.00
+2026-04-27,Raluca Lungu,0785-519-093,Makeup,Cristina,300.00
+2026-04-27,Corina Vasile,+40 761 587 575,Hair color,Bianca,350.00
+2026-04-27,Mihaela Marin,0748 945 742,Makeup,Andreea,300.00
+2026-04-27,Alexandra Vasile,0788 128 276,Highlights,Andreea,550.00
+2026-04-27,Elena Munteanu,0782177680,Keratin,Andreea,800.00
+2026-04-27,Ioana Moldovan,0777-822-858,Hair color,Andreea,350.00
+2026-04-27,Ștefania Matei,0798-145-471,Blow dry,Cristina,80.00
+2026-04-27,Alina Marin,0755720148,Hair color,Andreea,350.00
+2026-04-28,Andreea Munteanu,0730-678-856,Blow dry,Cristina,80.00
+2026-04-28,Raluca Stoica,+40 794 378 361,Highlights,Diana,550.00
+2026-04-28,Elena Matei,0735-685-181,Keratin,Bianca,800.00
+2026-04-28,Larisa Diaconu,0724 747 453,Haircut,Cristina,170.00
+2026-04-28,Gabriela Țurcanu,+40 773 284 171,Haircut,Cristina,120.00
+2026-04-28,Roxana Stan,0780 170 394,Manicure,Andreea,90.00
+2026-04-29,Bianca Neagu,0756-913-423,Keratin,Cristina,800.00
+2026-04-30,Ioana Popescu,0734 126 225,Hair color,Bianca,350.00
+2026-04-30,Raluca Popa,0747694731,Hair color,Cristina,350.00
+2026-04-30,Andreea Dumitru,0776 274 446,Haircut,Andreea,120.00

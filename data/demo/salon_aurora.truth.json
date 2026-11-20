@@ -1,0 +1,44 @@
+{
+  "today": "2026-11-01",
+  "month": "2026-10",
+  "prev_month": "2026-09",
+  "revenue": 1711000,
+  "revenue_prev": 2306000,
+  "change_pct": -25.8,
+  "top_offering": "Keratină",
+  "top_offering_revenue": 402000,
+  "top_staff": "Bianca",
+  "top_staff_revenue": 696000,
+  "cost_of_goods": 357300,
+  "costs": 1945700,
+  "net_profit": -592000,
+  "best_margin_offering": "Pensat",
+  "transaction_count": 1335,
+  "vertical": "salon",
+  "locale": "ro",
+  "currency": "RON",
+  "country": "RO",
+  "name": "Salon Aurora",
+  "customers": 177,
+  "lapsed_regulars": 52,
+  "lapsed_top3": [
+    "Bianca Neagu",
+    "Alina Diaconu",
+    "Raluca Stan"
+  ],
+  "lapsed_last_staff_left": 46,
+  "left_staff": "Cristina",
+  "duplicate_person": {
+    "name": "Ioana Popescu",
+    "visits": 12,
+    "spend": 388000,
+    "last_visit": "2026-10-10"
+  },
+  "campaign": {
+    "start": "2026-02-20",
+    "end": "2026-03-20",
+    "new": 23,
+    "returned": 3
+  },
+  "new_field": "sursa"
+}
