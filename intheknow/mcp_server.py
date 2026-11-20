@@ -12,7 +12,7 @@ import base64
 import datetime as dt
 import json
 from pathlib import Path
-from typing import Annotated, Any, Literal, Optional
+from typing import Annotated, Any, Callable, Literal, Optional
 
 from mcp.server.apps import Apps, ResourceCsp
 from mcp.server.mcpserver import Context, MCPServer
@@ -112,7 +112,11 @@ PROMPTS = {
 }
 
 
-def build_server(engine: ContextEngine) -> MCPServer:
+def build_server(engine: ContextEngine | Callable[[], ContextEngine], **server_kw: Any) -> MCPServer:
+    """`engine` is one business (local mode) or a function returning the calling owner's engine (hosted mode).
+    `server_kw` is passed to MCPServer (auth settings, token verifier, auth provider)."""
+    current: Callable[[], ContextEngine] = (lambda: engine) if isinstance(engine, ContextEngine) else engine
+    hosted = not isinstance(engine, ContextEngine)
     apps = Apps()
     apps.add_html_resource(UI_URI, ui_html(), name="in-the-know", title="In The Know",
                            csp=ResourceCsp(resource_domains=["https://fonts.googleapis.com", "https://fonts.gstatic.com"]),
@@ -134,7 +138,7 @@ def build_server(engine: ContextEngine) -> MCPServer:
 
     def run(name: str, args: dict) -> CallToolResult:
         try:
-            text, view = engine.call_view(name, args)
+            text, view = current().call_view(name, args)
         except Exception as exc:  # noqa: BLE001 - errors go back to the model as text it can act on
             return CallToolResult(content=[TextContent(type="text", text=f"Error: {exc}")], is_error=True)
         if view is None:
@@ -146,7 +150,7 @@ def build_server(engine: ContextEngine) -> MCPServer:
     async def get_started(ctx: Context,
                           step_done: Annotated[Optional[Literal["instructions", "review"]], Field(description="Mark a manual step as done")] = None) -> CallToolResult:
         """Onboarding: where the owner is in setup (connect, profile, Project instructions, import, review, first tries) and the next step. Call first when the business is not set up. Shows a native profile form when the client supports it."""
-        if not engine.is_setup and step_done is None:
+        if not current().is_setup and step_done is None:
             try:
                 res = await ctx.elicit("Welcome to In The Know. Tell me about your business.", ProfileForm)
                 if res.action == "accept" and res.data:
@@ -385,7 +389,7 @@ def build_server(engine: ContextEngine) -> MCPServer:
         apps.tool(resource_uri=UI_URI, meta={"ui/resourceUri": UI_URI}, **kw)(fn)
 
     mcp = MCPServer("in-the-know", title="In The Know", description="The memory and analyst of your business, inside Claude",
-                    instructions=SERVER_INSTRUCTIONS, version=VERSION, icons=[ICON], extensions=[apps])
+                    instructions=SERVER_INSTRUCTIONS, version=VERSION, icons=[ICON], extensions=[apps], **server_kw)
     for fn, kw in plain_tools:
         mcp.tool(**kw)(fn)
 
@@ -393,16 +397,25 @@ def build_server(engine: ContextEngine) -> MCPServer:
     @mcp.resource("intheknow://brief", name="business-brief", title="Business brief", mime_type="text/markdown",
                   description="Current business brief (attach to a chat for context)")
     def brief_resource() -> str:
-        return engine.call("get_business_brief", {})
+        return current().call("get_business_brief", {})
 
     @mcp.resource("intheknow://this-week", name="this-week", title="This week", mime_type="text/markdown",
                   description="Reminders and customers to contact this week")
     def week_resource() -> str:
-        return engine.call("get_action_list", {})
+        return current().call("get_action_list", {})
 
     # --------------------------------------------------------------- prompts
-    lang = engine.lang if engine.lang in i18n.LANGS else "en"
-    reply = {"en": "Answer in English.", "fr": "Réponds en français.", "ro": "Răspunde în română.", "de": "Antworte auf Deutsch."}[lang]
+    # Prompt titles are fixed when the server starts: the business language locally, English when hosted
+    # (one server serves every owner). The reply language inside each prompt follows the calling owner.
+    lang = "en" if hosted else (engine.lang if engine.lang in i18n.LANGS else "en")
+
+    class _Reply:
+        def __str__(self) -> str:
+            lg = current().lang
+            return {"en": "Answer in English.", "fr": "Réponds en français.", "ro": "Răspunde în română.",
+                    "de": "Antworte auf Deutsch."}.get(lg, "Answer in English.")
+
+    reply = _Reply()
 
     @mcp.prompt(name="start", title=PROMPTS["start"][lang])
     def start() -> str:

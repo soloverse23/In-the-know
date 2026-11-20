@@ -6,6 +6,9 @@ requires-python = ">=3.11"
 dependencies = [
     "openpyxl>=3.1",
     "mcp>=2.3",
+    "cryptography>=43",
+    "httpx2>=2.16",
+    "uvicorn>=0.30",
 ]
 
 [dependency-groups]

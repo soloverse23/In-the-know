@@ -99,6 +99,16 @@ def _period(name: str, today: dt.date) -> tuple[dt.date, dt.date]:
     return M.month_bounds(M.last_full_month(today))
 
 
+COUNTRY_TZ = {  # single-zone countries; others can set the `timezone` setting
+    "RO": "Europe/Bucharest", "MD": "Europe/Chisinau", "FR": "Europe/Paris", "BE": "Europe/Brussels", "LU": "Europe/Luxembourg",
+    "CH": "Europe/Zurich", "DE": "Europe/Berlin", "AT": "Europe/Vienna", "NL": "Europe/Amsterdam", "IT": "Europe/Rome",
+    "PL": "Europe/Warsaw", "CZ": "Europe/Prague", "SK": "Europe/Bratislava", "HU": "Europe/Budapest", "BG": "Europe/Sofia",
+    "GR": "Europe/Athens", "IE": "Europe/Dublin", "GB": "Europe/London", "UK": "Europe/London", "DK": "Europe/Copenhagen",
+    "SE": "Europe/Stockholm", "NO": "Europe/Oslo", "FI": "Europe/Helsinki", "HR": "Europe/Zagreb", "SI": "Europe/Ljubljana",
+    "RS": "Europe/Belgrade", "MC": "Europe/Monaco", "IR": "Asia/Tehran", "TR": "Europe/Istanbul", "AE": "Asia/Dubai",
+}
+
+
 class ContextEngine(WriteOps, EditOps, OnboardingOps, PeopleOps):
     def __init__(self, source: str | Path | Store, today: Optional[dt.date] = None):
         """`source` is where the memory file lives: a local path or any Store (Drive, OneDrive...).
@@ -146,7 +156,17 @@ class ContextEngine(WriteOps, EditOps, OnboardingOps, PeopleOps):
     # ---------------------------------------------------------------- settings
     @property
     def today(self) -> dt.date:
-        return self._today or dt.date.today()
+        """The business's own date: a hosted server runs in UTC, but a café in Bucharest lives on Bucharest time."""
+        if self._today:
+            return self._today
+        tz = self.setting("timezone") or COUNTRY_TZ.get((self.setting("country") or "").upper())
+        if tz:
+            try:
+                from zoneinfo import ZoneInfo
+                return dt.datetime.now(ZoneInfo(tz)).date()
+            except Exception:  # noqa: BLE001 - unknown zone or no tz database: fall back to the machine's date
+                pass
+        return dt.date.today()
 
     def setting(self, key: str, default=None):
         return get_setting(self.conn, key, default)
@@ -935,8 +955,8 @@ class ContextEngine(WriteOps, EditOps, OnboardingOps, PeopleOps):
             self._sync()
             for attempt in range(2):
                 result = self._run_once(fn, name, args)
-                if not self._dirty():
-                    break
+                if not self._dirty() or (self._version is None and not self.is_setup):
+                    break                       # no file is created in the owner's storage before setup
                 try:
                     self._persist()
                     break

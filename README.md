@@ -47,6 +47,9 @@ intheknow/
   editing.py     cleaning: browse rows, update/delete/merge/dedupe, field & table changes (snapshots for undo)
   people.py      people layer: facts (sourced, superseded not overwritten), relations, sensitivity, consent, forget/export
   onboarding.py  first-run checklist, Project instructions, old-chat import
+  seal.py        sealed (encrypted, expiring) tokens: the hosted server keeps no records
+  auth.py        hosted sign-in: stateless OAuth server + 'Continue with Google / Microsoft' page
+  hosted.py      hosted connector over HTTPS (one server for every owner, engines in RAM only)
   store.py       where the memory file lives (local file today; owner's Drive/OneDrive next); the engine works in memory
   mcp_server.py  MCP server: 31 tools, 7 prompts, resources, icon, MCP Apps UI
   ui/view.html   the in-chat app (renderer, brand, animations, actions)
@@ -60,8 +63,18 @@ docs/            brand.md + screenshots of every card
 ```bash
 uv sync
 uv run python data/synth.py            # regenerate demo data + ground truth
-uv run pytest -q                       # 72 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage
+uv run pytest -q                       # 79 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in
 uv run python eval/run_eval.py --dry-run
+```
+
+## Hosted connector (in progress)
+
+One server for phone, web and desktop; each owner's memory lives in their own Google Drive or OneDrive (see [docs/plan-user-owned-storage.md](docs/plan-user-owned-storage.md)). Until owner storage lands (R3), it runs only with a development store:
+
+```bash
+export $(uv run python -m intheknow.seal)            # ITK_SEAL_KEYS
+export ITK_GOOGLE_CLIENT_ID=... ITK_GOOGLE_CLIENT_SECRET=...
+uv run python -m intheknow.hosted --base-url https://<public-url> --dev-store ./.dev-memories
 ```
 
 ## Install in Claude Desktop

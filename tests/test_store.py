@@ -108,3 +108,11 @@ def test_local_store_file(tmp_path):
     path.unlink()
     with pytest.raises(RuntimeError, match="missing"):                  # never silently start empty
         goal(e, "after delete")
+
+
+def test_today_follows_business_timezone():
+    import datetime as dt
+    from zoneinfo import ZoneInfo
+    e = ContextEngine(MemoryStore())
+    e.call_view("setup_business", SETUP["salon_aurora"])          # country RO
+    assert e.today == dt.datetime.now(ZoneInfo("Europe/Bucharest")).date()

@@ -1,6 +1,6 @@
 # Plan: Hosted connector, data in the owner's own cloud
 
-Status: R1 implemented · R2–R6 proposed · 2026-11-20
+Status: R1–R2 implemented · R3–R6 proposed · 2026-11-20
 
 ## 1. Goal
 
@@ -147,6 +147,17 @@ Claude and ChatGPT already orchestrate between connectors. Our job is to make In
 | **R4** | Remote file import (file picker button, chat export from the store), CSP update | Import of the 3 demo businesses works end to end from Drive. |
 | **R5** | Connector integration: `source`/`external_id` dedupe, instructions, `sync_from` prompt | Eval scenarios with Calendar + Gmail + Square pass without duplicates. |
 | **R6** | EU deploy, logging guard, privacy page + data processing agreement, Google/Microsoft app verification | Real use on Claude iOS, Android, desktop and ChatGPT. Setup takes under 30 seconds. |
+
+**R2 notes (implemented):**
+- **Code:** [`seal.py`](../intheknow/seal.py) (AES-256-GCM sealed tokens with key rotation), [`auth.py`](../intheknow/auth.py) (stateless OAuth server and the sign-in page in 4 languages) and [`hosted.py`](../intheknow/hosted.py) (HTTP app and the per-owner engine cache in RAM).
+- **Dev storage:** until R3 the server only runs with `--dev-store DIR`, which keeps one file per owner on the server's disk.
+- **Owner's date:** "today" now follows the business's country, or a `timezone` setting, rather than the server clock.
+- **No empty files:** no memory file is created before the business is set up.
+- **Still open, needs the owner's accounts:**
+  - a Google Cloud OAuth client (web app, scope `drive.file`) and a Microsoft Entra app registration (`Files.ReadWrite.AppFolder`);
+  - the redirect URIs `<base>/callback/google` and `<base>/callback/microsoft`;
+  - a public HTTPS URL (a tunnel is fine) to connect from Claude and MCP Inspector.
+- **For R6:** with more than one instance, pass a shared `request_state_security` key to the MCP server. The SDK default is a per-process key.
 
 The order R1 → R2 → R3 is strict. R4 and R5 can run in parallel after R3.
 
