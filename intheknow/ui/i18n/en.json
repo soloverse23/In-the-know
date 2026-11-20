@@ -390,5 +390,10 @@
   "view.upload": "Add your files",
   "sub.upload": "Private link · works for {n} minutes",
   "ui.upload": "Open upload page",
-  "ui.upload_hint": "Customer lists, bookings or sales exports, price lists, expenses, notes, or your Claude / ChatGPT export. From your phone, computer or Google Drive."
+  "ui.upload_hint": "Customer lists, bookings or sales exports, price lists, expenses, notes, or your Claude / ChatGPT export. From your phone, computer or Google Drive.",
+  "view.capture_preview": "Ready to save",
+  "sub.capture_preview": "{n} of {total} new · nothing saved yet",
+  "cap.already_synced": "Already synced from {source}",
+  "cap.sync_updated": "Updated: it changed in {source}",
+  "ui.status.ready": "Will be saved"
 }

@@ -31,7 +31,7 @@ def test_server_surface(tmp_path):
         assert tools[name].meta["ui"]["resourceUri"] == "ui://intheknow/view.html"
     assert tools["get_business_brief"].annotations.read_only_hint and not tools["capture"].annotations.read_only_hint
     assert tools["undo_change"].annotations.destructive_hint
-    assert {p.name for p in asyncio.run(s.list_prompts())} == {"start", "onboarding", "weekly_review", "win_back", "import_history", "design_dashboard", "monthly_report"}
+    assert {p.name for p in asyncio.run(s.list_prompts())} == {"start", "onboarding", "weekly_review", "win_back", "import_history", "design_dashboard", "monthly_report", "sync_from"}
     assert {str(r.uri) for r in asyncio.run(s.list_resources())} >= {"ui://intheknow/view.html", "intheknow://brief", "intheknow://this-week"}
     html = list(asyncio.run(s.read_resource("ui://intheknow/view.html")))[0].content
     assert '"ro"' in html and "Încasări" in html                      # all four dictionaries are embedded

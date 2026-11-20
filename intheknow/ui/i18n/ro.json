@@ -390,5 +390,10 @@
   "view.upload": "Adaugă fișierele tale",
   "sub.upload": "Link privat · valabil {n} minute",
   "ui.upload": "Deschide pagina de încărcare",
-  "ui.upload_hint": "Liste de clienți, exporturi de programări sau vânzări, liste de prețuri, cheltuieli, notițe sau exportul tău din Claude / ChatGPT. De pe telefon, calculator sau din Google Drive."
+  "ui.upload_hint": "Liste de clienți, exporturi de programări sau vânzări, liste de prețuri, cheltuieli, notițe sau exportul tău din Claude / ChatGPT. De pe telefon, calculator sau din Google Drive.",
+  "view.capture_preview": "Gata de salvat",
+  "sub.capture_preview": "{n} noi din {total} · nimic salvat încă",
+  "cap.already_synced": "Deja sincronizat din {source}",
+  "cap.sync_updated": "Actualizat: s-a schimbat în {source}",
+  "ui.status.ready": "Se va salva"
 }

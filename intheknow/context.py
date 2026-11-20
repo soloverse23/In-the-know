@@ -68,6 +68,11 @@ PEOPLE: before meeting or writing to someone call get_person_brief (quietly if t
 documents unless show_sensitive=true, which you use only when the owner asks for those by name). "Forget / delete everything about
 X" -> edit_records action=forget_person (preview, then confirm=true); "what do you hold about X" -> action=export_person.
 Design wishes -> update_design. New kinds of things to track -> change_schema.
+OTHER APPS (calendar, Gmail/Outlook, Square/Shopify/Stripe, booking tools) through their own connectors:
+- What you read there and save here gets source=<app> and external_id=<its id>, so a second sync never stores it twice and a
+  moved appointment replaces the old one. Bring in batches with capture dry_run=true first; save after the owner agrees.
+- get_context says when each app was last synced: read only what is newer.
+- Before you write an email or message to a customer, or prepare for a meeting, call get_person_brief first (quietly).
 """
 
 
@@ -364,6 +369,11 @@ class ContextEngine(WriteOps, EditOps, OnboardingOps, PeopleOps):
                 if k:
                     changes.append(f"{k} new {one if k == 1 else many}")
             lines.append("Since the last check: " + (", ".join(changes) if changes else "nothing new."))
+        syncs = [(r["key"][10:], r["value"].split("|")[0]) for r in c.execute(
+            "SELECT key, value FROM settings WHERE key LIKE 'sync_last:%' ORDER BY key")]
+        if syncs:
+            lines.append("Last synced from other apps: " + ", ".join(f"{k} {d}" for k, d in syncs)
+                         + " (read only newer items; use source + external_id).")
         if self.has_data():
             lm = M.last_full_month(today)
             pm = M.shift_month(lm, -1)

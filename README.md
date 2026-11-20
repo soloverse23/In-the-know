@@ -20,6 +20,7 @@ The memory and analyst of a small business, inside Claude. It is one MCP server 
   - Promises, meetings and money due become dated tasks with a Done button.
   - Rent and salaries become recurring monthly costs that are included in profit.
   - New-customer questions are grouped, and skipped when there is no customer list to compare against.
+- **Works with your other apps:** facts Claude reads from Calendar, Gmail/Outlook, Square, Shopify or Stripe are saved with their source and id, so syncing twice never stores anything twice and a moved appointment replaces the old one. Bigger batches are shown as a preview first (`capture dry_run`), and the *Bring in my latest from my apps* prompt does a guided sync.
 - **Exact numbers:** every metric is computed in `metrics.py`, not by the model. Tool text goes to the model in English; the cards render in the owner's language.
 - **Answers without dumping tables:** `find_records` filters, sorts and counts any table on the server and returns only the matching rows and the fields asked for, with no card.
   - `query_data` returns at most 25 rows and asks Claude to aggregate instead.
@@ -65,7 +66,7 @@ docs/            brand.md + screenshots of every card
 ```bash
 uv sync
 uv run python data/synth.py            # regenerate demo data + ground truth
-uv run pytest -q                       # 104 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in, Drive/OneDrive, uploads
+uv run pytest -q                       # 112 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in, Drive/OneDrive, uploads, sync from other apps
 uv run python eval/run_eval.py --dry-run
 ```
 

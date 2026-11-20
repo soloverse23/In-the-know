@@ -8,7 +8,9 @@ Every write is validated in code, deduplicated, and reported as a view the UI ca
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import json
+import re
 from typing import Any, Optional
 
 from . import design, schema
@@ -21,6 +23,29 @@ from .views import schema_field_view, D, M as MV, N, T, block, view
 
 CAPTURE_TYPES = ("transaction", "customer_note", "customer_info", "offering", "expense", "goal", "policy", "fact",
                  "decision", "staff", "record", "task", "relation")
+LOCAL_SOURCES = {"chat", "history", "photo", "file", "list"}
+SYNC_LABELS = {"calendar": "Calendar", "google_calendar": "Google Calendar", "outlook_calendar": "Outlook Calendar",
+               "gmail": "Gmail", "outlook": "Outlook", "email": "Email", "square": "Square", "shopify": "Shopify",
+               "stripe": "Stripe", "sumup": "SumUp", "paypal": "PayPal", "quickbooks": "QuickBooks", "whatsapp": "WhatsApp",
+               "calendly": "Calendly", "fresha": "Fresha", "booksy": "Booksy", "doctolib": "Doctolib", "treatwell": "Treatwell"}
+
+
+def sync_source(value) -> Optional[str]:
+    """The connector an item came from ('square', 'gmail'...), or None for the owner's own words, photos, old chats."""
+    v = re.sub(r"[^a-z0-9_]+", "_", str(value or "").strip().lower()).strip("_")[:30]
+    v = v.removeprefix("sync_")
+    return v if v and v not in LOCAL_SOURCES and not v.startswith(("photo", "list")) else None
+
+
+def sync_label(src: str) -> str:
+    return SYNC_LABELS.get(src, src.replace("_", " ").title())
+
+
+def _fingerprint(it: dict) -> str:
+    keep = {k: v for k, v in it.items() if k not in ("quote", "source", "external_id")}
+    return hashlib.sha1(json.dumps(keep, sort_keys=True, default=str, ensure_ascii=False).encode()).hexdigest()[:16]
+
+
 TYPE_ALIASES = {"visit": "transaction", "sale": "transaction", "appointment": "transaction", "order": "transaction",
                 "service": "offering", "product": "offering", "price": "offering", "cost": "expense", "note": "customer_note",
                 "customer": "customer_info", "rule": "policy", "team": "staff", "reminder": "task", "follow_up": "task",
@@ -124,8 +149,36 @@ class WriteOps:
         self._require_setup()
         if not rows:
             raise ValueError("rows is empty")
-        src = source if source.startswith(("photo", "chat", "history", "list")) else f"photo:{source}"
-        report = self.ingestor.import_records(entity, rows, src)
+        sync = sync_source(source)
+        if not sync:
+            src = source if source.startswith(("photo", "chat", "history", "list")) else f"photo:{source}"
+            return self._files_view([self.ingestor.import_records(entity, rows, src)], [])
+        # rows from another connector: each may carry external_id; rows already synced are skipped
+        kind = f"rows:{entity}"
+        fresh, ids, known = [], [], 0
+        for r in rows:
+            r = dict(r)
+            eid = str(r.pop("external_id", "") or "").strip()[:200]
+            if eid and self.conn.execute("SELECT 1 FROM external_refs WHERE source=? AND external_id=? AND kind=?",
+                                         (sync, eid, kind)).fetchone():
+                known += 1
+                continue
+            fresh.append(r)
+            if eid:
+                ids.append(eid)
+        if fresh:
+            report = self.ingestor.import_records(entity, fresh, f"sync:{sync}")
+        else:
+            from .ingest import IngestReport
+            report = IngestReport(f"sync:{sync}", entity)
+        report.rows_duplicate += known
+        report.rows_total += known
+        if known:
+            report.notes.append(f"{known} already synced from {sync_label(sync)}")
+        self.conn.executemany("INSERT OR IGNORE INTO external_refs(source, external_id, kind) VALUES (?,?,?)",
+                              [(sync, e, kind) for e in ids])
+        set_setting(self.conn, f"sync_last:{sync}", f"{self.today.isoformat()}|{len(rows)}")
+        self.conn.commit()
         return self._files_view([report], [])
 
     def _files_view(self, reports: list[IngestReport], errors: list[dict]) -> dict:
@@ -232,7 +285,7 @@ class WriteOps:
         return v
 
     # -------------------------------------------------------------- capture
-    def capture(self, items: list[dict]) -> dict:
+    def capture(self, items: list[dict], dry_run: bool = False) -> dict:
         self._require_setup()
         if not items:
             raise ValueError("no items")
@@ -244,16 +297,39 @@ class WriteOps:
             norm_items.append(it)
         norm_items.sort(key=lambda it: order.get(it.get("type"), 5))
         out = []
+        synced: dict[str, int] = {}
         for it in norm_items:
             kind = it.get("type")
+            src = sync_source(it.get("source"))
             try:
                 if kind not in CAPTURE_TYPES:
                     res = {"status": "error", **T("err.capture_type", type=str(kind))}
+                elif src and it.get("external_id"):
+                    res = self._cap_synced(it, kind, src)
                 else:
                     res = getattr(self, f"_cap_{kind}")(it)
             except Exception as exc:  # noqa: BLE001
                 res = {"status": "error", **T("err.generic", msg=str(exc))}
+            if src:
+                res["chips"] = list(res.get("chips") or []) + [{"v": sync_label(src), "icon": "sync"}]
+                if res["status"] in ("saved", "known"):
+                    synced[src] = synced.get(src, 0) + 1
             out.append({"kind": kind, **res})
+        if dry_run:                                    # preview: nothing is kept
+            self.conn.rollback()
+            self._mark_clean()
+            for o in out:
+                o.pop("undo", None)
+                if o["status"] == "saved":
+                    o["status"] = "ready"
+            n_ready = sum(o["status"] == "ready" for o in out)
+            return view("capture", T("view.capture_preview"), [block("feed", items=out)],
+                        subtitle=T("sub.capture_preview", n=N(n_ready), total=N(len(out))),
+                        hints=["PREVIEW ONLY: nothing was saved. Summarise it for the owner in one or two lines (counts per kind, "
+                               "anything unusual) and ask. If they agree, call capture again with the same items and dry_run=false. "
+                               "Items marked known are already in memory."])
+        for src, n in synced.items():
+            set_setting(self.conn, f"sync_last:{src}", f"{self.today.isoformat()}|{n}")
         self.conn.commit()
         if any(o["status"] == "saved" for o in out):
             self._mark_used("capture")
@@ -267,6 +343,35 @@ class WriteOps:
         hints.append("Confirm briefly in one line; the card shows what was saved (each item has an Undo button).")
         n_saved = sum(o["status"] == "saved" for o in out)
         return view("capture", T("view.capture"), [block("feed", items=out)], subtitle=T("sub.capture", n=N(n_saved), total=N(len(out))), hints=hints)
+
+    def _cap_synced(self, it: dict, kind: str, src: str) -> dict:
+        """An item from another connector: skipped if already synced unchanged, replaced if it changed (e.g. a moved event)."""
+        eid = str(it["external_id"]).strip()[:200]
+        fp = _fingerprint(it)
+        prev = self.conn.execute("SELECT fingerprint, ref FROM external_refs WHERE source=? AND external_id=? AND kind=?",
+                                 (src, eid, kind)).fetchone()
+        if prev is not None and prev["fingerprint"] == fp:
+            return {"status": "known", **T("cap.already_synced", source=sync_label(src))}
+        if not self.conn.in_transaction:
+            self.conn.execute("BEGIN")                  # a bare SAVEPOINT would start (and RELEASE commit) its own transaction
+        self.conn.execute("SAVEPOINT sync_item")
+        replaced = False
+        if prev is not None and prev["ref"]:
+            self.undo_change(prev["ref"])               # the app changed it: the old version goes, the new one is saved
+            replaced = True
+        res = getattr(self, f"_cap_{kind}")(it)
+        if res["status"] not in ("saved", "known"):
+            self.conn.execute("ROLLBACK TO sync_item")  # nothing half-replaced
+            self.conn.execute("RELEASE sync_item")
+            return res
+        self.conn.execute("INSERT INTO external_refs(source, external_id, kind, fingerprint, ref) VALUES (?,?,?,?,?) "
+                          "ON CONFLICT(source, external_id, kind) DO UPDATE SET fingerprint=excluded.fingerprint, "
+                          "ref=excluded.ref, synced_at=datetime('now')",
+                          (src, eid, kind, fp, res.get("undo") if res["status"] == "saved" else (prev["ref"] if prev else None)))
+        self.conn.execute("RELEASE sync_item")
+        if replaced and res["status"] == "saved":
+            res["note"] = T("cap.sync_updated", source=sync_label(src))
+        return res
 
     def _date(self, value, default_today: bool = True) -> Optional[str]:
         if not value:
@@ -329,6 +434,9 @@ class WriteOps:
         return norm_text(it.get("quote"))[:500] or None
 
     def _source(self, it: dict) -> str:
+        src = sync_source(it.get("source"))
+        if src:
+            return f"sync:{src}"
         return it.get("source") if it.get("source") in ("history", "photo") else "chat"
 
     def _cap_transaction(self, it: dict) -> dict:
@@ -778,7 +886,7 @@ class WriteOps:
             spec = schema.entity(self.conn, ent)
             if spec is None:
                 raise ValueError("unknown record")
-            n = self.conn.execute(f"DELETE FROM {schema.table(ent)} WHERE id=? AND (_source IN ('chat','history','photo') OR _source LIKE 'photo%' OR _source LIKE 'list%')",
+            n = self.conn.execute(f"DELETE FROM {schema.table(ent)} WHERE id=? AND (_source IN ('chat','history','photo') OR _source LIKE 'photo%' OR _source LIKE 'list%' OR _source LIKE 'sync:%')",
                                   (int(rid),)).rowcount
             msg = T("undo.record" if n else "undo.nothing")
         elif cid.startswith("kn:"):

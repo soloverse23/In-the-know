@@ -138,6 +138,16 @@ CREATE TABLE IF NOT EXISTS usage_log (
     at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS external_refs (     -- items synced from other connectors: never stored twice
+    source TEXT NOT NULL,                    -- calendar | gmail | outlook | square | shopify | stripe | ...
+    external_id TEXT NOT NULL,               -- the item's id in that app (event, message, payment)
+    kind TEXT NOT NULL,                      -- capture type, or rows:<entity> for import_records
+    fingerprint TEXT,                        -- what the item said last time; a change replaces the saved record
+    ref TEXT,                                -- undo id of what was saved
+    synced_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (source, external_id, kind)
+);
+
 -- People layer (people.py) --------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS vocab (            -- fact kinds and relation types (pack + added from chat)
     type TEXT NOT NULL,                      -- fact_kind | relation_type

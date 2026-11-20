@@ -84,7 +84,11 @@ class CaptureItem(BaseModel):
     expected_outcome: Optional[str] = Field(None, description="Decision: what should happen")
     review_on: Optional[str] = Field(None, description="Decision: when to check the result (default +30 days)")
     reason: Optional[str] = Field(None, description="Decision: why")
-    source: Optional[Literal["chat", "history", "photo"]] = Field(None, description="'history' when extracted from old chats")
+    source: Optional[str] = Field(None, description="Where it came from: omit for the owner's own words; 'history' for old chats; 'photo'; "
+                                  "or the app it came from when you read it with another connector: calendar, gmail, outlook, square, shopify, stripe...")
+    external_id: Optional[str] = Field(None, description="With an app source: the item's id there (event id, message id, payment id). "
+                                       "Saving the same id again is skipped; if the item changed (e.g. moved event) the saved one is replaced. "
+                                       "If one app item gives several facts of the same type, add '#2', '#3' to the id")
     recurring: Optional[Literal["monthly"]] = Field(None, description="expense: 'monthly' for rent, salaries, subscriptions; replaces the previous amount of that category from `month`")
     fact_kind: Optional[str] = Field(None, description="fact about a person: preference, dislike, must, must_not, goal, constraint, health, allergy, motivation, communication_style, family, finances, life_event, document, consent, note, or a kind from get_context")
     key: Optional[str] = Field(None, description="fact: the comparable aspect, e.g. 'budget', 'floor', 'area', 'diet', so a later different value is caught as a change")
@@ -112,6 +116,8 @@ PROMPTS = {
     "win_back": {"en": "Win back regulars", "fr": "Faire revenir les fidèles", "ro": "Recâștigă clientele fidele", "de": "Stammkunden zurückgewinnen"},
     "import_history": {"en": "Import my history", "fr": "Importer mon historique", "ro": "Importă istoricul", "de": "Verlauf importieren"},
     "design_dashboard": {"en": "Design my dashboard", "fr": "Créer mon tableau de bord", "ro": "Creează panoul meu", "de": "Mein Dashboard gestalten"},
+    "sync_from": {"en": "Bring in my latest from my apps", "fr": "Récupérer le nouveau de mes applis", "ro": "Adu noutățile din aplicațiile mele",
+                  "de": "Neues aus meinen Apps holen"},
     "monthly_report": {"en": "Monthly report", "fr": "Rapport mensuel", "ro": "Raport lunar", "de": "Monatsbericht"},
 }
 
@@ -241,9 +247,10 @@ def build_server(engine: ContextEngine | Callable[[], ContextEngine], upload_lin
 
     # ------------------------------------------------------------------ write
     @ui(title="Save to memory", annotations=WRITE)
-    def capture(items: Annotated[list[CaptureItem], Field(min_length=1, description="Every business fact in the owner's latest message")]) -> CallToolResult:
+    def capture(items: Annotated[list[CaptureItem], Field(min_length=1, description="Every business fact in the owner's latest message")],
+                dry_run: Annotated[bool, Field(description="Preview only: show what would be saved, save nothing. Use for anything brought in from another app before the owner agrees")] = False) -> CallToolResult:
         """Save what the owner tells you, in the same turn: visits/sales (who, what, how much, when, with whom), customer notes and phones, prices and costs, expenses, goals, rules, decisions, team changes, custom records. Nothing is stored unless this tool is called, so never say "saved" without its result. Matches names across spellings and languages, never guesses a customer from a partial name, skips duplicates, and returns items needing one detail. Each saved item can be undone."""
-        return run("capture", {"items": [i.model_dump(exclude_none=True) for i in items]})
+        return run("capture", {"items": [i.model_dump(exclude_none=True) for i in items], "dry_run": dry_run})
 
     async def _with_progress(ctx: Context, name: str, args: dict) -> CallToolResult:
         try:
@@ -281,8 +288,8 @@ def build_server(engine: ContextEngine | Callable[[], ContextEngine], upload_lin
     @ui(title="Save rows from a photo or list", annotations=WRITE)
     def import_records(entity: Annotated[str, Field(description="Entity the rows belong to (see get_data_status), e.g. visit, customer, service, expense")],
                        rows: Annotated[list[dict[str, Any]], Field(description="Rows keyed by field name; refs by name, e.g. {'date':'2026-10-03','customer':'Ana Pop','service':'Tuns','amount':'120'}")],
-                       source: Annotated[str, Field(description="Where the rows came from, e.g. 'photo:agenda_oct.jpg'")] = "photo") -> CallToolResult:
-        """Save rows you extracted yourself from photos (appointment book pages, receipts, price boards) or from lists the owner pasted. Same matching and duplicate checks as file imports."""
+                       source: Annotated[str, Field(description="Where the rows came from: 'photo:agenda_oct.jpg', 'list', or the app you read them from with another connector (square, shopify, stripe, calendar...)")] = "photo") -> CallToolResult:
+        """Save rows you extracted yourself from photos (appointment book pages, receipts, price boards), from lists the owner pasted, or many items read from another app (payments, orders, bookings). For app rows put the item's id in each row as external_id: rows already synced are skipped. Same matching and duplicate checks as file imports."""
         return run("import_records", {"entity": entity, "rows": rows, "source": source})
 
     @ui(title="Fix column mapping", annotations=WRITE)
@@ -481,6 +488,17 @@ def build_server(engine: ContextEngine | Callable[[], ContextEngine], upload_lin
         """Design a custom dashboard from a description."""
         return (f"Design a dashboard for my business{': ' + idea if idea else ''}. Propose it in one sentence, then create it with update_design "
                 f"(views) and show it with show_view. {reply}")
+
+    @mcp.prompt(name="sync_from", title=PROMPTS["sync_from"][lang])
+    def sync_from(apps: str = "") -> str:
+        """Bring new appointments, payments, orders and promises from the owner's other connectors into memory."""
+        which = f"from {apps}" if apps else "from every other connector I have connected (calendar, email, payments, shop)"
+        return ("Bring my latest business facts into In The Know " + which + ". First call get_context: it says when each app was last "
+                "synced; read only what is newer (if never, the last 30 days). Calendar: appointments that happened -> transaction "
+                "(status done/no_show/cancelled), future ones and meetings -> task. Email: promises, bookings, money owed, customer details -> "
+                "task / customer_info / fact. Payments or orders -> transaction (several at once: import_records with external_id per row). "
+                "Always set source to the app and external_id to the item's id. First call capture with dry_run=true and give me a "
+                f"two-line summary; save only after I say yes. {reply}")
 
     @mcp.prompt(name="monthly_report", title=PROMPTS["monthly_report"][lang])
     def monthly_report() -> str:

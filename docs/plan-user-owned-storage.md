@@ -1,6 +1,6 @@
 # Plan: Hosted connector, data in the owner's own cloud
 
-Status: R1–R4 implemented · R5–R6 proposed · 2026-11-20
+Status: R1–R5 implemented · R6 proposed · 2026-11-20
 
 ## 1. Goal
 
@@ -199,6 +199,22 @@ Claude and ChatGPT already orchestrate between connectors. Our job is to make In
     1. Enable the *Google Picker API*.
     2. Create an API key restricted to the server's domain (`ITK_GOOGLE_API_KEY`).
     3. Use the project number as `ITK_GOOGLE_APP_ID`.
+
+**R5 notes (implemented):**
+- **`external_refs` table:** remembers each item brought in from another app as (source, external_id, kind), plus a fingerprint of what it said and the undo id of what was saved.
+- **`capture` items** take `source` (calendar, gmail, outlook, square, shopify, stripe, …) and `external_id`:
+  - **Same item, unchanged:** status `known` ("already synced from Calendar").
+  - **Same item, changed** (a moved or cancelled appointment): the saved record is undone and the new version saved. This runs inside a savepoint, so if the new version cannot be saved the old one stays.
+  - **One email, several facts:** different capture types sharing one external_id work as expected.
+  - **On the card:** synced records show a chip with the app's name.
+- **`import_records`** with an app source: rows carry `external_id`, rows already synced are skipped, and records keep `_source = sync:<app>`.
+- **`capture(dry_run=true)`:** a preview card ("Will be saved") that keeps nothing and uploads nothing. The instructions and the `sync_from` prompt say to preview first and save after the owner agrees.
+- **`get_context`:** says when each app was last synced, so the assistant only reads newer items.
+- **Instructions:** before writing to a customer or preparing a meeting, call `get_person_brief`.
+- **Fixed along the way:**
+  - A bare `SAVEPOINT` outside a transaction would start, and on `RELEASE` commit, its own transaction. That would have broken all-or-nothing tool calls and previews. We now open the transaction first.
+  - Rows from `import_records` always got `_source = file:<id>`. Synced rows now keep their app source.
+- **Tests:** server behaviour is covered by `tests/test_sync.py`. **Not done:** the paid LLM eval (`eval/run_eval.py`) has no Calendar/Gmail/Square scenarios yet. That needs real connector data and an API budget.
 
 The order R1 → R2 → R3 is strict. R4 and R5 can run in parallel after R3.
 

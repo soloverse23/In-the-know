@@ -328,7 +328,7 @@ class Ingestor:
                     extra[h] = str(v)
                 elif t:
                     values[t] = v
-            status, info = self.load(spec, values, extra, file_id=file_id, row=i, order=m.date_order, source=f"file:{file_id}")
+            status, info = self.load(spec, values, extra, file_id=file_id, row=i, order=m.date_order, source=src.name if src.name.startswith("sync:") else f"file:{file_id}")
             if status == "inserted":
                 r.rows_loaded += 1
                 if info:

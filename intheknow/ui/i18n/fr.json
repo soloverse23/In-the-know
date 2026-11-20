@@ -390,5 +390,10 @@
   "view.upload": "Ajoutez vos fichiers",
   "sub.upload": "Lien privé · valable {n} minutes",
   "ui.upload": "Ouvrir la page d'envoi",
-  "ui.upload_hint": "Listes de clients, exports de rendez-vous ou de ventes, tarifs, dépenses, notes, ou votre export Claude / ChatGPT. Depuis votre téléphone, votre ordinateur ou Google Drive."
+  "ui.upload_hint": "Listes de clients, exports de rendez-vous ou de ventes, tarifs, dépenses, notes, ou votre export Claude / ChatGPT. Depuis votre téléphone, votre ordinateur ou Google Drive.",
+  "view.capture_preview": "Prêt à enregistrer",
+  "sub.capture_preview": "{n} nouveaux sur {total} · rien n'est encore enregistré",
+  "cap.already_synced": "Déjà synchronisé depuis {source}",
+  "cap.sync_updated": "Mis à jour : modifié dans {source}",
+  "ui.status.ready": "Sera enregistré"
 }
