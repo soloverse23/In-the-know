@@ -89,6 +89,36 @@ class WriteOps:
             raise ValueError("give `paths` (local files/folders) or `content` + `filename`")
         return self._files_view(reports, errors)
 
+    def upload_card(self, url: str, minutes: int = 30) -> dict:
+        """Card with the owner's upload page link (hosted connector)."""
+        self._require_setup()
+        return view("upload_files", T("view.upload"), [block("upload", url=url, minutes=minutes)],
+                    subtitle=T("sub.upload", n=N(minutes)),
+                    hints=[f"Upload page for the owner (works for {minutes} minutes, in the first browser that opens it): {url}",
+                           "Put this link in your reply as a clickable link (the card also has a button). On that page they add CSV, "
+                           "Excel or notes files, or a Claude/ChatGPT export .zip, from their phone, computer or Google Drive. "
+                           "When they say they are done, call get_context to see what arrived, then go through open questions "
+                           "(get_data_status) and, if old chats were added, import_chat_history()."])
+
+    def import_uploads(self, files: list[tuple[str, bytes]]) -> dict:
+        """Files the owner sent from the upload page or picked in their Drive: data files and old-chat exports."""
+        self._require_setup()
+        from .onboarding import is_chat_export
+        data, chats, chat_files = [], 0, 0
+        for name, raw in files:
+            if is_chat_export(name, raw):
+                chats += self.load_chat_export(name, raw)
+                chat_files += 1
+            else:
+                data.append((name, raw))
+        v = self._files_view(self.ingestor.add_files(data) if data else [], [])
+        v["chat_messages"], v["chat_files"] = chats, chat_files
+        if chat_files:
+            self._mark_used("history")
+            v["hints"].append(f"{chats} new messages from the owner's old chats are queued: call import_chat_history() "
+                              "(no path) to work through them in batches.")
+        return v
+
     def import_records(self, entity: str, rows: list[dict], source: str = "photo") -> dict:
         """Rows the assistant extracted itself (photo of a notebook/receipt/price list, a pasted list...)."""
         self._require_setup()

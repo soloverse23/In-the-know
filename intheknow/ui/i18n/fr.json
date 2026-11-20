@@ -386,5 +386,9 @@
   "ui.not_known": "Pas encore connu",
   "ui.was": "avant « {v} »",
   "ui.stated": "dit par la personne, non confirmé",
-  "ui.inferred": "déduit"
+  "ui.inferred": "déduit",
+  "view.upload": "Ajoutez vos fichiers",
+  "sub.upload": "Lien privé · valable {n} minutes",
+  "ui.upload": "Ouvrir la page d'envoi",
+  "ui.upload_hint": "Listes de clients, exports de rendez-vous ou de ventes, tarifs, dépenses, notes, ou votre export Claude / ChatGPT. Depuis votre téléphone, votre ordinateur ou Google Drive."
 }

@@ -123,14 +123,8 @@ class OnboardingOps:
         self._require_setup()
         loaded = 0
         if path:
-            for source, conv, at, text in _read_export(Path(path).expanduser()):
-                h = hashlib.sha256(f"{at}|{text}".encode()).hexdigest()[:24]
-                if self.conn.execute("SELECT 1 FROM history_queue WHERE id=?", (int(h[:12], 16),)).fetchone():
-                    continue
-                status = "pending" if _relevant(text, self._known_words()) else "skipped"
-                self.conn.execute("INSERT INTO history_queue(id, source, conversation, sent_at, text, status) VALUES (?,?,?,?,?,?)",
-                                  (int(h[:12], 16), source, conv, at, text[:4000], status))
-                loaded += 1
+            p = Path(path).expanduser()
+            loaded = self.load_chat_export(p.name, p.read_bytes())
         self.conn.execute("UPDATE history_queue SET status='done' WHERE status='sent'")
         batch = [dict(r) for r in self.conn.execute("SELECT id, conversation, sent_at, text FROM history_queue WHERE status='pending' "
                                                     "ORDER BY sent_at LIMIT ?", (max(1, min(batch_size, 50)),))]
@@ -154,6 +148,20 @@ class OnboardingOps:
         return view("import_chat_history", T("view.history"), b, subtitle=T("sub.history", n=N(len(batch)), left=N(counts.get("pending", 0))),
                     hints=hints)
 
+    def load_chat_export(self, name: str, raw: bytes) -> int:
+        """Queue the owner's messages from a Claude / ChatGPT export (.zip or conversations.json). Returns new messages."""
+        loaded = 0
+        known = self._known_words()
+        for source, conv, at, text in _read_export(name, raw):
+            h = hashlib.sha256(f"{at}|{text}".encode()).hexdigest()[:24]
+            if self.conn.execute("SELECT 1 FROM history_queue WHERE id=?", (int(h[:12], 16),)).fetchone():
+                continue
+            status = "pending" if _relevant(text, known) else "skipped"
+            self.conn.execute("INSERT INTO history_queue(id, source, conversation, sent_at, text, status) VALUES (?,?,?,?,?,?)",
+                              (int(h[:12], 16), source, conv, at, text[:4000], status))
+            loaded += 1
+        return loaded
+
     def _known_words(self) -> set[str]:
         words = set()
         for r in self.conn.execute("SELECT name FROM v_offerings UNION SELECT name FROM v_staff"):
@@ -168,16 +176,27 @@ def _relevant(text: str, known: set[str]) -> bool:
     return any(ch.isdigit() for ch in t) or any(w in t for w in BUSINESS_WORDS) or any(w in t for w in known)
 
 
-def _read_export(path: Path):
+def is_chat_export(name: str, raw: bytes) -> bool:
+    """A Claude / ChatGPT data export: a .zip holding conversations.json, or that file itself."""
+    if name.lower().endswith(".zip"):
+        try:
+            with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                return any(n.endswith("conversations.json") for n in z.namelist())
+        except zipfile.BadZipFile:
+            return False
+    return name.lower().endswith("conversations.json")
+
+
+def _read_export(name: str, raw: bytes):
     """Yield (source, conversation title, ISO time, text) for each message the user wrote."""
-    if path.suffix.lower() == ".zip":
-        with zipfile.ZipFile(path) as z:
-            name = next((n for n in z.namelist() if n.endswith("conversations.json")), None)
-            if not name:
+    if name.lower().endswith(".zip"):
+        with zipfile.ZipFile(io.BytesIO(raw)) as z:
+            inner = next((n for n in z.namelist() if n.endswith("conversations.json")), None)
+            if not inner:
                 raise ValueError("no conversations.json in this export")
-            data = json.load(io.TextIOWrapper(z.open(name), encoding="utf-8"))
+            data = json.load(io.TextIOWrapper(z.open(inner), encoding="utf-8"))
     else:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(raw.decode("utf-8-sig"))
     for conv in data if isinstance(data, list) else data.get("conversations", []):
         if "chat_messages" in conv:                                   # Claude export
             for m in conv["chat_messages"]:

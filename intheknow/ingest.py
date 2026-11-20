@@ -81,16 +81,23 @@ def table_from_text(text: str) -> tuple[list[str], list[dict]]:
     return headers, [dict(zip(headers, r)) for r in rows[1:]]
 
 
+def _decode(raw: bytes) -> str:
+    try:
+        return raw.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return raw.decode("cp1252")
+
+
 def read_table(path: Path) -> tuple[list[str], list[dict], str]:
-    if path.suffix.lower() in (".csv", ".tsv"):
-        raw = path.read_bytes()
-        try:
-            text = raw.decode("utf-8-sig")
-        except UnicodeDecodeError:
-            text = raw.decode("cp1252")
+    return read_table_bytes(path.name, path.read_bytes())
+
+
+def read_table_bytes(name: str, raw: bytes) -> tuple[list[str], list[dict], str]:
+    if Path(name).suffix.lower() in (".csv", ".tsv"):
+        text = _decode(raw)
         h, r = table_from_text(text)
         return h, r, text
-    ws = load_workbook(path, data_only=True).active
+    ws = load_workbook(io.BytesIO(raw), data_only=True, read_only=True).active
     rows = [list(r) for r in ws.iter_rows(values_only=True) if any(c not in (None, "") for c in r)]
     if not rows:
         return [], [], ""
@@ -122,12 +129,17 @@ def split_sections(text: str) -> list[tuple[str, str]]:
 
 
 def source_from_path(path: Path) -> Optional[Source]:
-    ext = path.suffix.lower()
+    return source_from_bytes(path.name, path.read_bytes()) if path.suffix.lower() in TABLE_EXT | TEXT_EXT else None
+
+
+def source_from_bytes(name: str, raw: bytes) -> Optional[Source]:
+    """A file that arrived as bytes (upload page, Drive). None for unsupported types."""
+    ext = Path(name).suffix.lower()
     if ext in TABLE_EXT:
-        h, r, text = read_table(path)
-        return Source(path.name, "table", text, h, r)
+        h, r, text = read_table_bytes(name, raw)
+        return Source(name, "table", text, h, r)
     if ext in TEXT_EXT:
-        return Source(path.name, "text", path.read_text(encoding="utf-8"))
+        return Source(name, "text", _decode(raw))
     return None
 
 
@@ -168,6 +180,17 @@ class Ingestor:
                 sources.append(src)
             else:
                 reports.append(IngestReport(f.name, "skipped", notes=["unsupported type (CSV, XLSX, MD, TXT; send images in the chat)"]))
+        return self.ingest_sources(sources) + reports
+
+    def add_files(self, files: list[tuple[str, bytes]]) -> list[IngestReport]:
+        """Files as (name, bytes): the upload page and Drive imports. Same matching as add_path."""
+        sources, reports = [], []
+        for name, raw in files:
+            src = source_from_bytes(name, raw)
+            if src:
+                sources.append(src)
+            else:
+                reports.append(IngestReport(name, "skipped", notes=["unsupported type (CSV, XLSX, MD, TXT; send images in the chat)"]))
         return self.ingest_sources(sources) + reports
 
     def add_content(self, filename: str, content: str) -> IngestReport:

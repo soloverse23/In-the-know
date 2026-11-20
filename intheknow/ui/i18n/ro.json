@@ -386,5 +386,9 @@
   "ui.not_known": "Încă necunoscut",
   "ui.was": "înainte „{v}”",
   "ui.stated": "spus de persoană, neconfirmat",
-  "ui.inferred": "dedus"
+  "ui.inferred": "dedus",
+  "view.upload": "Adaugă fișierele tale",
+  "sub.upload": "Link privat · valabil {n} minute",
+  "ui.upload": "Deschide pagina de încărcare",
+  "ui.upload_hint": "Liste de clienți, exporturi de programări sau vânzări, liste de prețuri, cheltuieli, notițe sau exportul tău din Claude / ChatGPT. De pe telefon, calculator sau din Google Drive."
 }

@@ -941,7 +941,7 @@ class ContextEngine(WriteOps, EditOps, OnboardingOps, PeopleOps):
             "get_started", "setup_business", "get_context", "get_metrics", "complete_task", "get_business_brief", "get_action_list", "review_period", "find_customers",
             "get_person_brief", "get_customer_context", "get_data_status", "show_view", "prepare_decision_context", "search_knowledge", "query_data",
             "get_report_data", "add_data", "import_records", "map_columns", "capture", "change_schema", "update_design",
-            "define_metric", "merge_customers", "resolve_question", "mark_contacted", "undo_change", "import_chat_history",
+            "define_metric", "merge_customers", "resolve_question", "mark_contacted", "undo_change", "import_chat_history", "import_uploads", "upload_card",
             "edit_records", "browse_records", "find_records")}
 
     def call(self, name: str, args: dict) -> str:

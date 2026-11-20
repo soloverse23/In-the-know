@@ -422,6 +422,10 @@ const R = {
     const steps = b.items.map((s, i) => `<div class="step ${s.state}"><span class="b">${s.state === "done" ? ic("check", 12) : i + 1}</span><span class="x">${esc(t(s.t))}</span></div>`).join("");
     return `<div class="card"><div class="prog" style="margin-bottom:12px"><i style="width:${Math.round(b.progress * 100)}%"></i></div><div class="steps">${steps}</div></div>`;
   },
+  upload(b) {
+    return `<div class="card"><p class="muted" style="margin:0">${esc(t("ui.upload_hint"))}</p>
+      <div class="row" style="margin-top:12px"><button class="btn" data-act="open" data-url="${esc(b.url)}">${ic("file", 15)}${esc(t("ui.upload"))}</button></div></div>`;
+  },
   hero(b) { return `<div class="hero"><div class="glow"></div><h2>${esc(t(b.t, b.p))}</h2><p>${esc(t("onb.hero_tagline"))}</p><div class="m">${MARK(28)}</div></div>`; },
   copy(b) {
     return `<div class="card copy"><h2>${esc(tx(b.title))}</h2><pre class="ua" id="cp">${esc(b.text)}</pre>
@@ -561,6 +565,10 @@ document.addEventListener("click", async (e) => {
     } else if (act === "q") {
       b.disabled = true; await rpc("tools/call", { name: "resolve_question", arguments: { question_ids: [Number(b.dataset.id)], resolution: b.dataset.r } });
       const row = b.closest(".chg"); if (row) row.style.opacity = ".45"; b.classList.add("done");
+    } else if (act === "open") {
+      const url = b.dataset.url;
+      if (!/^https:\/\//.test(url) && !/^http:\/\/(localhost|127\.0\.0\.1)[:/]/.test(url)) return;
+      try { await rpc("ui/open-link", { url }); } catch { window.open(url, "_blank", "noopener"); }
     } else if (act === "copy") {
       const el = document.getElementById("cp");
       try { await navigator.clipboard.writeText(el.textContent); } catch { const rg = document.createRange(); rg.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(rg); document.execCommand("copy"); }

@@ -386,5 +386,9 @@
   "ui.not_known": "Noch unbekannt",
   "ui.was": "vorher „{v}“",
   "ui.stated": "von der Person gesagt, nicht bestätigt",
-  "ui.inferred": "abgeleitet"
+  "ui.inferred": "abgeleitet",
+  "view.upload": "Dateien hinzufügen",
+  "sub.upload": "Privater Link · gültig {n} Minuten",
+  "ui.upload": "Upload-Seite öffnen",
+  "ui.upload_hint": "Kundenlisten, Termin- oder Kassenexporte, Preislisten, Ausgaben, Notizen oder Ihr Claude- / ChatGPT-Export. Vom Handy, Computer oder aus Google Drive."
 }

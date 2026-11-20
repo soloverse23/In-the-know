@@ -34,6 +34,7 @@ from .context import ContextEngine
 from .mcp_server import build_server
 from .seal import Sealer
 from .store import LocalStore, Store
+from .uploads import PickerConfig, Uploads
 
 StoreFactory = Callable[[dict[str, Any]], Store]
 
@@ -47,8 +48,10 @@ class EngineCache:
         self._lock = threading.Lock()
 
     def get(self, token: AccessToken) -> ContextEngine:
-        identity = (token.claims or {})["identity"]
-        key = token.subject or ""
+        return self.for_identity((token.claims or {})["identity"])
+
+    def for_identity(self, identity: dict[str, Any]) -> ContextEngine:
+        key = f"{identity['p']}:{identity['sub']}"
         now = time.monotonic()
         with self._lock:
             for k in [k for k, (_, t) in self._items.items() if now - t > self.idle]:
@@ -77,11 +80,14 @@ def dev_store_factory(directory: str | Path) -> StoreFactory:
 
 
 def create_app(base_url: str, sealer: Sealer, providers: dict[str, IdentityProvider], store_factory: StoreFactory,
-               http_factory=None, today=None, extra_hosts: Optional[list[str]] = None) -> Starlette:
+               http_factory=None, today=None, extra_hosts: Optional[list[str]] = None,
+               picker: Optional[PickerConfig] = None) -> Starlette:
     base_url = base_url.rstrip("/")
     kw = {"http_factory": http_factory} if http_factory else {}
     auth = StatelessAuthProvider(sealer, base_url, providers, **kw)
     engines = EngineCache(store_factory, today=today)
+
+    uploads = Uploads(sealer, base_url, engines.for_identity, picker)
 
     def current() -> ContextEngine:
         token = get_access_token()
@@ -89,13 +95,20 @@ def create_app(base_url: str, sealer: Sealer, providers: dict[str, IdentityProvi
             raise PermissionError("not signed in")
         return engines.get(token)
 
+    def upload_link() -> str:
+        token = get_access_token()
+        if token is None:
+            raise PermissionError("not signed in")
+        return uploads.link((token.claims or {})["identity"])
+
     mcp = build_server(
         current,
+        upload_link=upload_link,
         auth_server_provider=auth,
         auth=AuthSettings(issuer_url=base_url, resource_server_url=auth.resource, validate_token_resource=True,
                           client_registration_options=ClientRegistrationOptions(enabled=True),
                           revocation_options=RevocationOptions(enabled=False)))
-    for path, methods, handler in auth.routes():
+    for path, methods, handler in auth.routes() + uploads.routes():
         mcp.custom_route(path, methods)(handler)
 
     @mcp.custom_route("/health", ["GET"])
@@ -124,7 +137,9 @@ def main() -> None:
     if not providers:
         raise SystemExit("Set ITK_GOOGLE_CLIENT_ID/SECRET and/or ITK_MICROSOFT_CLIENT_ID/SECRET.")
     stores = dev_store_factory(args.dev_store) if args.dev_store else cloud_store_factory(providers)
-    app = create_app(args.base_url, Sealer.from_env(), providers, stores)
+    picker = (PickerConfig(os.environ["ITK_GOOGLE_API_KEY"], os.environ["ITK_GOOGLE_APP_ID"])
+              if os.environ.get("ITK_GOOGLE_API_KEY") and os.environ.get("ITK_GOOGLE_APP_ID") else None)
+    app = create_app(args.base_url, Sealer.from_env(), providers, stores, picker=picker)
     import uvicorn
     uvicorn.run(app, host=args.host, port=args.port, proxy_headers=True, forwarded_allow_ips="*",
                 access_log=False)                        # no request lines: URLs can carry sign-in data

@@ -41,6 +41,13 @@ class FakeCloud:
     def expire_tokens(self) -> None:
         self.valid.clear()
 
+    def add_drive_file(self, name: str, mime: str, data: bytes = b"", export: Optional[bytes] = None) -> str:
+        """A file the owner already has in Drive (reachable once they pick it in the Picker)."""
+        f = self._new_drive({"name": name, "mimeType": mime}, data)
+        if export is not None:
+            f["export"] = export
+        return f["id"]
+
     def drive_memory(self) -> list[dict]:
         return [f for f in self.drive.values() if f.get("appProperties", {}).get("itk") == "memory"]
 
@@ -87,13 +94,19 @@ class FakeCloud:
             hits.sort(key=lambda f: f["modified"], reverse=True)
             return httpx.Response(200, json={"files": [{"id": f["id"], "version": str(f["version"]),
                                                         "modifiedTime": f["modified"]} for f in hits]})
+        if req.method == "GET" and path.startswith("/drive/v3/files/") and path.endswith("/export"):
+            f = self.drive.get(path.split("/")[-2])
+            if f is None or "export" not in f:
+                return httpx.Response(404)
+            return httpx.Response(200, content=f["export"])
         if req.method == "GET" and path.startswith("/drive/v3/files/"):
             f = self.drive.get(path.rsplit("/", 1)[1])
             if f is None:
                 return httpx.Response(404)
             if p.get("alt") == "media":
                 return httpx.Response(200, content=f["data"])
-            return httpx.Response(200, json={"id": f["id"], "version": str(f["version"]), "trashed": f["trashed"]})
+            return httpx.Response(200, json={"id": f["id"], "version": str(f["version"]), "trashed": f["trashed"],
+                                             "name": f.get("name"), "mimeType": f.get("mimeType"), "size": str(len(f["data"]))})
         if req.method == "POST" and path == "/drive/v3/files":
             meta = json.loads(req.content)
             return httpx.Response(200, json={"id": self._new_drive(meta, b"")["id"]})

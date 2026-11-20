@@ -41,6 +41,10 @@ WHERE_DOC = ("Filter: {search: text in any text field or linked name, equals:{fi
              "fact:{kind?, key?, text?, polarity?} (people only: e.g. who must have parking)}")
 
 
+HOSTED_NOTE = ("\nFiles: you cannot pass the owner's files to In The Know. When they want to add files, old chats or exports, "
+               "call upload_files and give them the link; when they come back, call get_context.")
+
+
 def ui_html() -> str:
     html = (Path(__file__).parent / "ui" / "view.html").read_text(encoding="utf-8")
     return html.replace("/*I18N*/{}/*END*/", json.dumps(i18n.all_tables(), ensure_ascii=False))
@@ -112,9 +116,11 @@ PROMPTS = {
 }
 
 
-def build_server(engine: ContextEngine | Callable[[], ContextEngine], **server_kw: Any) -> MCPServer:
+def build_server(engine: ContextEngine | Callable[[], ContextEngine], upload_link: Optional[Callable[[], str]] = None,
+                 **server_kw: Any) -> MCPServer:
     """`engine` is one business (local mode) or a function returning the calling owner's engine (hosted mode).
-    `server_kw` is passed to MCPServer (auth settings, token verifier, auth provider)."""
+    `upload_link` (hosted) makes a link to the owner's upload page; local paths are then not offered.
+    `server_kw` is passed to MCPServer (auth settings, auth provider)."""
     current: Callable[[], ContextEngine] = (lambda: engine) if isinstance(engine, ContextEngine) else engine
     hosted = not isinstance(engine, ContextEngine)
     apps = Apps()
@@ -239,23 +245,38 @@ def build_server(engine: ContextEngine | Callable[[], ContextEngine], **server_k
         """Save what the owner tells you, in the same turn: visits/sales (who, what, how much, when, with whom), customer notes and phones, prices and costs, expenses, goals, rules, decisions, team changes, custom records. Nothing is stored unless this tool is called, so never say "saved" without its result. Matches names across spellings and languages, never guesses a customer from a partial name, skips duplicates, and returns items needing one detail. Each saved item can be undone."""
         return run("capture", {"items": [i.model_dump(exclude_none=True) for i in items]})
 
-    @ui(title="Import files", annotations=WRITE)
-    async def add_data(ctx: Context,
-                       paths: Annotated[Optional[list[str]], Field(description="Local files or folders (CSV, XLSX, MD, TXT)")] = None,
-                       filename: Annotated[Optional[str], Field(description="Name of an attached/pasted file, with extension")] = None,
-                       content: Annotated[Optional[str], Field(description="Full text of an attached/pasted CSV or notes file; never a summary")] = None) -> CallToolResult:
-        """Import business files in any layout and language: customer lists, booking/POS exports, price lists, expenses, notes. Recognizes columns (en/fr/ro/de), dates, money formats, first/last names; merges spellings and duplicates; skips rows already imported; adds new fields for unknown columns (undoable)."""
-        for p in (0.1,):
-            try:
-                await ctx.report_progress(p, 1.0, "reading")
-            except Exception:  # noqa: BLE001
-                pass
-        result = run("add_data", {"paths": paths, "filename": filename, "content": content})
+    async def _with_progress(ctx: Context, name: str, args: dict) -> CallToolResult:
+        try:
+            await ctx.report_progress(0.1, 1.0, "reading")
+        except Exception:  # noqa: BLE001
+            pass
+        result = run(name, args)
         try:
             await ctx.report_progress(1.0, 1.0, "done")
         except Exception:  # noqa: BLE001
             pass
         return result
+
+    if upload_link is None:
+        @ui(title="Import files", annotations=WRITE)
+        async def add_data(ctx: Context,
+                           paths: Annotated[Optional[list[str]], Field(description="Local files or folders (CSV, XLSX, MD, TXT)")] = None,
+                           filename: Annotated[Optional[str], Field(description="Name of an attached/pasted file, with extension")] = None,
+                           content: Annotated[Optional[str], Field(description="Full text of an attached/pasted CSV or notes file; never a summary")] = None) -> CallToolResult:
+            """Import business files in any layout and language: customer lists, booking/POS exports, price lists, expenses, notes. Recognizes columns (en/fr/ro/de), dates, money formats, first/last names; merges spellings and duplicates; skips rows already imported; adds new fields for unknown columns (undoable)."""
+            return await _with_progress(ctx, "add_data", {"paths": paths, "filename": filename, "content": content})
+    else:
+        @ui(title="Add files", annotations=READ)
+        def upload_files() -> CallToolResult:
+            """Give the owner a private upload page for their files: customer lists, booking/POS exports, price lists, expenses, notes (CSV, Excel, text), or a Claude/ChatGPT export .zip. Works from phone or computer, including Google Drive. Use this whenever the owner wants to bring in files or their history; show them the link."""
+            return run("upload_card", {"url": upload_link()})
+
+        @ui(title="Import pasted data", annotations=WRITE)
+        async def add_data(ctx: Context,
+                           filename: Annotated[str, Field(description="Name for the data, with extension, e.g. clients.csv or notes.md")],
+                           content: Annotated[str, Field(description="Full text of a short CSV or notes the owner pasted or attached; never a summary")]) -> CallToolResult:
+            """Import a short table or notes the owner pasted or attached in the chat (same matching as file imports). For real files, or anything longer than about 200 lines, use upload_files instead."""
+            return await _with_progress(ctx, "add_data", {"filename": filename, "content": content})
 
     @ui(title="Save rows from a photo or list", annotations=WRITE)
     def import_records(entity: Annotated[str, Field(description="Entity the rows belong to (see get_data_status), e.g. visit, customer, service, expense")],
@@ -379,17 +400,23 @@ def build_server(engine: ContextEngine | Callable[[], ContextEngine], **server_k
         """Undo something saved from chat, a schema change or the last design change."""
         return run("undo_change", {"change_id": change_id})
 
-    @ui(title="Import old chats", annotations=WRITE)
-    def import_chat_history(path: Annotated[Optional[str], Field(description="Claude or ChatGPT export (.zip or conversations.json); omit to get the next batch")] = None,
-                            batch_size: Annotated[int, Field(ge=1, le=50)] = 20) -> CallToolResult:
-        """Bring business facts from the owner's old Claude/ChatGPT conversations into memory: loads the export, then returns batches of the owner's messages for you to capture (source='history')."""
-        return run("import_chat_history", {"path": path, "batch_size": batch_size})
+    if upload_link is None:
+        @ui(title="Import old chats", annotations=WRITE)
+        def import_chat_history(path: Annotated[Optional[str], Field(description="Claude or ChatGPT export (.zip or conversations.json); omit to get the next batch")] = None,
+                                batch_size: Annotated[int, Field(ge=1, le=50)] = 20) -> CallToolResult:
+            """Bring business facts from the owner's old Claude/ChatGPT conversations into memory: loads the export, then returns batches of the owner's messages for you to capture (source='history')."""
+            return run("import_chat_history", {"path": path, "batch_size": batch_size})
+    else:
+        @ui(title="Go through old chats", annotations=WRITE)
+        def import_chat_history(batch_size: Annotated[int, Field(ge=1, le=50)] = 20) -> CallToolResult:
+            """Work through the owner's old Claude/ChatGPT messages in batches and capture the business facts (source='history'). The owner first adds their export .zip on the upload page (upload_files)."""
+            return run("import_chat_history", {"batch_size": batch_size})
 
     for fn, kw in ui_tools:
         apps.tool(resource_uri=UI_URI, meta={"ui/resourceUri": UI_URI}, **kw)(fn)
 
     mcp = MCPServer("in-the-know", title="In The Know", description="The memory and analyst of your business, inside Claude",
-                    instructions=SERVER_INSTRUCTIONS, version=VERSION, icons=[ICON], extensions=[apps], **server_kw)
+                    instructions=SERVER_INSTRUCTIONS + (HOSTED_NOTE if upload_link else ""), version=VERSION, icons=[ICON], extensions=[apps], **server_kw)
     for fn, kw in plain_tools:
         mcp.tool(**kw)(fn)
 
@@ -443,7 +470,10 @@ def build_server(engine: ContextEngine | Callable[[], ContextEngine], **server_k
     @mcp.prompt(name="import_history", title=PROMPTS["import_history"][lang])
     def import_history(path: str = "") -> str:
         """Bring facts from old Claude/ChatGPT chats into memory."""
-        where = f"My export is at {path}." if path else "Tell me how to export my Claude or ChatGPT history, then I'll give you the path."
+        if upload_link is not None:
+            where = "Tell me how to export my Claude or ChatGPT history, then give me the upload page (upload_files) to add the .zip."
+        else:
+            where = f"My export is at {path}." if path else "Tell me how to export my Claude or ChatGPT history, then I'll give you the path."
         return f"{where} Use import_chat_history and capture (source='history') until all batches are done. {reply}"
 
     @mcp.prompt(name="design_dashboard", title=PROMPTS["design_dashboard"][lang])

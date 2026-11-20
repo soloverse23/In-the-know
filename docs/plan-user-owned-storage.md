@@ -1,6 +1,6 @@
 # Plan: Hosted connector, data in the owner's own cloud
 
-Status: R1–R3 implemented · R4–R6 proposed · 2026-11-20
+Status: R1–R4 implemented · R5–R6 proposed · 2026-11-20
 
 ## 1. Goal
 
@@ -109,13 +109,14 @@ The store has three implementations:
 
 ## 4. Changes to the tools for remote use
 
-| Area | Today | Remote |
+Implemented in R4. The design changed from the first draft; see the R4 notes in §6.
+
+| Area | Local (desktop extension) | Hosted |
 |---|---|---|
-| `add_data(paths=…)` | Reads local paths | `content` + `filename` (already supported). We add a **"Choose from Drive / OneDrive" button** in the card, using the Google Picker or OneDrive file picker. Picking a file grants access to that one file. |
-| `import_chat_history(path)` | Reads a local export `.zip` | The owner uploads the export to the In The Know folder, or picks it with the file picker. The server reads it from the store. |
+| Files | `add_data(paths=…)` | `upload_files` → private upload page: device upload and Google Drive picker |
+| Pasted text | `add_data(content, filename)` | `add_data(content, filename)` for short pastes only |
+| Old chats | `import_chat_history(path)` | The export `.zip` is added on the upload page, then `import_chat_history()` works through batches |
 | Photos (`import_records`) | Claude reads the image and sends rows | Unchanged |
-| `--db`, `--today` | CLI flags | Unchanged for local mode. Remote mode gets an `--http` entry point. |
-| UI resource CSP | Fonts only | Add the picker domains (Google and Microsoft) |
 
 ---
 
@@ -175,6 +176,29 @@ Claude and ChatGPT already orchestrate between connectors. Our job is to make In
 - **Reads:** read-only calls cost one metadata request each and never upload (tested).
 - **File size:** a typical memory file is 0.4–2.3 MB (the three demo businesses and a real one), so each upload is small.
 - **Tests:** the contract tests run against in-memory fakes of the Drive v3 and Graph endpoints we use ([`tests/clouds.py`](../tests/clouds.py)). **Still to do:** one run against real accounts once the Google and Microsoft apps are set up.
+
+**R4 notes (implemented, design changed from §4):**
+- **Why the plan changed:** the plan put a Drive picker button *inside* the chat card. That card runs in the assistant's sandboxed iframe, where Google's Picker scripts and popups are unlikely to work. Also, `drive.file` cannot read files the owner drops into our folder; picking a file is what grants access. So `upload_files` now gives the owner a **private upload page on our server**. The card has a button for it, and the link is also in the reply.
+- **Upload from the device:**
+  - **Formats:** CSV, Excel, notes, or a Claude/ChatGPT export `.zip`.
+  - **Phones:** the file chooser also offers Drive, OneDrive and iCloud.
+  - **Processing:** files are processed in RAM straight into the owner's memory file.
+  - **Results:** the page shows what was added, in the business's language.
+- **Choose from Google Drive** (Google Picker), shown only when `ITK_GOOGLE_API_KEY` and `ITK_GOOGLE_APP_ID` are set:
+  - Google Sheets are exported as CSV and Docs as text.
+  - The file's name and type come from Drive, never from the browser.
+- **Link safety:**
+  - The ticket is sealed and lasts 30 minutes.
+  - Opening the page binds the link to that browser with a cookie. Another browser, or a POST without opening the page, gets "ask Claude for a new link".
+  - Limits: 20 files of 25 MB each, 60 MB in total.
+- **Tool changes in hosted mode:** `add_data` drops `paths` and keeps only short pasted text, and `import_chat_history` drops `path`. Local desktop mode is unchanged.
+- **Engine changes:** files are read from bytes (`source_from_bytes`, `add_files`, `load_chat_export`), and a new `import_uploads` operation takes both data files and chat exports.
+- **Not done yet:**
+  - **OneDrive picker.** OneDrive owners use the device upload; on phones the file chooser reaches OneDrive.
+  - **Picker setup in Google Cloud:**
+    1. Enable the *Google Picker API*.
+    2. Create an API key restricted to the server's domain (`ITK_GOOGLE_API_KEY`).
+    3. Use the project number as `ITK_GOOGLE_APP_ID`.
 
 The order R1 → R2 → R3 is strict. R4 and R5 can run in parallel after R3.
 

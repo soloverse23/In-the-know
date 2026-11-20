@@ -386,5 +386,9 @@
   "ui.not_known": "Not known yet",
   "ui.was": "was “{v}”",
   "ui.stated": "said by them, not confirmed",
-  "ui.inferred": "inferred"
+  "ui.inferred": "inferred",
+  "view.upload": "Add your files",
+  "sub.upload": "Private link · works for {n} minutes",
+  "ui.upload": "Open upload page",
+  "ui.upload_hint": "Customer lists, bookings or sales exports, price lists, expenses, notes, or your Claude / ChatGPT export. From your phone, computer or Google Drive."
 }

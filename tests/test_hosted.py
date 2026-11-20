@@ -125,7 +125,7 @@ def test_full_flow_and_owner_isolation(env):
     t1 = sign_in(c, g, client, "owner-1")
     m1 = MCP(c, t1["access_token"])
     tools = m1.rpc("tools/list", {})["result"]["tools"]
-    assert len(tools) == 31
+    assert len(tools) == 32                                     # hosted: upload_files added
     m1.call("setup_business", SETUP["salon_aurora"])
     m1.call("capture", {"items": [{"type": "goal", "quote": "40k by Christmas", "text": "40k by Christmas"}]})
     assert "Salon Aurora" in m1.call("get_context", {})

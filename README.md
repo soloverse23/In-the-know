@@ -52,6 +52,7 @@ intheknow/
   hosted.py      hosted connector over HTTPS (one server for every owner, engines in RAM only)
   store.py       where the memory file lives (local file, or any Store); the engine works in memory
   cloud.py       the owner's memory file in their own Google Drive or OneDrive
+  uploads.py     hosted upload page: files from phone/computer/Google Drive straight into the owner's memory
   mcp_server.py  MCP server: 31 tools, 7 prompts, resources, icon, MCP Apps UI
   ui/view.html   the in-chat app (renderer, brand, animations, actions)
 data/synth.py    three messy demo businesses + ground truth (Bucharest salon, Lyon physio, Berlin café)
@@ -64,7 +65,7 @@ docs/            brand.md + screenshots of every card
 ```bash
 uv sync
 uv run python data/synth.py            # regenerate demo data + ground truth
-uv run pytest -q                       # 97 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in, Drive/OneDrive
+uv run pytest -q                       # 104 tests: normalizers, ground truth x3, tool flows, cleaning, smart behaviour, people layer, storage, hosted sign-in, Drive/OneDrive, uploads
 uv run python eval/run_eval.py --dry-run
 ```
 
@@ -75,6 +76,7 @@ One server for phone, web and desktop; each owner's memory lives in their own Go
 ```bash
 export $(uv run python -m intheknow.seal)            # ITK_SEAL_KEYS
 export ITK_GOOGLE_CLIENT_ID=... ITK_GOOGLE_CLIENT_SECRET=...
+export ITK_GOOGLE_API_KEY=... ITK_GOOGLE_APP_ID=...   # optional: 'Choose from Google Drive' on the upload page
 uv run python -m intheknow.hosted --base-url https://<public-url>
 ```
 
