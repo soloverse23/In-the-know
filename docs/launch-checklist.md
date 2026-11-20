@@ -1,6 +1,6 @@
 # Launch checklist: hosted connector (R6)
 
-Status: code ready · accounts and hosting pending · 2026-11-20
+Status: code ready · deploy script ready (Cloud Run) · 2026-11-20
 
 The server is one Docker image (`Dockerfile`). It keeps no database and writes nothing to disk. Owners' memories live in their own Google Drive or OneDrive.
 
@@ -31,6 +31,25 @@ The server is one Docker image (`Dockerfile`). It keeps no database and writes n
 | `PORT` | set by host | Default 8080 in the image |
 
 **Secrets** (seal keys, client secrets) go into the host's secret store, never into the repo or the image.
+
+## 2b. Decisions for the beta (2026-11-20)
+
+| Decision | Choice |
+|---|---|
+| Hosting | **Google Cloud Run**, `europe-west1` (Belgium), in the same Google Cloud project as the sign-in client |
+| Instances | min 1 and max 1 |
+| Address | Cloud Run's own address `https://intheknow-<project-number>.europe-west1.run.app` for now. Google brand verification waits for an owned domain. |
+| Operator on `/privacy` | Decided later (`ITK_OPERATOR`, `ITK_CONTACT` in `.env`). Must be filled before verification. |
+| Microsoft | After the Google beta works end to end |
+
+**Deploy:** run [`deploy/cloudrun.sh`](../deploy/cloudrun.sh). It is safe to re-run. It:
+1. enables the APIs;
+2. keeps the secrets in Secret Manager (the production seal key is generated once and never replaced);
+3. builds the image and deploys with min = max = 1 instance;
+4. checks `/health`;
+5. prints the redirect URI and the connector address.
+
+During a deploy, Cloud Run briefly runs the old and the new revision side by side. The one-instance rule can be broken for a few seconds, so deploy when few owners are active.
 
 ## 3. Google
 
