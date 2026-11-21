@@ -18,7 +18,7 @@
   --amber:#C98A12; --amber-soft:#FFF4DC; --mint-soft:#E3F6EF; --coral-soft:#ECEBFD; --violet:#6B5BD6; --violet-soft:#EEEBFC;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:16px}
+html{scroll-behavior:smooth;scroll-padding-top:68px}
 body{background:var(--paper);color:var(--ink);font:400 17px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
 a{color:inherit}
 button{font:inherit;color:inherit}
@@ -29,7 +29,7 @@ button{font:inherit;color:inherit}
 .app{--cbg:#FAF9F5;--cside:#F3F1EA;--cbubble:#EFECE3;--cline:#E6E2D8;--ctext:#29261B;--cmuted:#8A8578;
   --brand:#4B5BDB;--brand2:#18B39B;
   display:grid;grid-template-columns:264px minmax(0,1fr);margin:12px 12px 0;
-  height:calc(100vh - 170px);height:calc(100svh - 170px);min-height:600px;max-height:900px;
+  height:calc(100vh - 222px);height:calc(100svh - 222px);min-height:600px;max-height:900px;
   background:var(--cbg);border:1px solid var(--cline);border-radius:18px;overflow:hidden;color:var(--ctext);box-shadow:0 40px 90px -50px rgba(41,38,27,.35)}
 .btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);border:0;border-radius:999px;padding:12px 22px;font:600 15px Inter,sans-serif;text-decoration:none;cursor:pointer;transition:transform .2s,box-shadow .2s;white-space:nowrap}
 .btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(20,22,31,.5)}
@@ -322,7 +322,7 @@ footer a{text-decoration:none}
   .person-map .group::after{display:none}
 }
 @media (max-width:860px){
-  .app{grid-template-columns:minmax(0,1fr);margin:0;border-width:0 0 1px;border-radius:0 0 22px 22px;height:calc(100vh - 150px);height:calc(100svh - 150px);min-height:540px;box-shadow:0 30px 60px -40px rgba(41,38,27,.4)}
+  .app{grid-template-columns:minmax(0,1fr);margin:0;border-width:0 0 1px;border-radius:0 0 22px 22px;height:calc(100vh - 202px);height:calc(100svh - 202px);min-height:540px;box-shadow:0 30px 60px -40px rgba(41,38,27,.4)}
   .side{display:none}
   .m-top{padding:0 12px;border-bottom:1px solid var(--cline);height:52px}
   .m-menu{display:grid;place-items:center;width:30px;height:30px;color:var(--cmuted)}
@@ -484,9 +484,73 @@ footer a{text-decoration:none}
 }
 @keyframes packetx{0%{left:-12px;opacity:1}100%{left:32px;opacity:1}}
 @media (prefers-reduced-motion:reduce){.tr{opacity:1}}
+
+/* ======================= Site bar: slim, sticky, ink ======================= */
+.topbar{position:sticky;top:0;z-index:50;height:52px;background:var(--ink);color:var(--paper);transition:box-shadow .25s}
+.topbar.scrolled{box-shadow:0 10px 24px -18px rgba(20,22,31,.7)}
+.topbar .tb-in{height:100%;padding:0 31px;display:flex;align-items:center;gap:28px}
+.tb-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap;color:var(--paper)}
+.tb-brand svg{width:24px;height:24px;flex:none;border-radius:7px}
+.tb-links{display:flex;gap:2px;margin-left:auto}
+.tb-links a{text-decoration:none;font-size:14px;font-weight:500;color:rgba(250,248,244,.62);padding:6px 12px;border-radius:6px;transition:color .2s,background .2s}
+.tb-links a:hover{color:var(--paper);background:rgba(255,255,255,.07)}
+.tb-cta{display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:var(--signal);color:#fff;font-size:13.5px;font-weight:600;padding:8px 15px;border-radius:8px;white-space:nowrap;transition:background .2s}
+.tb-cta:hover{background:#4338CA}
+.tb-cta:focus-visible,.tb-links a:focus-visible,.tb-brand:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+@media (max-width:860px){.topbar .tb-in{padding:0 12px}}
+@media (max-width:640px){.tb-links{display:none}.tb-cta{margin-left:auto}.topbar .tb-in{gap:12px}}
+
+/* ===== person file panel (same language as the tools hub) ===== */
+.pf-tabs{display:flex;justify-content:center;gap:4px;margin:6px auto 0;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px;width:max-content}
+.pf-tabs button{border:0;background:none;border-radius:6px;padding:7px 14px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;transition:background .25s,color .25s}
+.pf-tabs button.on{background:var(--ink);color:var(--paper)}
+.pf{margin-top:28px}
+.pf + .rules{margin-top:36px}
+.pf-chat{position:relative;height:300px;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 70px);mask-image:linear-gradient(to bottom,transparent 0,#000 70px)}
+.pf-msgs{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.pf-b{max-width:92%;background:var(--ink);color:var(--paper);border-radius:10px;border-bottom-right-radius:3px;padding:10px 14px;font-size:15px;line-height:1.4;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
+.pf-b.show{opacity:1;transform:none}
+.pf-b.show.old{opacity:.35}
+.pf-file{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.pf-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--paper)}
+.pf-av{width:40px;height:40px;border-radius:8px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-weight:700;font-size:16px;flex:none}
+.pf-head b{display:block;font-size:16px}
+.pf-head small{display:block;font-size:12.5px;color:var(--muted)}
+.pf-drive{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.pf-drive svg{width:14px;height:14px}
+.pf-r{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:10px;align-items:center;height:64px;padding:10px 16px;border-top:1px solid #F1EEE8;transition:background .6s}
+.pf-r:first-child{border-top:0}
+.pf-r .lb{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.pf-r .lb .lock{align-self:flex-start;letter-spacing:0}
+.pf-r .vl{font-size:15px;line-height:1.3;font-weight:500;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pf-r .vl s{color:var(--muted);font-weight:400;text-decoration-color:var(--muted);margin-right:8px}
+.pf-r .vl .ph{display:block;height:10px;width:60%;border-radius:3px;background:#F1EEE8}
+.pf-r .fsrc{font-size:11.5px;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .4s}
+.pf-r.seen .fsrc{opacity:1}
+.pf-r.hit{background:#F3F2FF}
+@media (max-width:860px){
+  .pf-tabs{width:100%;justify-content:space-between}.pf-tabs button{flex:1;padding:7px 4px}
+  .pf-chat{height:150px}
+  .pf-r{grid-template-columns:72px minmax(0,1fr) auto;padding:8px 12px;gap:8px}
+  .pf-r .vl{font-size:14px}
+  .pf-r .st{font-size:10.5px;padding:2px 5px}
+  .pf-drive{display:none}
+}
 </style>
 </head>
 <body>
+
+<nav class="topbar" id="topbar" aria-label="Site">
+  <div class="tb-in">
+    <a class="tb-brand" href="#app" aria-label="In The Know, back to top"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span>In The Know</span></a>
+    <div class="tb-links">
+      <a href="#one">Why</a>
+      <a href="#how">How it works</a>
+      <a href="#tools">Your tools</a>
+    </div>
+    <a class="tb-cta" href="#connect">Add to Claude</a>
+  </div>
+</nav>
 
 <header class="app" id="app">
   <aside class="side" aria-label="Example chats">
@@ -502,7 +566,6 @@ footer a{text-decoration:none}
       <span class="m-menu" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></span>
       <span class="m-brand"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.18 12.31L22.50 13.48M13.73 13.35L18.62 17.17M12.82 14.04L15.97 21.83M11.69 14.18L10.83 20.32M10.65 13.73L5.47 20.35M9.96 12.82L4.21 15.15M9.82 11.69L1.50 10.52M10.27 10.65L5.38 6.83M11.18 9.96L8.03 2.17M12.31 9.82L13.17 3.68M13.35 10.27L18.53 3.65M14.04 11.18L19.79 8.85" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg><span class="cw">Claude</span></span>
       <span class="m-title" id="mtitle"></span>
-      <a class="btn small" href="#connect">Add it — free</a>
     </div>
 
     <div class="h-stage">
@@ -565,41 +628,21 @@ footer a{text-decoration:none}
 <section class="how" id="how">
   <div class="wrap">
     <h2 class="serif reveal center">A file for <em>every person</em></h2>
-
-    <div class="diagram reveal">
-      <div class="flow" id="flow">
-        <div class="stage">
-          <div class="stage-label"><b>1</b>You say</div>
-          <div class="say">“<mark class="m1">Sara wants 3 rooms, 120–140k €.</mark> <mark class="m2">No ground floor.</mark> <mark class="m3">Her husband Mihai decides.</mark> <mark class="m4">Viewing Thursday.</mark>”</div>
-        </div>
-        <div class="link" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-        <div class="stage">
-          <div class="stage-label"><b>2</b>It sorts</div>
-          <div class="pieces">
-            <div class="piece p1"><span class="k2">Wants</span><span class="v">3 rooms · 120–140k €</span></div>
-            <div class="piece p2"><span class="k2">Must not</span><span class="v">Ground floor</span></div>
-            <div class="piece p3"><span class="k2">Link</span><span class="v">Mihai · decides</span></div>
-            <div class="piece p4"><span class="k2">Next</span><span class="v">Viewing · Thu</span></div>
-          </div>
-        </div>
-        <div class="link" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div>
-        <div class="stage">
-          <div class="stage-label"><b>3</b>Your Drive</div>
-          <div class="drive">
-            <div class="drive-top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>In The Know</div>
-            <div class="file hot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><div>Sara Ionescu</div></div>
-            <div class="file hot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><div>Mihai Ionescu <span class="new">new</span></div></div>
-            <div class="file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><div>Viewings</div></div>
-          </div>
-        </div>
+    <div class="pf-tabs reveal" id="pftabs" role="tablist" aria-label="Example person"></div>
+    <div class="hub pf reveal" id="pf" aria-label="Each thing you say about a person goes through Claude to In The Know and lands in the right line of that person's file; a change is asked first and the old value kept">
+      <div class="pf-chat"><div class="pf-msgs" id="pfmsgs"></div></div>
+      <div class="mid">
+        <div class="wire" aria-hidden="true"><i></i></div>
+        <div class="node"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.18 12.31L22.50 13.48M13.73 13.35L18.62 17.17M12.82 14.04L15.97 21.83M11.69 14.18L10.83 20.32M10.65 13.73L5.47 20.35M9.96 12.82L4.21 15.15M9.82 11.69L1.50 10.52M10.27 10.65L5.38 6.83M11.18 9.96L8.03 2.17M12.31 9.82L13.17 3.68M13.35 10.27L18.53 3.65M14.04 11.18L19.79 8.85" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg><span>Claude</span></div>
+        <div class="wire" aria-hidden="true"><i></i></div>
+        <div class="node itk"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span>In The Know</span></div>
+        <div class="wire" aria-hidden="true"><i></i></div>
+      </div>
+      <div class="pf-file">
+        <div class="pf-head"><span class="pf-av" id="pfav"></span><div><b id="pfname"></b><small id="pfrole"></small></div><span class="pf-drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Your Drive</span></div>
+        <div id="pfrows"></div>
       </div>
     </div>
-
-    <div class="diagram reveal">
-      <div class="pm-tabs" id="pmtabs" role="tablist" aria-label="Example person"></div>
-      <div class="pm-body" id="pmbody"></div>
-    </div>
-
     <div class="rules">
       <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M7 8h10M7 12h6M5 20l2-4h12V4H5z"/></svg></span>Source kept</div>
       <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3"/></svg></span>Undo anything</div>
@@ -837,60 +880,6 @@ pintabs.addEventListener("click", e => { const b = e.target.closest("button"); i
 if (reduce){ setChat(0); app.classList.add("chat"); CHATS[0].steps.slice(-3).forEach(([k, h]) => { const el = add(k, h); if (k === "tool") el.querySelector(".st").innerHTML = OK; }); }
 else loop();
 
-/* ================= diagram 2: one person, three trades ================= */
-const PEOPLE = [
-  { tab:"Buyer", name:"Sara Ionescu", sub:"Buyer · since Nov 3", init:"S", b:"#4B5BDB", b2:"#18B39B", stats:["2 viewings","1 offer"],
-    wants:["3 rooms","120–140k €","Near a school"], must:"Ground floor", people:["Mihai · husband, decides","Referred by Dan"],
-    hist:[["Nov 3","First call",""],["Nov 10","Viewing","Teilor 14"],["Nov 17","Offer","128k €"],["Today","Viewing","Dacia 7"]],
-    old:"120k max", nu:"140k max", q:"Viewing with Sara at 5. Anything to know?", a:"Mihai decides, so make sure he comes. Skip ground floors. Her budget is now up to 140k." },
-  { tab:"Athlete", name:"Mihai Radu", sub:"Athlete · since March", init:"M", b:"#7C3AED", b2:"#EC4899", stats:["24 sessions","2 left"],
-    wants:["Half marathon, April","Squat 100 kg"], must:"Deep lunges (knee)", people:["Trains with Andrei","Wife pays the package"],
-    hist:[["Mar","Squat","70 kg"],["Jun","Squat","80 kg"],["Sep","Squat","85 kg"],["Today","Squat","90 kg"]],
-    old:"Mon · Wed", nu:"Tue · Thu", q:"Mihai at 6. What's the plan?", a:"Go light on squats: knee pain 3 times in 2 weeks. He's 20 weeks from the half marathon." },
-  { tab:"Traveler", name:"Ana Pop", sub:"Traveler · 3rd trip", init:"A", b:"#0F9F8C", b2:"#84CC16", stats:["3 trips","Delta · Fri"],
-    wants:["Window seat","Birdwatching"], must:"Nuts (allergy)", people:["Rooms with sister Ioana","Not near Paul"],
-    hist:[["2024","Danube",""],["2025","Maramureș",""],["Fri","Delta","booked"]],
-    old:"Vegetarian", nu:"Vegan", q:"Ana's on Friday's trip. What should I know?", a:"Nut allergy, so check Saturday's lunch. She rooms with Ioana, away from Paul." }
-];
-const pmtabs = document.getElementById("pmtabs"), pmbody = document.getElementById("pmbody");
-pmtabs.innerHTML = PEOPLE.map((p, i) => `<button type="button" data-i="${i}" role="tab">${p.tab}</button>`).join("");
-function person(i){
-  const p = PEOPLE[i];
-  [...pmtabs.children].forEach(b => { b.classList.toggle("on", b.dataset.i == i); b.setAttribute("aria-selected", b.dataset.i == i); });
-  pmbody.innerHTML = `
-    <div class="person-map" style="--pb:${p.b};--pb2:${p.b2}">
-      <div class="who"><div class="avatar">${p.init}</div><b>${p.name}</b><small>${p.sub}</small><div class="stats">${p.stats.map(s => `<span>${s}</span>`).join("")}</div></div>
-      <div class="group g-wants"><h4>Wants</h4><ul>${p.wants.map(w => `<li>${w}</li>`).join("")}</ul></div>
-      <div class="group g-must"><h4>Must not <span class="lock">private</span></h4><ul><li>${p.must}</li></ul></div>
-      <div class="group g-people"><h4>People</h4><ul>${p.people.map(w => `<li>${w}</li>`).join("")}</ul></div>
-      <div class="group g-time"><h4>History</h4><ul class="timeline">${p.hist.map(([d, t, v], k) => `<li class="${k === p.hist.length - 1 ? "now" : ""}">${d} · ${t}<span class="amt">${v}</span></li>`).join("")}</ul></div>
-    </div>
-    <div class="change" aria-label="When a fact changes, it asks before updating and keeps the old one">
-      <span class="chg old">${p.old}</span><span class="q">?</span><span class="chg nu">${p.nu}</span>
-      <span class="cap">asks before it changes · keeps the old one</span>
-    </div>
-    <div class="map-ask"><div class="bub me">${p.q}</div><div class="bub ai">${p.a}</div></div>`;
-}
-let pmTimer;
-function pick(i, user){
-  pmbody.classList.add("swap");
-  setTimeout(() => { pmCur = i; person(i); pmbody.classList.remove("swap"); }, 220);
-  if (user){ clearInterval(pmTimer); }
-}
-/* reserve the tallest person's height so switching never moves the page */
-let pmCur = 0;
-function lockPm(){
-  pmbody.style.minHeight = "";
-  let m = 0;
-  PEOPLE.forEach((_, i) => { person(i); m = Math.max(m, Math.ceil(pmbody.getBoundingClientRect().height)); });
-  person(pmCur); pmbody.style.minHeight = m + "px";
-}
-lockPm();
-let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(lockPm, 150); });
-if (document.fonts) document.fonts.ready.then(lockPm);
-pmtabs.addEventListener("click", e => { const b = e.target.closest("button"); if (b) pick(+b.dataset.i, true); });
-if (!reduce){ let k = 0; pmTimer = setInterval(() => { if (!document.hidden) pick(k = (k + 1) % PEOPLE.length); }, 7000); }
-
 /* ================= tools hub: an item travels from a tool into its row ================= */
 (() => {
   const hub = document.getElementById("hub"); if (!hub) return;
@@ -910,6 +899,93 @@ if (!reduce){ let k = 0; pmTimer = setInterval(() => { if (!document.hidden) pic
     setTimeout(step, 200);
   }
   new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !started){ started = true; o.disconnect(); step(); } }, {threshold:.3}).observe(hub);
+})();
+</script>
+<script>
+(()=>{const t=document.getElementById('topbar');const f=()=>t.classList.toggle('scrolled',scrollY>8);addEventListener('scroll',f,{passive:true});f();})();
+
+/* ================= person file: each sentence lands in the right line ================= */
+(() => {
+  const root = document.getElementById("pf"); if (!root) return;
+  const LOCK = '<span class="lock">private</span>';
+  const P = [
+    { tab:"Buyer", init:"S", name:"Sara Ionescu", role:"Buyer · Casa Nord", rows:["Wants","Must not","People","Next"], priv:1,
+      says:[["Sara wants 3 rooms, 120–140k €.", 0, "3 rooms · 120–140k €"],
+            ["No ground floor, ever.", 1, "Ground floor"],
+            ["Her husband Mihai decides.", 2, "Mihai · husband, decides"],
+            ["Viewing at Teilor 14 on Thursday.", 3, "Teilor 14 · Thu"]],
+      change:["She can go up to 150k now.", 0, "120–140k €", "3 rooms · up to 150k €"] },
+    { tab:"Athlete", init:"M", name:"Mihai Radu", role:"Athlete · Fit Studio", rows:["Goal","Must not","People","Next"], priv:1,
+      says:[["Mihai wants a half marathon in April.", 0, "Half marathon · April"],
+            ["Deep lunges hurt his knee.", 1, "Deep lunges · knee"],
+            ["He trains with Andrei.", 2, "Andrei · training partner"],
+            ["Next session Thursday at 6.", 3, "Thu · 18:00"]],
+      change:["Move him to Tuesdays and Thursdays.", 3, "Thu", "Tue · Thu · 18:00"] },
+    { tab:"Traveler", init:"A", name:"Ana Pop", role:"Traveler · Delta Tours", rows:["Trip","Must not","People","Next"], priv:1,
+      says:[["Ana's on the Delta trip, window seat.", 0, "Delta · Fri · window seat"],
+            ["She's allergic to nuts.", 1, "Nuts · allergy"],
+            ["She rooms with her sister Ioana.", 2, "Ioana · sister, same room"],
+            ["Her deposit is due Wednesday.", 3, "Deposit · due Wed"]],
+      change:["Ana paid the deposit.", 3, "due Wed", "Deposit · paid"] }
+  ];
+  const tabs = document.getElementById("pftabs"), msgs = document.getElementById("pfmsgs"), rowsEl = document.getElementById("pfrows");
+  tabs.innerHTML = P.map((p, i) => `<button type="button" role="tab" data-i="${i}">${p.tab}</button>`).join("");
+  let token = 0, started = false;
+  function setup(i){
+    const p = P[i];
+    [...tabs.children].forEach(b => { b.classList.toggle("on", b.dataset.i == i); b.setAttribute("aria-selected", b.dataset.i == i); });
+    document.getElementById("pfav").textContent = p.init;
+    document.getElementById("pfname").textContent = p.name;
+    document.getElementById("pfrole").textContent = p.role;
+    rowsEl.innerHTML = p.rows.map((r, k) => `<div class="pf-r"><span class="lb">${r}${k === p.priv ? LOCK : ""}</span><span class="vl"><span class="ph"></span></span><span class="fsrc"></span></div>`).join("");
+    msgs.innerHTML = "";
+  }
+  function say(text){
+    [...msgs.children].forEach(m => m.classList.add("old"));
+    const b = document.createElement("div"); b.className = "pf-b"; b.textContent = text; msgs.appendChild(b);
+    while (msgs.children.length > 4) msgs.firstElementChild.remove();
+    requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add("show")));
+    root.classList.remove("pulse"); void root.offsetWidth; root.classList.add("pulse");
+  }
+  function land(k, html, src){
+    const r = rowsEl.children[k];
+    [...rowsEl.children].forEach(x => x.classList.remove("hit"));
+    r.querySelector(".vl").innerHTML = html; r.querySelector(".fsrc").innerHTML = src;
+    r.classList.add("seen", "hit");
+  }
+  async function play(i, t){
+    setup(i);
+    const p = P[i];
+    await wait(500);
+    for (const [text, k, val] of p.says){
+      if (t !== token) return false;
+      say(text); await wait(1100); if (t !== token) return false;
+      land(k, val, "today"); await wait(1300);
+    }
+    if (t !== token) return false;
+    const [text, k, old, nu] = p.change;
+    say(text); await wait(1100); if (t !== token) return false;
+    land(k, `<s>${old}</s>${nu}`, '<span class="st st-u">asked · updated</span>');
+    await wait(3200);
+    return true;
+  }
+  async function loop(start){
+    const t = ++token; let i = start;
+    while (t === token){
+      if (document.hidden){ await wait(1000); continue; }
+      if (!(await play(i, t))) return;
+      i = (i + 1) % P.length;
+    }
+  }
+  tabs.addEventListener("click", e => { const b = e.target.closest("button"); if (b){ started = true; loop(+b.dataset.i); } });
+  setup(0);
+  if (reduce){
+    P[0].says.forEach(([, k, val]) => land(k, val, "today"));
+    const [, k, old, nu] = P[0].change; land(k, `<s>${old}</s>${nu}`, '<span class="st st-u">asked · updated</span>');
+    rowsEl.querySelectorAll(".hit").forEach(x => x.classList.remove("hit"));
+    return;
+  }
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !started){ started = true; o.disconnect(); loop(0); } }, {threshold:.3}).observe(root);
 })();
 </script>
 </body>
