@@ -5,12 +5,12 @@
 **Voice:** a calm, precise business assistant. It uses short sentences, real names and real numbers. It never shows hype and never invents anything. In the owner's language it sounds like a trusted bookkeeper who also knows the customers.
 
 ## Mark
-An ink rounded square with a light arc (the "knowing look") and a signal-coral dot (the insight).
+A light paper rounded square (with a faint ink hairline) with "ITK" drawn as one minimal monoline wordmark. The letters are joined: the signal-coral T's crossbar runs from the top of the I to the top of the K, so the three letters read as one connected shape.
 
 ```
-<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#14161F"/>
-<path d="M8.5 20.5c2.6-6.2 12.4-6.2 15 0" stroke="#FAF8F4" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-<circle cx="16" cy="12.4" r="3.3" fill="#FF6B4A"/></svg>
+<svg viewBox="0 0 32 32"><rect x=".5" y=".5" width="31" height="31" rx="8.5" fill="#FAF8F4" stroke="#14161F" stroke-opacity=".12"/>
+<path d="M6.5 10V22M20.5 10V22M20.5 16L25.5 10M20.5 16L25.5 22" fill="none" stroke="#14161F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6.5 10H20.5M13.5 10V22" fill="none" stroke="#FF6B4A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
 ```
 
 `packaging/icon.png` is the 512 px version of the mark. The same mark is the connector icon in Claude, sent through the MCP `icons` field.
@@ -18,9 +18,9 @@ An ink rounded square with a light arc (the "knowing look") and a signal-coral d
 ## Colours
 | Token | Hex | Use |
 |---|---|---|
-| Ink | `#14161F` | mark, hero background |
-| Paper | `#FAF8F4` | mark arc, hero text |
-| Signal | `#FF6B4A` | the insight dot, hero glow |
+| Ink | `#14161F` | mark I and K, hero background |
+| Paper | `#FAF8F4` | mark background, hero text |
+| Signal | `#FF6B4A` | mark T (the joining stroke), hero glow |
 | Mint | `#16B98A` | live/working pulse |
 
 The owner's own brand colours (`brand.primary`, `brand.accent`) colour the content: KPIs, charts and buttons. The In The Know signature stays in the mark and the footer.

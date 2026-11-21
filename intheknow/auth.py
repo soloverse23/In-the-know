@@ -326,9 +326,9 @@ LOGOS = {
                   '<rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>'
                   '<rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>'),
 }
-MARK = ('<svg viewBox="0 0 32 32" width="44" height="44" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#14161F"/>'
-        '<path d="M8.5 20.5c2.6-6.2 12.4-6.2 15 0" stroke="#FAF8F4" stroke-width="2.6" fill="none" stroke-linecap="round"/>'
-        '<circle cx="16" cy="12.4" r="3.3" fill="#FF6B4A"/></svg>')
+MARK = ('<svg viewBox="0 0 32 32" width="44" height="44" aria-hidden="true"><rect x=".5" y=".5" width="31" height="31" rx="8.5" fill="#FAF8F4" stroke="#14161F" stroke-opacity=".12"/>'
+        '<path d="M6.5 10V22M20.5 10V22M20.5 16L25.5 10M20.5 16L25.5 22" fill="none" stroke="#14161F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'
+        '<path d="M6.5 10H20.5M13.5 10V22" fill="none" stroke="#FF6B4A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 CSS = """
 :root{--bg:#FAF8F4;--card:#fff;--ink:#14161F;--muted:#5d6070;--line:#e6e2da;--accent:#FF6B4A}
 @media (prefers-color-scheme:dark){:root{--bg:#101218;--card:#181b23;--ink:#f3f1ec;--muted:#a3a6b3;--line:#2a2e3a}}
