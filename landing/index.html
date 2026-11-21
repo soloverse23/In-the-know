@@ -393,6 +393,7 @@ footer .legal-links{display:flex;gap:16px;flex-wrap:wrap}
 @media (max-width:1100px){.tour[data-stage="demo"] .tour-left .lang{display:none}}
 @media (max-width:860px){.topbar .tb-in{padding:0 12px}}
 @media (max-width:640px){.tb-links{display:none}.topbar .lang{margin-left:auto}.topbar .tb-in{gap:12px}}
+@media (max-width:400px){.tb-brand span{display:none}.tb-cta{padding:8px 12px}}
 
 
 /* ===== flexible database -> complete answers ===== */
@@ -758,6 +759,20 @@ html.touring{overflow:hidden}
 .replay-btn svg{width:15px;height:15px}
 .hero h1{margin:18px auto 22px;font-size:clamp(52px,8.4vw,118px);line-height:.96;letter-spacing:-.02em;max-width:none}
 .lede{font-size:clamp(18px,1.9vw,23px);color:var(--muted)}
+/* headline: always two lines. Line one is sized to fit the column; --fit is its width in em (Romanian is longer and needs room for diacritics) */
+.hl{--fit:11.7;--fitall:13.9;max-width:none;text-wrap:balance}
+html[lang="ro"] .hl{--fit:14.5;--fitall:16.7}
+.hl .l1{white-space:nowrap}
+.hl em{display:block}
+.hero h1.hl{font-size:min(96px,calc((min(100vw,1080px) - 56px) / var(--fit)));line-height:1.06}
+.qa h1.hl{font-size:min(84px,calc((min(100vw,1080px) - 72px) / var(--fit)));line-height:1.06;max-width:none}
+html[lang="ro"] .hero h1.hl,html[lang="ro"] .qa h1.hl{line-height:1.2}
+html[lang="ro"] h2{line-height:1.18}
+@media (max-width:700px){
+  .hl .l1{white-space:normal}
+  .hl em{display:inline}
+  .hero h1.hl,.qa h1.hl{font-size:calc((100vw - 40px) * 2 / (var(--fitall) + 2))}
+}
 .add{margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:24px}
 .add .tabs{display:flex;gap:10px;background:none;padding:0;border:0;margin:0;border-radius:0}
 .add .tab{height:54px;padding:0 28px;border-radius:10px;font:600 16.5px Inter,sans-serif;border:1.5px solid var(--ink);background:transparent;color:var(--ink);opacity:1;transition:background .2s,color .2s,transform .2s}
@@ -902,7 +917,7 @@ html.touring{overflow:hidden}
   <div class="tour-body">
     <div class="qs qa">
       <p class="q-kick" data-i="kick">A one-minute tour</p>
-      <h1 class="serif" data-i="h1">Your AI finally knows your business. <em>All of it.</em></h1>
+      <h1 class="serif hl" data-i="h1"><span class="l1">Your AI finally knows your business.</span> <em>All of it.</em></h1>
       <p class="q-ask" data-i="ask">First, which one do you usually use?</p>
       <div class="q-choices">
         <button type="button" class="q-choice" data-ai="claude"><span class="ai-mark" data-for="claude"></span><span><b>Claude</b><small data-i="byA">by Anthropic</small></span><span class="arr" aria-hidden="true">→</span></button>
@@ -985,7 +1000,7 @@ html.touring{overflow:hidden}
 <section class="hero" id="start">
   <div class="wrap hero-in">
     <button type="button" class="replay-btn" id="replay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v4h4"/></svg><span data-i="replay">Replay the tour</span></button>
-    <h1 class="serif" data-i="h1b">Your AI finally knows your business.<br><em>All of it.</em></h1>
+    <h1 class="serif hl" data-i="h1b"><span class="l1">Your AI finally knows your business.</span> <em>All of it.</em></h1>
     <p class="lede" data-i="lede">Clients, deals, schedules, payments and notes in one complete memory for Claude and ChatGPT.</p>
     <div class="add" id="connect">
       <div class="tabs" role="tablist" aria-label="Add it to">
