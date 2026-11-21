@@ -67,20 +67,32 @@ def routes(base_url: str, show_connector: bool = True) -> list[tuple[str, list[s
                  + (f' · <a href="mailto:{html.escape(contact)}">{html.escape(contact)}</a>' if contact else "") + "</footer>")
         return _doc(lang, "In The Know", inner, https)
 
+    def legal(request: Request, page: str) -> Response:
+        lang = legal_lang(request)
+        title, render = LEGAL[lang][page]
+        return _doc(lang, f"In The Know: {title}", render(base) if page == "privacy" else render(), https)
+
     async def privacy(request: Request) -> Response:
-        return _doc("en", "In The Know: Privacy policy", privacy_html(base), https)
+        return legal(request, "privacy")
 
     async def pricing(request: Request) -> Response:
-        return _doc("en", "In The Know: Pricing", pricing_html(), https)
+        return legal(request, "pricing")
 
     async def terms(request: Request) -> Response:
-        return _doc("en", "In The Know: Terms", terms_html(), https)
+        return legal(request, "terms")
 
     async def refunds(request: Request) -> Response:
-        return _doc("en", "In The Know: Refunds", refunds_html(), https)
+        return legal(request, "refunds")
 
     return [("/", ["GET"], home), ("/privacy", ["GET"], privacy), ("/pricing", ["GET"], pricing),
             ("/terms", ["GET"], terms), ("/refunds", ["GET"], refunds)]
+
+
+def legal_lang(request: Request) -> str:
+    """Legal pages exist in English and Romanian: ?lang= wins (the landing page links with it), then the browser language."""
+    asked = request.query_params.get("lang", "").lower()
+    lang = asked if asked in ("en", "ro") else pick_lang(request.headers.get("accept-language", ""))
+    return lang if lang in ("en", "ro") else "en"
 
 
 def pricing_html() -> str:
@@ -211,3 +223,156 @@ held about a person. For anything else, contact {contact}.</p>
 <h2>Changes</h2>
 <p>We will update this page when what the service does with data changes, and change the date at the top.</p>
 <footer><a href="/">In The Know</a></footer>"""
+
+
+# --------------------------------------------------------------------------- Romanian
+RO_FOOT = '<footer><a href="/">In The Know</a> · {links}</footer>'
+RO_LINKS = {"pricing": "Prețuri", "terms": "Termeni", "refunds": "Rambursări", "privacy": "Confidențialitate"}
+
+
+def _ro_footer(skip: str) -> str:
+    return RO_FOOT.format(links=" · ".join(f'<a href="/{k}?lang=ro">{v}</a>' for k, v in RO_LINKS.items() if k != skip))
+
+
+def pricing_html_ro() -> str:
+    contact = html.escape(_env("ITK_CONTACT", "adresa de contact de pe pagina principală"))
+    return f"""<h1>Prețuri</h1><p class="lead">Un singur plan, totul inclus.</p>
+<ul><li><b>4,99 € pe lună</b> sau <b>49 € pe an</b> (două luni gratuite). Prețurile includ TVA.</li>
+<li><b>14 zile gratuit</b> când adaugi un card. Dacă anulezi înainte să treacă cele 14 zile, nu plătești nimic.</li>
+<li>Fără limite pentru clienți, înregistrări sau fișiere.</li></ul>
+<h2>Ai un cod?</h2><p>Un cod promoțional îți dă 3 luni gratuit, fără card. Introdu-l când conectezi In The Know la Claude sau ChatGPT.</p>
+<h2>Dacă te oprești</h2><p>Memoria ta este un fișier în propriul tău Google Drive sau OneDrive, deci rămâne a ta. Fără un plan activ, asistentul tău
+poate citi în continuare totul; salvarea lucrurilor noi se oprește până te abonezi din nou.</p>
+<p>Plățile sunt gestionate de Paddle, care este vânzătorul înregistrat (seller of record). Întrebări: {contact}.</p>
+{_ro_footer("pricing")}"""
+
+
+def terms_html_ro() -> str:
+    op = html.escape(_env("ITK_OPERATOR", "operatorul In The Know"))
+    contact = html.escape(_env("ITK_CONTACT", "adresa de contact de pe pagina principală"))
+    date = html.escape(_env("ITK_POLICY_DATE", "2026-11-20"))
+    return f"""<h1>Termeni și condiții</h1><p class="lead">Ultima actualizare: {date}. In The Know este operat de {op}. Contact: {contact}.</p>
+<h2>Serviciul</h2><p>In The Know este un conector care le oferă asistenților AI, precum Claude și ChatGPT, o memorie durabilă și exactă a
+afacerii tale. Memoria este un fișier în propriul tău Google Drive sau OneDrive. Ai nevoie de un cont la unul dintre acestea și la asistentul tău AI.</p>
+<h2>Datele tale</h2><p>Datele tale rămân ale tale. Nu revendicăm niciun drept asupra lor. Ești responsabil pentru ce pui în memorie, inclusiv
+pentru existența unui temei legal pentru păstrarea datelor personale ale clienților tăi. Vezi <a href="/privacy?lang=ro">politica de confidențialitate</a>.</p>
+<h2>Planuri, perioadă de probă și reînnoire</h2>
+<ul><li>Planul costă 4,99 € pe lună sau 49 € pe an, cu TVA inclus, și se reînnoiește automat până când îl anulezi.</li>
+<li>Adăugarea unui card pornește o perioadă de probă gratuită de 14 zile, disponibilă o singură dată de persoană. Dacă nu anulezi înainte să se
+încheie, se încasează prima plată.</li>
+<li>Un cod promoțional oferă 3 luni gratuit fără card, o singură dată de persoană. La finalul perioadei nu se încasează nimic; salvarea se
+oprește până te abonezi.</li>
+<li>Poți anula oricând din pagina contului tău; planul rămâne activ până la sfârșitul perioadei plătite.</li>
+<li>Plățile, facturile și TVA-ul sunt gestionate de Paddle, ca vânzător înregistrat. Pentru cumpărare se aplică termenii Paddle.</li>
+<li>Putem modifica prețurile pentru reînnoirile viitoare și te vom anunța din timp. Primii utilizatori pot păstra un preț convenit.</li></ul>
+<h2>Fără un plan activ</h2><p>Citirea și exportul memoriei tale funcționează în continuare. Salvarea informațiilor noi se oprește. Nu se șterge nimic.</p>
+<h2>Utilizare acceptabilă</h2><p>Nu folosi serviciul în mod abuziv: fără încercări de a-l strica, supraîncărca sau decompila, fără utilizări
+ilegale și fără folosirea aceluiași plan de către mai multe afaceri.</p>
+<h2>Disponibilitate și răspundere</h2><p>Serviciul este oferit „ca atare”. Ne străduim să îl menținem disponibil și să îți păstrăm datele în
+siguranță, dar nu putem promite că nu va fi niciodată întrerupt. Te rugăm să îți păstrezi propria copie de siguranță; fișierul este în Drive-ul
+tău. În măsura permisă de lege, răspunderea noastră este limitată la suma plătită de tine în ultimele 12 luni. Nimic din acești termeni nu
+limitează drepturile pe care le ai conform legislației obligatorii privind protecția consumatorilor.</p>
+<h2>Răspunsurile AI</h2><p>Răspunsurile vin de la asistentul tău AI, pe baza datelor tale. Verifică singur deciziile importante.</p>
+<h2>Modificări și legea aplicabilă</h2><p>Vom actualiza acești termeni când va fi nevoie și vom schimba data de mai sus. Se aplică legea română,
+fără a afecta protecțiile obligatorii pentru consumatori din țara ta de reședință.</p>
+{_ro_footer("terms")}"""
+
+
+def refunds_html_ro() -> str:
+    contact = html.escape(_env("ITK_CONTACT", "adresa de contact de pe pagina principală"))
+    return f"""<h1>Politica de rambursare</h1><p class="lead">Simplă și corectă.</p>
+<ul><li><b>Perioada de probă de 14 zile este gratuită.</b> Dacă anulezi înainte să se încheie, nu plătești nimic.</li>
+<li><b>Planul lunar:</b> dacă ți s-a încasat o plată și nu voiai să continui, cere rambursarea în cel mult 14 zile de la plată și îți
+returnăm toată suma.</li>
+<li><b>Planul anual:</b> cere rambursarea în cel mult 30 de zile de la plată și primești toată suma înapoi. După aceea, poți anula oricând
+și păstrezi serviciul până la finalul anului.</li></ul>
+<p>Pentru o cerere, scrie la {contact} de pe adresa folosită la cumpărare sau folosește linkul din chitanța Paddle. Rambursările sunt făcute
+de Paddle, pe metoda de plată inițială. Acolo unde legea îți dă un drept de retragere mai lung, se aplică acel drept.</p>
+{_ro_footer("refunds")}"""
+
+
+def privacy_html_ro(base: str) -> str:
+    op = html.escape(_env("ITK_OPERATOR", "operatorul In The Know"))
+    contact = html.escape(_env("ITK_CONTACT", "adresa de contact de pe pagina principală"))
+    hosting = html.escape(_env("ITK_HOSTING", "furnizorul nostru de găzduire din Uniunea Europeană"))
+    date = html.escape(_env("ITK_POLICY_DATE", "2026-11-20"))
+    return f"""<h1>Politica de confidențialitate</h1><p class="lead">Ultima actualizare: {date}. In The Know este operat de {op}. Contact: {contact}.</p>
+
+<h2>Pe scurt</h2>
+<ul><li>Memoria afacerii tale este un singur fișier în <b>propriul tău</b> Google Drive (folderul „In The Know”) sau OneDrive (folderul „Apps/In The Know”).</li>
+<li>Nu păstrăm <b>nicio copie</b> a lui și nicio bază de date cu clienții sau datele afacerii tale. Singurul lucru pe care îl înregistrăm despre
+tine este o mică înregistrare de facturare (vezi „Planuri și plăți”).</li>
+<li>Atingem acel fișier doar atunci când tu, prin asistentul tău AI, îi ceri lui In The Know să facă ceva.</li></ul>
+
+<h2>Ce face In The Know</h2>
+<p>In The Know este un conector pentru asistenți AI precum Claude și ChatGPT. Păstrează o memorie exactă a unei afaceri mici (clienți,
+vizite, vânzări, prețuri, costuri, sarcini, obiective, decizii) și îi calculează cifrele. Îl adaugi în asistentul tău la {html.escape(base)}/mcp.</p>
+
+<h2>Unde sunt stocate datele tale</h2>
+<p>Într-un fișier numit memory.itk din propriul tău spațiu de stocare în cloud, pe care îl poți vedea, descărca, copia sau șterge oricând.
+Când adaugi fișiere (liste de clienți, exporturi, notițe, un export al conversațiilor tale vechi), acestea sunt citite o singură dată pe
+serverul nostru, iar conținutul lor este adăugat în acel fișier; fișierele încărcate nu sunt păstrate.</p>
+
+<h2>Ce procesează serverul nostru și cât timp</h2>
+<ul><li>Cât timp gestionează o cerere, serverul ține fișierul memoriei tale în memoria de lucru (RAM). Nu este scris niciodată pe discurile
+noastre. Rămâne în RAM cel mult 10 minute după ultima ta cerere, ca cererile consecutive să fie rapide, apoi este eliminat.</li>
+<li>Fișierele pe care le încarci sunt procesate în RAM în același fel și eliminate după import.</li>
+<li>Jurnalele operaționale înregistrează ce funcție a rulat, cât a durat, dacă a funcționat și un hash unidirecțional al identificatorului
+contului tău. Nu conțin niciodată conținutul memoriei tale, fișierele, mesajele tale sau vreun token de acces.</li></ul>
+
+<h2>Accesul la contul tău Google sau Microsoft</h2>
+<ul><li>Google: cerem permisiunea <i>drive.file</i>, care îi permite lui In The Know să vadă și să modifice doar fișierele pe care le creează
+și fișierele pe care le alegi explicit în selectorul de fișiere Google. Nu putem vedea restul Drive-ului tău. Primim și identificatorul și
+adresa de e-mail ale contului tău Google, ca să știm care memorie este a ta.</li>
+<li>Microsoft: cerem acces la folderul propriu al aplicației In The Know din OneDrive-ul tău (<i>Files.ReadWrite.AppFolder</i>), plus
+identificatorul și adresa de e-mail ale contului tău.</li>
+<li>Autorizarea primită de la furnizorul tău este criptată și stocată doar în tokenul de conectare pe care asistentul tău AI îl păstrează
+pentru tine. Serverul nostru o poate citi când faci o cerere; nu o stocăm nicăieri altundeva.</li>
+<li>Poți retrage accesul oricând: pentru Google la myaccount.google.com/permissions, pentru Microsoft la account.live.com/consent/Manage
+(sau pe pagina „My Apps” a organizației tale).</li></ul>
+
+<h2>Google API Services: Limited Use</h2>
+<p>Utilizarea de către In The Know a informațiilor primite prin API-urile Google și transferul lor către orice altă aplicație respectă
+<a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, inclusiv
+cerințele Limited Use. Folosim datele utilizatorilor Google doar pentru a-ți oferi funcțiile In The Know. Nu le vindem, nu le folosim
+pentru publicitate, nu le transferăm altora decât dacă este necesar pentru furnizarea serviciului sau dacă legea o cere și nu le folosim
+pentru antrenarea modelelor AI. Nicio persoană din echipa In The Know nu îți citește datele, cu excepția cazurilor în care ne dai
+permisiunea explicită pentru suport, din motive de securitate sau acolo unde legea o cere.</p>
+
+<h2>Planuri și plăți</h2>
+<p>In The Know are un singur plan plătit (vezi <a href="/pricing?lang=ro">prețurile</a>). Plățile sunt gestionate de <b>Paddle</b>, care este
+vânzătorul înregistrat: colectează datele cardului tău, face încasarea, se ocupă de TVA și îți trimite facturile. Nu vedem și nu stocăm
+niciodată numărul cardului tău.</p>
+<p>Ca să știm dacă salvarea este activă pentru tine, păstrăm o mică înregistrare într-o bază de date din UE (Google Cloud Firestore): un
+hash unidirecțional al identificatorului contului tău, starea planului și data de expirare, dacă ai folosit deja perioada de probă
+gratuită, numerele de referință Paddle pentru abonament și client și codul promoțional folosit. Nu conține <b>niciun nume, nicio adresă de
+e-mail și nimic din memoria afacerii tale</b>. O ștergem la cerere. Codurile promoționale sunt stocate doar ca hash-uri.</p>
+
+<h2>Asistentul tău AI</h2>
+<p>Răspunsurile pe care In The Know le dă asistentului tău (de exemplu istoricul unui client când întrebi de el) sunt procesate de
+furnizorul acelui asistent (precum Anthropic sau OpenAI), conform propriilor lui condiții de confidențialitate.</p>
+
+<h2>Cine mai este implicat</h2>
+<p>Serverul nostru și înregistrarea de facturare rulează la {hosting}. Paddle procesează plățile. Nu vindem și nu partajăm datele tale și
+nu folosim trackere de publicitate sau de analiză.</p>
+
+<h2>Drepturile tale</h2>
+<p>Conform GDPR, poți cere accesul la datele tale personale, rectificarea, ștergerea, restricționarea sau portabilitatea lor și poți
+depune o plângere la autoritatea de protecție a datelor (în România, ANSPDCP). Pentru că memoria ta stă în propriul tău spațiu de
+stocare, poți exercita direct majoritatea acestor drepturi: deschizi, editezi, exporți sau ștergi fișierul. În In The Know îi poți cere
+și asistentului tău să exporte sau să uite tot ce se știe despre o persoană. Pentru orice altceva, scrie la {contact}.</p>
+
+<h2>Copii</h2>
+<p>In The Know este un instrument pentru afaceri și nu este destinat persoanelor sub 16 ani.</p>
+
+<h2>Modificări</h2>
+<p>Vom actualiza această pagină când se schimbă ce face serviciul cu datele și vom modifica data de sus.</p>
+{_ro_footer("privacy")}"""
+
+
+LEGAL = {
+    "en": {"pricing": ("Pricing", pricing_html), "terms": ("Terms", terms_html),
+           "refunds": ("Refunds", refunds_html), "privacy": ("Privacy policy", privacy_html)},
+    "ro": {"pricing": ("Prețuri", pricing_html_ro), "terms": ("Termeni", terms_html_ro),
+           "refunds": ("Rambursări", refunds_html_ro), "privacy": ("Politica de confidențialitate", privacy_html_ro)},
+}

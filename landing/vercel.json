@@ -1,5 +1,24 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "cookie", "key": "itk-lang", "value": "ro" }],
+      "destination": "/ro",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "header", "key": "x-vercel-ip-country", "value": "RO" }],
+      "missing": [{ "type": "cookie", "key": "itk-lang" }],
+      "destination": "/ro",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    { "source": "/ro", "destination": "/index.html" },
+    { "source": "/ro/", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

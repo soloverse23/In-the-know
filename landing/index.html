@@ -4,14 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>In The Know — your business memory for Claude & ChatGPT</title>
-<meta name="description" content="Your AI forgets your clients. In The Know gives Claude and ChatGPT an exact memory of every buyer, athlete and traveler — stored in your own Google Drive or OneDrive.">
+<meta name="description" content="Your AI finally knows your business. In The Know gives Claude and ChatGPT one complete memory of it: clients, deals, schedules, payments, prices, notes and decisions, stored in your own Google Drive or OneDrive.">
 <meta property="og:title" content="In The Know">
-<meta property="og:description" content="Your AI finally remembers your people.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:description" content="Your AI finally knows your business. All of it.">
+<link rel="alternate" hreflang="en" href="/">
+<link rel="alternate" hreflang="ro" href="/ro">
+<link rel="alternate" hreflang="x-default" href="/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>
+/* language comes from the path: /ro is Romanian, everything else English */
+(function(){
+  var p = location.pathname.replace(/\/+$/, "");
+  window.LANG = (p === "/ro" || p.indexOf("/ro/") === 0) ? "ro" : "en";
+  var r = document.documentElement; r.lang = window.LANG;
+  if (window.LANG !== "en"){ r.classList.add("i18n-wait"); document.write('<script src="/ro.js"><\/script>'); }
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
 <style>
+html.i18n-wait body{visibility:hidden}
 :root{
   --ink:#14161F; --paper:#FAF8F4; --signal:#4F46E5; --stop:#E5484D; --stop-soft:#FDECEC; --mint:#16B98A;
   --muted:#6B6F7B; --line:#E9E5DD; --card:#FFFFFF; --soft:#F3EFE8;
@@ -367,8 +380,19 @@ footer .legal-links{display:flex;gap:16px;flex-wrap:wrap}
 .tb-cta{display:inline-flex;align-items:center;gap:6px;text-decoration:none;background:var(--signal);color:#fff;font-size:13.5px;font-weight:600;padding:8px 15px;border-radius:8px;white-space:nowrap;transition:background .2s}
 .tb-cta:hover{background:#4338CA}
 .tb-cta:focus-visible,.tb-links a:focus-visible,.tb-brand:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.lang{display:inline-flex;gap:2px;padding:2px;border:1px solid rgba(250,248,244,.18);border-radius:7px;flex:none}
+.lang a{font-size:12px;font-weight:600;letter-spacing:.04em;text-decoration:none;padding:4px 7px;border-radius:5px;color:rgba(250,248,244,.6);transition:color .2s,background .2s}
+.lang a:hover{color:var(--paper)}
+.lang a[aria-current="true"]{background:rgba(250,248,244,.14);color:var(--paper)}
+.lang a:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.tour .lang{border-color:var(--line)}
+.tour .lang a{color:var(--muted)}
+.tour .lang a:hover{color:var(--ink)}
+.tour .lang a[aria-current="true"]{background:var(--soft);color:var(--ink)}
+.tour-left{display:flex;align-items:center;gap:14px;min-width:0}
+@media (max-width:1100px){.tour[data-stage="demo"] .tour-left .lang{display:none}}
 @media (max-width:860px){.topbar .tb-in{padding:0 12px}}
-@media (max-width:640px){.tb-links{display:none}.tb-cta{margin-left:auto}.topbar .tb-in{gap:12px}}
+@media (max-width:640px){.tb-links{display:none}.topbar .lang{margin-left:auto}.topbar .tb-in{gap:12px}}
 
 
 /* ===== flexible database -> complete answers ===== */
@@ -666,7 +690,7 @@ html.touring{overflow:hidden}
 .k-res{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13.5px;color:#6E6A62;opacity:0;transition:opacity .4s}
 .k-res b{font-size:20px;font-weight:750;letter-spacing:-.5px;color:#14161F;font-variant-numeric:tabular-nums}
 .k-res svg{width:16px;height:16px;color:#16A34A}
-.k-file{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(50px,90px) 76px;align-items:center;gap:10px;font-size:13px;padding:5px 0}
+.k-file{display:grid;grid-template-columns:28px minmax(0,1fr) minmax(50px,90px) minmax(76px,max-content);align-items:center;gap:10px;font-size:13px;padding:5px 0}
 .k-file .fi{width:28px;height:28px;border-radius:6px;font-size:8px}
 .k-file .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
 .k-bar{height:5px;background:#EEEAE2;border-radius:3px;overflow:hidden}
@@ -842,7 +866,7 @@ html.touring{overflow:hidden}
   .endp{flex-wrap:wrap;padding:14px}
   .endp p{flex-basis:100%}
   .endp button{flex:1}
-  .k-file{grid-template-columns:28px minmax(0,1fr) 40px 66px}
+  .k-file{grid-template-columns:28px minmax(0,1fr) 40px minmax(66px,max-content)}
 }
 @media (max-width:560px){
   .tour-brand span{display:none}
@@ -862,34 +886,34 @@ html.touring{overflow:hidden}
 
 <div class="tour" id="tour" data-stage="ai" role="region" aria-label="One-minute tour">
   <div class="tour-top">
-    <span class="tour-brand"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span>In The Know</span></span>
+    <div class="tour-left"><span class="tour-brand"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span>In The Know</span></span><div class="lang" role="group" aria-label="Language"><a href="/" hreflang="en" lang="en" data-lang="en">EN</a><a href="/ro" hreflang="ro" lang="ro" data-lang="ro">RO</a></div></div>
     <div class="tour-mid">
       <ol class="tour-prog" id="tourprog" aria-label="Tour steps">
-        <li data-s="ai"><button type="button"><b>1</b><span>Your AI</span></button></li>
-        <li data-s="work"><button type="button"><b>2</b><span>Your work</span></button></li>
-        <li data-s="demo"><button type="button"><b>3</b><span>See it work</span></button></li>
+        <li data-s="ai"><button type="button"><b>1</b><span data-i="prog1">Your AI</span></button></li>
+        <li data-s="work"><button type="button"><b>2</b><span data-i="prog2">Your work</span></button></li>
+        <li data-s="demo"><button type="button"><b>3</b><span data-i="prog3">See it work</span></button></li>
       </ol>
       <div class="rail" id="rail">
         <div class="rail-chs" id="rchs"></div>
       </div>
     </div>
-    <div class="tour-skip-w"><button type="button" class="tour-back" id="tback" aria-label="Back one step" disabled><span aria-hidden="true">←</span><span class="lbl">Back</span></button><button type="button" class="tour-skip" id="tskip"><span>Skip<span class="long"> to the site</span></span><span aria-hidden="true">→</span></button></div>
+    <div class="tour-skip-w"><button type="button" class="tour-back" id="tback" aria-label="Back one step" disabled><span aria-hidden="true">←</span><span class="lbl" data-i="back">Back</span></button><button type="button" class="tour-skip" id="tskip"><span data-i="skip">Skip<span class="long"> to the site</span></span><span aria-hidden="true">→</span></button></div>
   </div>
   <div class="tour-body">
     <div class="qs qa">
-      <p class="q-kick">A one-minute tour</p>
-      <h1 class="serif">Your AI forgets your clients. <em>Now it won't.</em></h1>
-      <p class="q-ask">First, which one do you usually use?</p>
+      <p class="q-kick" data-i="kick">A one-minute tour</p>
+      <h1 class="serif" data-i="h1">Your AI finally knows your business. <em>All of it.</em></h1>
+      <p class="q-ask" data-i="ask">First, which one do you usually use?</p>
       <div class="q-choices">
-        <button type="button" class="q-choice" data-ai="claude"><span class="ai-mark" data-for="claude"></span><span><b>Claude</b><small>by Anthropic</small></span><span class="arr" aria-hidden="true">→</span></button>
-        <button type="button" class="q-choice" data-ai="chatgpt"><span class="ai-mark" data-for="chatgpt"></span><span><b>ChatGPT</b><small>by OpenAI</small></span><span class="arr" aria-hidden="true">→</span></button>
+        <button type="button" class="q-choice" data-ai="claude"><span class="ai-mark" data-for="claude"></span><span><b>Claude</b><small data-i="byA">by Anthropic</small></span><span class="arr" aria-hidden="true">→</span></button>
+        <button type="button" class="q-choice" data-ai="chatgpt"><span class="ai-mark" data-for="chatgpt"></span><span><b>ChatGPT</b><small data-i="byO">by OpenAI</small></span><span class="arr" aria-hidden="true">→</span></button>
       </div>
-      <p class="q-note">It works the same in both.</p>
+      <p class="q-note" data-i="same">It works the same in both.</p>
     </div>
 
     <div class="qs qw">
-      <p class="q-kick">Step 2 of 3</p>
-      <h2 class="serif q-h">What's your work <em>closest to?</em></h2>
+      <p class="q-kick" data-i="step2">Step 2 of 3</p>
+      <h2 class="serif q-h" data-i="work">What's your work <em>closest to?</em></h2>
       <div class="q-jobs" id="qjobs"></div>
     </div>
 
@@ -899,7 +923,7 @@ html.touring{overflow:hidden}
         <div class="w-nav" id="wnav"></div>
         <p class="w-lab" id="wlab">Recents</p>
         <ul class="w-list" id="wlist"></ul>
-        <div class="w-foot"><span class="w-av" id="wav">C</span><span><b id="wname">You</b><small id="wplan">Pro plan</small></span></div>
+        <div class="w-foot"><span class="w-av" id="wav">C</span><span><b id="wname" data-i="you">You</b><small id="wplan">Pro plan</small></span></div>
       </aside>
       <div class="w-main">
         <div class="w-head" aria-hidden="true">
@@ -928,8 +952,8 @@ html.touring{overflow:hidden}
             </div>
           </div>
           <div class="endp" id="endp">
-            <p><b>That's In The Know.</b>Your past comes in once. Every chat adds to it.</p>
-            <button type="button" class="alt" id="eother">Another job</button>
+            <p data-i="endp"><b>That's In The Know.</b>Your past comes in once. Every chat adds to it.</p>
+            <button type="button" class="alt" id="eother" data-i="other">Another job</button>
             <button type="button" class="go" id="ego">Add it →</button>
           </div>
           <p class="w-note" id="wnote"></p>
@@ -938,7 +962,7 @@ html.touring{overflow:hidden}
       </div>
       <div class="dim" id="wdim"></div>
       <div class="pointer" id="wptr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3l14 8-6.2 1.6L16 20l-2.8 1.3-3.3-7.3L5 18z" fill="#fff" stroke="#14161F" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
-      <div class="spot-tip" id="stip" role="button" tabindex="0" aria-live="polite"><small id="stipk"></small><b>Click “New chat”</b><span class="nx">Next example<em id="stipt"></em></span></div>
+      <div class="spot-tip" id="stip" role="button" tabindex="0" aria-live="polite"><small id="stipk"></small><b data-i="clicknew">Click “New chat”</b><span class="nx"><span data-i="nextex">Next example</span><em id="stipt"></em></span></div>
         </div>
   </div>
 </div>
@@ -947,11 +971,12 @@ html.touring{overflow:hidden}
   <div class="tb-in">
     <a class="tb-brand" href="#start" aria-label="In The Know, back to top"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span>In The Know</span></a>
     <div class="tb-links">
-      <a href="#one">Why</a>
-      <a href="#how">How it works</a>
-      <a href="#tools">Your tools</a>
-      <a href="#pricing">Pricing</a>
+      <a href="#one" data-i="nav1">Why</a>
+      <a href="#how" data-i="nav2">How it works</a>
+      <a href="#tools" data-i="nav3">Your tools</a>
+      <a href="#pricing" data-i="nav4">Pricing</a>
     </div>
+    <div class="lang" role="group" aria-label="Language"><a href="/" hreflang="en" lang="en" data-lang="en">EN</a><a href="/ro" hreflang="ro" lang="ro" data-lang="ro">RO</a></div>
     <a class="tb-cta" id="tbcta" href="#connect">Add to Claude</a>
   </div>
 </nav>
@@ -959,76 +984,76 @@ html.touring{overflow:hidden}
 <main id="site">
 <section class="hero" id="start">
   <div class="wrap hero-in">
-    <button type="button" class="replay-btn" id="replay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v4h4"/></svg>Replay the tour</button>
-    <h1 class="serif">Your AI forgets your clients.<br><em>Now it won't.</em></h1>
-    <p class="lede">One lasting memory for Claude and ChatGPT.</p>
+    <button type="button" class="replay-btn" id="replay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v4h4"/></svg><span data-i="replay">Replay the tour</span></button>
+    <h1 class="serif" data-i="h1b">Your AI finally knows your business.<br><em>All of it.</em></h1>
+    <p class="lede" data-i="lede">Clients, deals, schedules, payments and notes in one complete memory for Claude and ChatGPT.</p>
     <div class="add" id="connect">
       <div class="tabs" role="tablist" aria-label="Add it to">
-        <button class="tab on" data-app="claude" role="tab" aria-selected="true">Add to Claude</button>
-        <button class="tab" data-app="chatgpt" role="tab" aria-selected="false">Add to ChatGPT</button>
+        <button class="tab on" data-app="claude" role="tab" aria-selected="true" data-i="addC">Add to Claude</button>
+        <button class="tab" data-app="chatgpt" role="tab" aria-selected="false" data-i="addG">Add to ChatGPT</button>
       </div>
       <ol class="add-steps" id="steps"></ol>
-      <p class="add-note"><b>14 days free</b>, then €4.99 a month. <a href="#pricing" style="color:inherit">See pricing</a></p>
+      <p class="add-note" data-i="addnote"><b>14 days free</b>, then €4.99 a month. <a href="#pricing" style="color:inherit">See pricing</a></p>
     </div>
   </div>
 </section>
 
 <section id="one">
   <div class="wrap">
-    <h2 class="serif center">Scattered notes → <em>one memory</em></h2>
+    <h2 class="serif center" data-i="oneh">Scattered notes → <em>one memory</em></h2>
     <div class="scatter reveal" aria-label="Notebooks, chats, spreadsheets and your head become one memory that Claude and ChatGPT read">
       <div class="mess">
-        <div class="src s1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6zM6 3v18M9 8h6M9 12h6"/></svg><span>Notebook</span></div>
-        <div class="src s2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg><span>Chats</span></div>
+        <div class="src s1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6zM6 3v18M9 8h6M9 12h6"/></svg><span data-i="src1">Notebook</span></div>
+        <div class="src s2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg><span data-i="src2">Chats</span></div>
         <div class="src s3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/></svg><span>Excel</span></div>
-        <div class="src s4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></svg><span>Your head</span></div>
+        <div class="src s4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></svg><span data-i="src4">Your head</span></div>
       </div>
       <div class="pipe" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="core"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span>Your Drive</span></div>
+      <div class="core"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span data-i="drive">Your Drive</span></div>
       <div class="pipe" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="ais"><div class="ai-chip">Claude</div><div class="ai-chip">ChatGPT</div></div>
     </div>
     <div class="trades reveal">
-      <span class="trade" style="--c:#DBE7FF"><i><svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linejoin="round"><path d="M4 11l8-6 8 6v9H4z"/><path d="M10 20v-5h4v5"/></svg></i>Real estate agents</span>
-      <span class="trade" style="--c:#EDE4FF"><i><svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/></svg></i>Sports coaches</span>
-      <span class="trade" style="--c:#EDE4FF"><i><svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></i>Life coaches</span>
-      <span class="trade" style="--c:#D7F5EF"><i><svg viewBox="0 0 24 24" fill="none" stroke="#0F9F8C" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></i>Tour leaders</span>
+      <span class="trade" style="--c:#DBE7FF"><i><svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linejoin="round"><path d="M4 11l8-6 8 6v9H4z"/><path d="M10 20v-5h4v5"/></svg></i><span data-i="tr1">Real estate agents</span></span>
+      <span class="trade" style="--c:#EDE4FF"><i><svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/></svg></i><span data-i="tr2">Sports coaches</span></span>
+      <span class="trade" style="--c:#EDE4FF"><i><svg viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></i><span data-i="tr3">Life coaches</span></span>
+      <span class="trade" style="--c:#D7F5EF"><i><svg viewBox="0 0 24 24" fill="none" stroke="#0F9F8C" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></i><span data-i="tr4">Tour leaders</span></span>
     </div>
   </div>
 </section>
 
 <section class="how" id="how">
   <div class="wrap">
-    <h2 class="serif reveal center">Built around your business. <em>Nothing missed.</em></h2>
+    <h2 class="serif reveal center" data-i="howh">Built around your business. <em>Nothing missed.</em></h2>
     <div class="db-tabs reveal" id="dbtabs" role="tablist" aria-label="Example business"></div>
     <div class="db reveal" id="dbx" aria-label="In The Know shapes a database around your business as you talk, adding fields like budget or allergies. Any question then uses every relevant field, so the answer misses nothing.">
       <div>
-        <div class="db-cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg>Your database</div>
+        <div class="db-cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg><span data-i="dbcap1">Your database</span></div>
         <div class="schema" id="schema"></div>
       </div>
       <div>
-        <div class="db-cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Any question</div>
+        <div class="db-cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span data-i="dbcap2">Any question</span></div>
         <div class="ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="qt" id="dbq"></span></div>
         <div class="checks" id="checks"></div>
         <div class="meter">
-          <div class="mrow"><span>AI alone</span><div class="mtrack"><div class="mfill" id="malone"></div></div><span id="nalone">0</span></div>
-          <div class="mrow me"><span><b>With In The Know</b></span><div class="mtrack"><div class="mfill" id="mwith"></div></div><span id="nwith">0</span></div>
+          <div class="mrow"><span data-i="alone">AI alone</span><div class="mtrack"><div class="mfill" id="malone"></div></div><span id="nalone">0</span></div>
+          <div class="mrow me"><span><b data-i="with">With In The Know</b></span><div class="mtrack"><div class="mfill" id="mwith"></div></div><span id="nwith">0</span></div>
         </div>
       </div>
     </div>
     <div class="rules">
-      <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M7 8h10M7 12h6M5 20l2-4h12V4H5z"/></svg></span>Source kept</div>
-      <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3"/></svg></span>Undo anything</div>
-      <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>Private stays private</div>
+      <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M7 8h10M7 12h6M5 20l2-4h12V4H5z"/></svg></span><span data-i="rule1">Source kept</span></div>
+      <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M9 14 4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3"/></svg></span><span data-i="rule2">Undo anything</span></div>
+      <div class="rule reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span data-i="rule3">Private stays private</span></div>
     </div>
   </div>
 </section>
 
 <section class="tools" id="tools">
   <div class="wrap">
-    <h2 class="serif reveal center">All your tools. <em>One tidy memory.</em></h2>
+    <h2 class="serif reveal center" data-i="toolsh">All your tools. <em>One tidy memory.</em></h2>
     <div class="hub reveal" id="hub" aria-label="Claude reads your other tools through its connectors; In The Know files each item in the right place, skipping what it already knows and updating what moved">
-      <div class="apps"><div class="app-t" data-a="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Gmail</span></div><div class="app-t" data-a="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span>Calendar</span></div><div class="app-t" data-a="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Drive</span></div><div class="app-t" data-a="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M7 3h10"/><circle cx="12" cy="12.5" r="3"/></svg><span>Outlook</span></div><div class="app-t" data-a="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.4-4A8 8 0 1 1 8 18.6z"/><path d="M9 9.5c.5 2 2.5 4 4.5 4.5"/></svg><span>WhatsApp</span></div><div class="app-t" data-a="5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><path d="M16.5 7.5h.01"/></svg><span>Instagram</span></div><div class="app-t" data-a="6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 4c.5 2.5 2.5 4 5 4"/></svg><span>TikTok</span></div><div class="app-t" data-a="7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M15 8h-1.5A1.5 1.5 0 0 0 12 9.5V20M10 13h5"/></svg><span>Facebook</span></div><div class="app-t" data-a="8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg><span>Stripe</span></div><div class="app-t" data-a="9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span>Shopify</span></div><div class="app-t" data-a="10"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 8v8M9 8l6 8M15 8v8"/></svg><span>Notion</span></div><div class="app-t" data-a="11"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 9h14M5 14h14M10 9v12"/></svg><span>Sheets</span></div></div>
+      <div class="apps"><div class="app-t" data-a="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><span>Gmail</span></div><div class="app-t" data-a="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span data-i="calname">Calendar</span></div><div class="app-t" data-a="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Drive</span></div><div class="app-t" data-a="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M7 3h10"/><circle cx="12" cy="12.5" r="3"/></svg><span>Outlook</span></div><div class="app-t" data-a="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.4-4A8 8 0 1 1 8 18.6z"/><path d="M9 9.5c.5 2 2.5 4 4.5 4.5"/></svg><span>WhatsApp</span></div><div class="app-t" data-a="5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="3.5"/><path d="M16.5 7.5h.01"/></svg><span>Instagram</span></div><div class="app-t" data-a="6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v10.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 4c.5 2.5 2.5 4 5 4"/></svg><span>TikTok</span></div><div class="app-t" data-a="7"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M15 8h-1.5A1.5 1.5 0 0 0 12 9.5V20M10 13h5"/></svg><span>Facebook</span></div><div class="app-t" data-a="8"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg><span>Stripe</span></div><div class="app-t" data-a="9"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span>Shopify</span></div><div class="app-t" data-a="10"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 8v8M9 8l6 8M15 8v8"/></svg><span>Notion</span></div><div class="app-t" data-a="11"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M5 9h14M5 14h14M10 9v12"/></svg><span>Sheets</span></div></div>
       <div class="mid">
         <div class="wire" aria-hidden="true"><i></i></div>
         <div class="node"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.18 12.31L22.50 13.48M13.73 13.35L18.62 17.17M12.82 14.04L15.97 21.83M11.69 14.18L10.83 20.32M10.65 13.73L5.47 20.35M9.96 12.82L4.21 15.15M9.82 11.69L1.50 10.52M10.27 10.65L5.38 6.83M11.18 9.96L8.03 2.17M12.31 9.82L13.17 3.68M13.35 10.27L18.53 3.65M14.04 11.18L19.79 8.85" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg><span>Claude</span></div>
@@ -1036,62 +1061,80 @@ html.touring{overflow:hidden}
         <div class="node itk"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span>In The Know</span></div>
         <div class="wire" aria-hidden="true"><i></i></div>
       </div>
-      <div class="tables"><div class="tb"><div class="th"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>People</div><div class="tr" data-src="0"><span class="tn">Sara Ionescu</span><span class="ts">Gmail</span><span class="st st-k">known</span></div><div class="tr" data-src="5"><span class="tn">Elena Marin</span><span class="ts">Instagram</span><span class="st st-n">new</span></div><div class="tr" data-src="6"><span class="tn">3 leads</span><span class="ts">TikTok</span><span class="st st-n">new</span></div></div><div class="tb"><div class="th"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Appointments</div><div class="tr" data-src="1"><span class="tn">Viewing · Thu 17:00</span><span class="ts">Calendar</span><span class="st st-n">new</span></div><div class="tr" data-src="1"><span class="tn">Mihai · Tue → Thu</span><span class="ts">Calendar</span><span class="st st-u">moved</span></div></div><div class="tb"><div class="th"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>Payments</div><div class="tr" data-src="8"><span class="tn">Mihai Radu · 180 €</span><span class="ts">Stripe</span><span class="st st-n">new</span></div><div class="tr" data-src="9"><span class="tn">Delta deposit · 450 €</span><span class="ts">Shopify</span><span class="st st-n">new</span></div></div></div>
+      <div class="tables"><div class="tb"><div class="th"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span data-i="tbl1">People</span></div><div class="tr" data-src="0"><span class="tn">Sara Ionescu</span><span class="ts">Gmail</span><span class="st st-k" data-i="st-k">known</span></div><div class="tr" data-src="5"><span class="tn">Elena Marin</span><span class="ts">Instagram</span><span class="st st-n" data-i="st-n">new</span></div><div class="tr" data-src="6"><span class="tn" data-i="leads">3 leads</span><span class="ts">TikTok</span><span class="st st-n" data-i="st-n">new</span></div></div><div class="tb"><div class="th"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span data-i="tbl2">Appointments</span></div><div class="tr" data-src="1"><span class="tn" data-i="viewing">Viewing · Thu 17:00</span><span class="ts" data-i="calname">Calendar</span><span class="st st-n" data-i="st-n">new</span></div><div class="tr" data-src="1"><span class="tn" data-i="moved">Mihai · Tue → Thu</span><span class="ts" data-i="calname">Calendar</span><span class="st st-u" data-i="st-u">moved</span></div></div><div class="tb"><div class="th"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg><span data-i="tbl3">Payments</span></div><div class="tr" data-src="8"><span class="tn">Mihai Radu · 180 €</span><span class="ts">Stripe</span><span class="st st-n" data-i="st-n">new</span></div><div class="tr" data-src="9"><span class="tn" data-i="deposit">Delta deposit · 450 €</span><span class="ts">Shopify</span><span class="st st-n" data-i="st-n">new</span></div></div></div>
     </div>
-    <div class="legend reveal"><span><b class="st st-n">new</b>added</span><span><b class="st st-k">known</b>never twice</span><span><b class="st st-u">moved</b>updated</span></div>
+    <div class="legend reveal"><span><b class="st st-n" data-i="st-n">new</b><span data-i="lg1">added</span></span><span><b class="st st-k" data-i="st-k">known</b><span data-i="lg2">never twice</span></span><span><b class="st st-u" data-i="st-u">moved</b><span data-i="lg3">updated</span></span></div>
   </div>
 </section>
 
 <section class="pricing" id="pricing">
   <div class="wrap">
-    <p class="eyebrow center">Pricing</p>
-    <h2 class="serif reveal center">One plan. <em>Nothing locked away.</em></h2>
+    <p class="eyebrow center" data-i="nav4">Pricing</p>
+    <h2 class="serif reveal center" data-i="priceh">One plan. <em>Nothing locked away.</em></h2>
     <div class="price-card reveal">
       <div class="bill" role="group" aria-label="Billing period">
-        <button type="button" id="bill-y" aria-pressed="true">Yearly<em>2 months free</em></button>
-        <button type="button" id="bill-m" aria-pressed="false">Monthly</button>
+        <button type="button" id="bill-y" aria-pressed="true" data-i="yearly">Yearly<em>2 months free</em></button>
+        <button type="button" id="bill-m" aria-pressed="false" data-i="monthly">Monthly</button>
       </div>
-      <div class="amount" aria-live="polite"><span id="p-amt">€49</span><small id="p-per">/ year</small></div>
-      <p class="price-sub" id="p-sub">That's €4.08 a month. VAT included.</p>
+      <div class="amount" aria-live="polite"><span id="p-amt" data-i="amtY">€49</span><small id="p-per" data-i="perY">/ year</small></div>
+      <p class="price-sub" id="p-sub" data-i="subY">That's €4.08 a month. VAT included.</p>
       <ul class="price-list">
-        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>14 days free</b>. Add a card, cancel any time before and you pay nothing.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Every customer, every file, every tool. No limits.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Your memory stays in <b>your own Drive or OneDrive</b>, even if you stop.</span></li>
-        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Works in Claude and ChatGPT, on phone and computer.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-i="pl1"><b>14 days free</b>. Add a card, cancel any time before and you pay nothing.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-i="pl2">Every client, every deal, every file, every tool. No limits.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-i="pl3">Your memory stays in <b>your own Drive or OneDrive</b>, even if you stop.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span data-i="pl4">Works in Claude and ChatGPT, on phone and computer.</span></li>
       </ul>
-      <a class="price-cta" href="#connect" id="p-cta">Start 14 days free</a>
-      <p class="price-fine">Without a plan you can still read everything. Only saving new things pauses.</p>
+      <a class="price-cta" href="#connect" id="p-cta" data-i="pcta">Start 14 days free</a>
+      <p class="price-fine" data-i="pfine">Without a plan you can still read everything. Only saving new things pauses.</p>
     </div>
-    <p class="price-code">Have a code? Enter it when you connect In The Know. It gives you 3 months free, no card needed.</p>
+    <p class="price-code" data-i="pcode">Have a code? Enter it when you connect In The Know. It gives you 3 months free, no card needed.</p>
   </div>
 </section>
 
 <div class="wrap">
   <footer>
-    <span>In The Know · the memory of your business</span>
-    <span class="legal-links"><a href="#pricing">Pricing</a><a data-app="/terms" href="#">Terms</a><a data-app="/refunds" href="#">Refunds</a><a data-app="/privacy" href="#">Privacy</a></span>
-    <a href="#">Back to top ↑</a>
-    <span class="legal">Claude is a trademark of Anthropic. ChatGPT is a trademark of OpenAI. In The Know is an independent connector, not affiliated with either.</span>
+    <span data-i="foot">In The Know · the memory of your business</span>
+    <span class="legal-links"><a href="#pricing" data-i="nav4">Pricing</a><a data-app="/terms" href="#" data-i="terms">Terms</a><a data-app="/refunds" href="#" data-i="refunds">Refunds</a><a data-app="/privacy" href="#" data-i="privacy">Privacy</a></span>
+    <a href="#" data-i="top">Back to top ↑</a>
+    <span class="legal" data-i="legal">Claude is a trademark of Anthropic. ChatGPT is a trademark of OpenAI. In The Know is an independent connector, not affiliated with either.</span>
     </footer>
 </div>
 </main>
 
 <script>
+/* ===== language: static text first, so nothing shows in the wrong language ===== */
+const LANG = window.LANG || "en", RO = LANG === "ro" && window.RO ? window.RO : null;
+const tx = (s, v) => { const x = RO && RO.s[s] != null ? RO.s[s] : s; return v ? x.replace(/\{(\w+)\}/g, (_, k) => v[k]) : x; };
+try {
+  if (RO){
+    document.querySelectorAll("[data-i]").forEach(e => { const v = RO.h[e.dataset.i]; if (v != null) e.innerHTML = v; });
+    document.title = RO.meta.title;
+    document.querySelector('meta[name="description"]').content = RO.meta.description;
+    document.querySelector('meta[property="og:description"]').content = RO.meta.og;
+    document.querySelectorAll("[aria-label]").forEach(e => { const v = RO.aria[e.getAttribute("aria-label")]; if (v) e.setAttribute("aria-label", v); });
+  }
+  /* switching language is remembered, so the Romania redirect never overrides a choice */
+  document.querySelectorAll(".lang a").forEach(a => {
+    if (a.dataset.lang === LANG) a.setAttribute("aria-current", "true");
+    a.addEventListener("click", () => { document.cookie = `itk-lang=${a.dataset.lang}; path=/; max-age=31536000; SameSite=Lax`; });
+  });
+} finally { document.documentElement.classList.remove("i18n-wait"); }
+
 /* ===== Set your live connector address here ===== */
 const MCP_URL = "https://app.intheknow.example/mcp";
 
 /* legal pages live on the app's own address */
 const APP_URL = MCP_URL.replace(/\/mcp$/, "");
-document.querySelectorAll("a[data-app]").forEach(a => { a.href = APP_URL + a.dataset.app; });
+document.querySelectorAll("a[data-app]").forEach(a => { a.href = APP_URL + a.dataset.app + (LANG === "en" ? "" : "?lang=" + LANG); });
 /* pricing: monthly / yearly */
 (() => {
   const y = document.getElementById("bill-y"), m = document.getElementById("bill-m");
   if (!y || !m) return;
   const set = yearly => {
     y.setAttribute("aria-pressed", yearly); m.setAttribute("aria-pressed", !yearly);
-    document.getElementById("p-amt").textContent = yearly ? "€49" : "€4.99";
-    document.getElementById("p-per").textContent = yearly ? "/ year" : "/ month";
-    document.getElementById("p-sub").textContent = yearly ? "That's €4.08 a month. VAT included." : "Or €49 a year, two months free. VAT included.";
+    document.getElementById("p-amt").textContent = yearly ? tx("€49") : tx("€4.99");
+    document.getElementById("p-per").textContent = yearly ? tx("/ year") : tx("/ month");
+    document.getElementById("p-sub").textContent = yearly ? tx("That's €4.08 a month. VAT included.") : tx("Or €49 a year, two months free. VAT included.");
   };
   y.addEventListener("click", () => set(true)); m.addEventListener("click", () => set(false));
 })();
@@ -1099,13 +1142,13 @@ const MARK = '<svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" heigh
 
 /* ---------- connect steps ---------- */
 const STEPS = {
-  claude: [["<b>Settings → Connectors</b>", ""], ["Paste", null], ["Sign in with <b>Google</b>", ""]],
-  chatgpt: [["<b>Settings → Apps</b> (developer mode)", ""], ["Paste", null], ["Sign in with <b>Google</b>", ""]]
+  claude: [[tx("<b>Settings → Connectors</b>"), ""], [tx("Paste"), null], [tx("Sign in with <b>Google</b>"), ""]],
+  chatgpt: [[tx("<b>Settings → Apps</b> (developer mode)"), ""], [tx("Paste"), null], [tx("Sign in with <b>Google</b>"), ""]]
 };
 const stepsEl = document.getElementById("steps");
 function renderSteps(app){
   stepsEl.innerHTML = STEPS[app].map(([t, x], i) => `<li><span class="num">${i+1}</span><span>${t}</span>${
-    x === null ? `<div class="url"><code>${MCP_URL}</code><button class="copy" type="button">Copy</button></div>` : x ? `<small>${x}</small>` : ""}</li>`).join("");
+    x === null ? `<div class="url"><code>${MCP_URL}</code><button class="copy" type="button">${tx("Copy")}</button></div>` : x ? `<small>${x}</small>` : ""}</li>`).join("");
 }
 renderSteps("claude");
 document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => {
@@ -1114,7 +1157,7 @@ document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", (
 }));
 stepsEl.addEventListener("click", e => {
   const b = e.target.closest(".copy"); if (!b) return;
-  const done = () => { b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1600); };
+  const done = () => { b.textContent = tx("Copied"); setTimeout(() => b.textContent = tx("Copy"), 1600); };
   if (navigator.clipboard) navigator.clipboard.writeText(MCP_URL).then(done, done); else done();
 });
 document.querySelectorAll("[data-app-link]").forEach(a => a.addEventListener("click", () => {
@@ -1159,12 +1202,12 @@ const I = {
 const SPARK = '<svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.18 12.31L22.50 13.48M13.73 13.35L18.62 17.17M12.82 14.04L15.97 21.83M11.69 14.18L10.83 20.32M10.65 13.73L5.47 20.35M9.96 12.82L4.21 15.15M9.82 11.69L1.50 10.52M10.27 10.65L5.38 6.83M11.18 9.96L8.03 2.17M12.31 9.82L13.17 3.68M13.35 10.27L18.53 3.65M14.04 11.18L19.79 8.85" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>';
 const GPTM = '<svg class="gptm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#0D0D0D"/><path d="M7.5 9.5h9M7.5 12.5h9M7.5 15.5h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>';
 const AIS = {
-  claude:  { name:"Claude",  cls:"cl", logo:SPARK, ph:"How can I help you today?", hello:n => `Good morning, ${n}`, lab:"Recents", plan:"Pro plan",
-             note:"Claude can make mistakes. Please double-check responses.", acts:[I.copy, I.up, I.down, I.retry],
-             nav:`<div class="nc"><i>${I.plus}</i>New chat</div><div>${I.chat2}Chats</div><div>${I.folder2}Projects</div>` },
-  chatgpt: { name:"ChatGPT", cls:"gp", logo:GPTM, ph:"Ask anything", hello:() => "Where should we begin?", lab:"Chats", plan:"Plus",
-             note:"ChatGPT can make mistakes. Check important info.", acts:[I.copy, I.up, I.down, I.share, I.retry],
-             nav:`<div class="nc">${I.pen}New chat</div><div>${I.search}Search chats</div><div>${I.image2}Library</div>` }
+  claude:  { name:"Claude",  cls:"cl", logo:SPARK, ph:tx("How can I help you today?"), lab:tx("Recents"), plan:tx("Pro plan"),
+             note:tx("Claude can make mistakes. Please double-check responses."), acts:[I.copy, I.up, I.down, I.retry],
+             nav:`<div class="nc"><i>${I.plus}</i>${tx("New chat")}</div><div>${I.chat2}${tx("Chats")}</div><div>${I.folder2}${tx("Projects")}</div>` },
+  chatgpt: { name:"ChatGPT", cls:"gp", logo:GPTM, ph:tx("Ask anything"), lab:tx("Chats"), plan:"Plus",
+             note:tx("ChatGPT can make mistakes. Check important info."), acts:[I.copy, I.up, I.down, I.share, I.retry],
+             nav:`<div class="nc">${I.pen}${tx("New chat")}</div><div>${I.search}${tx("Search chats")}</div><div>${I.image2}${tx("Library")}</div>` }
 };
 document.querySelectorAll(".ai-mark").forEach(e => e.innerHTML = AIS[e.dataset.for].logo);
 
@@ -1178,41 +1221,40 @@ const TH = {
 
 /* ---------- card builders (In The Know's own UI) ---------- */
 const head = (t, s) => `<div class="k-hd">${MARK}<div><b>${t}</b><small>${s}</small></div></div>`;
-const foot = biz => `<div class="k-foot">${MARK}In The Know · memory for ${biz}</div>`;
 const alert = (t, info) => `<div class="k-alert${info ? " info" : ""}"><span class="ai-ic">${info ? "i" : "!"}</span><span>${t}</span></div>`;
-const cap = (ic, t, chips, extra = "") => `<div class="k-card k-cap"><span class="k-ic">${ic}</span><div><div class="k-t">${t}</div><div class="k-chips">${chips.map(c => `<span class="k-chip">${c}</span>`).join("")}</div>${extra}</div><div class="k-side"><span class="k-badge k-ok">${I.check.replace("<svg", '<svg width="10" height="10"')} Saved</span><span class="k-undo">↶ Undo</span></div></div>`;
+const cap = (ic, t, chips, extra = "") => `<div class="k-card k-cap"><span class="k-ic">${ic}</span><div><div class="k-t">${t}</div><div class="k-chips">${chips.map(c => `<span class="k-chip">${c}</span>`).join("")}</div>${extra}</div><div class="k-side"><span class="k-badge k-ok">${I.check.replace("<svg", '<svg width="10" height="10"')} ${tx("Saved")}</span><span class="k-undo">↶ ${tx("Undo")}</span></div></div>`;
 const fileTile = f => f.img
   ? `<div class="att img" title="${f.n}">${TH[f.img]}</div>`
-  : `<div class="att"><span class="fi ${f.t}">${f.t.toUpperCase()}</span><span><b>${f.n}</b><small>${{xlsx:"Spreadsheet", csv:"Spreadsheet", pdf:"PDF", docx:"Document"}[f.t]}</small></span></div>`;
+  : `<div class="att"><span class="fi ${f.t}">${f.t.toUpperCase()}</span><span><b>${f.n}</b><small>${tx({xlsx:"Spreadsheet", csv:"Spreadsheet", pdf:"PDF", docx:"Document"}[f.t])}</small></span></div>`;
 
-const chatsCard = j => head("Reading your past chats", `${j.chats.n} chats`) +
+const chatsCard = j => head(tx("Reading your past chats"), tx("{n} chats", {n:j.chats.n})) +
   `<div class="k-card"><div class="k-rows">${j.chats.rows.map(([t, d]) => `<div class="k-row" data-seq="240">${I.chat}<span>${t}</span><span class="dt">${d}</span></div>`).join("")}</div>
-   <div class="k-res" data-seq="300"><b data-count="${j.chats.people}">0</b><span>people found</span></div></div>`;
-const filesCard = j => head("Importing", `${j.files.length} files · ${j.photos.length} photos`) +
+   <div class="k-res" data-seq="300"><b data-count="${j.chats.people}">0</b><span>${tx("people found")}</span></div></div>`;
+const filesCard = j => head(tx("Importing"), tx("{f} files · {p} photos", {f:j.files.length, p:j.photos.length})) +
   `<div class="k-card">${j.files.map(f => `<div class="k-file" data-seq="330"><span class="fi ${f.t}">${f.t.toUpperCase()}</span><span class="nm">${f.n}</span><span class="k-bar"><i></i></span><span class="n">${f.r}</span></div>`).join("")}
    <div class="k-thumbs">${j.photos.map(p => `<div class="k-th" data-seq="380">${TH[p]}<span class="tick">${I.check}</span></div>`).join("")}
    <div class="k-res" data-seq="700">${I.check}<span>${j.photoRes}</span></div></div></div>`;
 const driveCard = j => `<div class="k-card k-consent">
-   <div class="cs-ask"><div class="cs-top">${I.shield}Google · secure sign-in</div>
-     <div class="cs-q">In The Know wants to read one folder</div>
-     <div class="cs-scope"><div>${I.folder}${j.drive}</div><div>${I.eye}Read-only · revoke anytime</div></div>
-     <div class="cs-btns"><span class="cs-no">Cancel</span><span class="cs-allow">Allow</span></div></div>
-   <div class="cs-done"><div class="k-res">${I.check}<span><b style="font-size:15px">Drive connected</b> · ${j.drive}</span></div>
-     <div class="k-bar"><i></i></div><small>${j.driveFiles} files synced · new files sync on their own</small></div></div>`;
-const memCard = j => head("Your memory is ready", "from chats, files, photos and Drive") +
+   <div class="cs-ask"><div class="cs-top">${I.shield}${tx("Google · secure sign-in")}</div>
+     <div class="cs-q">${tx("In The Know wants to read one folder")}</div>
+     <div class="cs-scope"><div>${I.folder}${j.drive}</div><div>${I.eye}${tx("Read-only · revoke anytime")}</div></div>
+     <div class="cs-btns"><span class="cs-no">${tx("Cancel")}</span><span class="cs-allow">${tx("Allow")}</span></div></div>
+   <div class="cs-done"><div class="k-res">${I.check}<span><b style="font-size:15px">${tx("Drive connected")}</b> · ${j.drive}</span></div>
+     <div class="k-bar"><i></i></div><small>${tx("{n} files synced · new files sync on their own", {n:j.driveFiles})}</small></div></div>`;
+const memCard = j => head(tx("Your memory is ready"), tx("from chats, files, photos and Drive")) +
   `<div class="k-kpis" data-seq="300">${j.mem.map(([l, v]) => `<div class="k-kpi"><div class="l">${l}</div><div class="v"><span data-count="${v}">0</span></div></div>`).join("")}</div>
-   <div class="k-src"><span>${I.chat}${j.chats.n} chats</span><span>${I.file}${j.files.length} files</span><span>${I.image}${j.photos.length} photos</span><span>${I.folder}Drive</span><span>${I.loop}${j.merged} duplicates merged</span></div>`;
-const updCard = (name, sub, known, nw, extra = "") => head(`${name} · updated`, sub) +
-  `<div class="k-card"><div class="upd-list">${known.map(([t, s]) => `<div class="upd-row"><span class="upd-mk">${I.check}</span><span class="upd-t">${t}</span><span class="upd-s">${s}</span></div>`).join("")}${nw.map(t => `<div class="upd-row nw" data-seq="220"><span class="upd-mk">+</span><span class="upd-t">${t}</span><span class="upd-s">new</span></div>`).join("")}</div>${extra}</div>`;
+   <div class="k-src"><span>${I.chat}${tx("{n} chats", {n:j.chats.n})}</span><span>${I.file}${tx("{n} files", {n:j.files.length})}</span><span>${I.image}${tx("{n} photos", {n:j.photos.length})}</span><span>${I.folder}Drive</span><span>${I.loop}${tx("{n} duplicates merged", {n:j.merged})}</span></div>`;
+const updCard = (name, sub, known, nw, extra = "") => head(tx("{name} · updated", {name}), sub) +
+  `<div class="k-card"><div class="upd-list">${known.map(([t, s]) => `<div class="upd-row"><span class="upd-mk">${I.check}</span><span class="upd-t">${t}</span><span class="upd-s">${s}</span></div>`).join("")}${nw.map(t => `<div class="upd-row nw" data-seq="220"><span class="upd-mk">+</span><span class="upd-t">${t}</span><span class="upd-s">${tx("new")}</span></div>`).join("")}</div>${extra}</div>`;
 const table = (cols, rows) => `<table class="k-tbl"><tr>${cols.map(c => `<th${c[1] ? ` class="${c[1]}"` : ""}>${c[0]}</th>`).join("")}</tr>${rows.map(r => `<tr>${r.map((x, k) => `<td${cols[k][1] ? ` class="${cols[k][1]}"` : ""}>${x}</td>`).join("")}</tr>`).join("")}</table>`;
 const badge = (t, c = "") => `<span class="k-badge ${c}">${t}</span>`;
 
 /* ---------- more builders ---------- */
 TH.receipt = '<svg viewBox="0 0 64 64"><rect width="64" height="64" fill="#E9E6DF"/><path d="M16 4h32v56l-4-3-4 3-4-3-4 3-4-3-4 3-4-3-4 3z" fill="#fff"/><path d="M22 14h20M22 22h14M22 28h16M22 34h12" stroke="#B9AE9A" stroke-width="1.8" stroke-linecap="round"/><path d="M22 46h20" stroke="#14161F" stroke-width="2.4" stroke-linecap="round"/></svg>';
-const draft = (to, text) => `<div class="k-card k-draft"><div class="k-to">${I.chat}${to}</div><p>${text}</p><div class="k-btns"><span class="k-btn">Send</span><span class="k-btn ghost">Edit</span></div></div>`;
+const draft = (to, text) => `<div class="k-card k-draft"><div class="k-to">${I.chat}${to}</div><p>${text}</p><div class="k-btns"><span class="k-btn">${tx("Send")}</span><span class="k-btn ghost">${tx("Edit")}</span></div></div>`;
 const bars = (rows, unit) => { const max = Math.max(...rows.map(r => r[1])); return `<div class="k-card">${rows.map(([l, v]) => `<div class="k-file k-barrow" data-seq="260"><span class="nm">${l}</span><span class="k-bar"><i style="--w:${v / max * 100}%"></i></span><span class="n">${v} ${unit}</span></div>`).join("")}</div>`; };
 const kpis = list => `<div class="k-kpis">${list.map(([l, v]) => `<div class="k-kpi"><div class="l">${l}</div><div class="v">${v}</div></div>`).join("")}</div>`;
-const calEvent = (dow, day, title, time, chips = []) => `<div class="k-card k-cal" data-seq="250"><div class="k-date"><small>${dow}</small><b>${day}</b></div><div><div class="k-t">${title}</div><div class="k-sub">${time}</div>${chips.length ? `<div class="k-chips">${chips.map(c => `<span class="k-chip">${c}</span>`).join("")}</div>` : ""}</div><span class="k-badge k-ok">${I.check.replace("<svg", '<svg width="10" height="10"')} Added</span></div>`;
+const calEvent = (dow, day, title, time, chips = []) => `<div class="k-card k-cal" data-seq="250"><div class="k-date"><small>${dow}</small><b>${day}</b></div><div><div class="k-t">${title}</div><div class="k-sub">${time}</div>${chips.length ? `<div class="k-chips">${chips.map(c => `<span class="k-chip">${c}</span>`).join("")}</div>` : ""}</div><span class="k-badge k-ok">${I.check.replace("<svg", '<svg width="10" height="10"')} ${tx("Added")}</span></div>`;
 const cal = (events, src = "Google Calendar") => `<div class="k-calsrc">${I.cal}${src}</div>` + events.join("");
 const card = html => `<div class="k-card">${html}</div>`;
 
@@ -1224,9 +1266,9 @@ const ICONS = {
   pin: sv('<path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>')
 };
 /* a reply that shows it knows the history: one lead line, then what it remembers, what it noticed, what's ahead, and advice */
-const SAYL = { past:"Remembered", see:"Noticed", next:"Ahead", tip:"Advice" };
+const SAYL = { past:tx("Remembered"), see:tx("Noticed"), next:tx("Ahead"), tip:tx("Advice") };
 const say = (lead, ...parts) => `<p data-seq="380">${lead}</p>` + parts.map(([k, t]) => `<div class="in in-${k}" data-seq="520"><span class="il">${SAYL[k]}</span><div>${t}</div></div>`).join("");
-const JOBS = [
+const JOBS = RO ? RO.jobs({ say, updCard, draft, head, card, table, badge, alert, kpis, cal, calEvent, cap, bars, I }) : [
   { name:"Real estate", sub:"Buyers and listings", icon:"home", owner:"Cristina", next:"your next buyer",
     recents:["Listing text for Teilor 14", "Commission math", "Reply to Dana"],
     chats:{ n:37, people:41, rows:[["Sara asked about schools", "Mar 12"], ["Feedback · Dacia 7 viewing", "Apr 2"], ["Price drop · Victoriei 22", "May 19"], ["Leads from Facebook", "Jun 4"]] },
@@ -1510,10 +1552,10 @@ const JOBS = [
 ];
 /* day one brings the history in; each later story is a new chat */
 function buildSteps(j){
-  const history = { tag:"Day one", title:"Bring your history", when:"Day one", steps:[
-    { hint:"Bring in your past chats", me:"Go through my past chats about clients.", out:[["tool", "read past chats"], ["k", chatsCard(j)], ["ai", j.day1[0]]] },
-    { hint:"Drop in old files and photos", me:{ text:"My old files, plus photos of my notebook.", atts:[...j.files, ...j.photos.map((p, k) => ({img:p, n:`photo-${k+1}.jpg`}))] }, out:[["tool", "import files"], ["k", filesCard(j)], ["ai", j.day1[1]]] },
-    { hint:"Connect Google Drive, safely", me:"Connect my Google Drive.", out:[["tool", "connect Drive"], ["drive", driveCard(j)], ["k", memCard(j)], ["ai", j.day1[2]]] }
+  const history = { tag:tx("Day one"), title:tx("Bring your history"), when:tx("Day one"), steps:[
+    { hint:tx("Bring in your past chats"), me:tx("Go through my past chats about the business."), out:[["tool", tx("read past chats")], ["k", chatsCard(j)], ["ai", j.day1[0]]] },
+    { hint:tx("Drop in old files and photos"), me:{ text:tx("My old files, plus photos of my notebook."), atts:[...j.files, ...j.photos.map((p, k) => ({img:p, n:tx("photo-{n}.jpg", {n:k+1})}))] }, out:[["tool", tx("import files")], ["k", filesCard(j)], ["ai", j.day1[1]]] },
+    { hint:tx("Connect Google Drive, safely"), me:tx("Connect my Google Drive."), out:[["tool", tx("connect Drive")], ["drive", driveCard(j)], ["k", memCard(j)], ["ai", j.day1[2]]] }
   ]};
   const stories = [history, ...j.stories], list = [];
   stories.forEach((s, k) => s.steps.forEach((x, m) => list.push({ ...x, me: typeof x.me === "string" ? { text:x.me } : x.me, story:k, first:m === 0 })));
@@ -1547,10 +1589,10 @@ function pickAI(a){
   win.querySelectorAll(".ai-logo").forEach(e => e.innerHTML = A.logo);
   win.querySelector(".wm").textContent = A.name;
   cin.dataset.ph = A.ph; $("wnav").innerHTML = A.nav; $("wlab").textContent = A.lab; $("wplan").textContent = A.plan; $("wnote").textContent = A.note;
-  $("ego").textContent = `Add it to ${A.name} →`;
+  $("ego").textContent = tx("Add it to {name} →", {name:A.name});
   stop(); showStage("work");
 }
-const HELLO = {
+const HELLO = RO ? RO.hello : {
   claude: (n, k) => [`Good morning, ${n}`, `Back at it, ${n}`, `Good afternoon, ${n}`, `Hello again, ${n}`, `Evening, ${n}`][k % 5],
   chatgpt: (n, k) => ["Where should we begin?", "What's on your mind today?", "Ready when you are.", "What are you working on?", `How can I help, ${n}?`][k % 5]
 };
@@ -1561,7 +1603,7 @@ function setStory(k, fresh){   /* a story = one chat: sidebar, title, greeting a
   $("wlist").innerHTML = stories.slice(0, k + 1).map((s, i) => `<li class="${i === k ? "on" + (fresh ? " new" : "") : ""}">${s.title}</li>`).reverse().join("")
     + j.recents.map(r => `<li>${r}</li>`).join("");
   const b = $("sbanner");
-  $("sbk").textContent = `Story ${k + 1} of ${stories.length} · ${S.when}`; $("sbt").textContent = S.title;
+  $("sbk").textContent = tx("Story {k} of {n} · {when}", {k:k + 1, n:stories.length, when:S.when}); $("sbt").textContent = S.title;
   b.classList.remove("swap"); void b.offsetWidth; b.classList.add("swap");
 }
 function pickJob(i){
@@ -1603,12 +1645,12 @@ function follow(el, jump){
 }
 function settle(el){
   el.querySelectorAll("[data-seq]").forEach(x => x.classList.add("on"));
-  el.querySelectorAll("[data-count]").forEach(c => c.textContent = (+c.dataset.count).toLocaleString("en"));
+  el.querySelectorAll("[data-count]").forEach(c => c.textContent = (+c.dataset.count).toLocaleString(LANG));
   el.querySelectorAll(".k-consent").forEach(c => c.classList.add("ok"));
 }
 function countUp(c){
   const to = +c.dataset.count, t0 = performance.now();
-  const f = now => { const p = Math.min(1, (now - t0) / 700); c.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString("en"); if (p < 1) requestAnimationFrame(f); };
+  const f = now => { const p = Math.min(1, (now - t0) / 700); c.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString(LANG); if (p < 1) requestAnimationFrame(f); };
   requestAnimationFrame(f);
 }
 async function animate(el, t){
@@ -1645,7 +1687,7 @@ function ui(){
       seg.classList.toggle("cur", idx[m] === st && (phase === "typing" || phase === "ready"));
     });
   });
-  if (st < n) hint.innerHTML = `<b>${st + 1}/${n}</b>${steps[st].hint}<kbd>${st ? "Send" : "Press send"}</kbd>`;
+  if (st < n) hint.innerHTML = `<b>${st + 1}/${n}</b>${steps[st].hint}<kbd>${st ? tx("Send") : tx("Press send")}</kbd>`;
 }
 async function prepare(instant){
   const t = ++tok; phase = "typing";
@@ -1687,7 +1729,7 @@ function after(){
   if (steps[st].first){   /* this chat's story is over: offer the next one */
     phase = "between";
     const k = steps[st].story;
-    $("stipk").textContent = `Story ${k} of ${stories.length} done ✓`; $("stipt").textContent = stories[k].title;
+    $("stipk").textContent = tx("Story {k} of {n} done ✓", {k, n:stories.length}); $("stipt").textContent = stories[k].title;
     ui();
     /* let the ending be read first, then point at New chat */
     const t = tok, readMs = reduce ? 0 : 2000;
@@ -1758,7 +1800,7 @@ function point(){
 
 /* ---------- main page ---------- */
 function personalize(){
-  $("tbcta").textContent = `Add to ${AIS[ai].name}`;
+  $("tbcta").textContent = tx("Add to {name}", {name:AIS[ai].name});
   const tab = document.querySelector(`.tab[data-app="${ai}"]`); if (tab) tab.click();
 }
 function finishTour(){
@@ -1852,7 +1894,7 @@ addEventListener("keydown", e => {
     card:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>'
   };
   /* tables: [name, icon, [[field, type, isNew]]]; t0 is the big one; links: [fromTable, fromField] -> table */
-  const T = [
+  const T = RO ? RO.db : [
     { tab:"Broker", tables:[
         ["Buyers", "person", [["name","text"],["budget","range",1],["rooms","number"],["must not","list",1],["decides with","person"],["areas","tags"]]],
         ["Listings", "home", [["price","money"],["floor","number"],["to school","minutes",1]]],
@@ -1885,8 +1927,8 @@ addEventListener("keydown", e => {
     cur = i; const t = T[i];
     [...tabs.children].forEach(b => { b.classList.toggle("on", b.dataset.i == i); b.setAttribute("aria-selected", b.dataset.i == i); });
     schema.innerHTML = '<svg class="rel" aria-hidden="true"></svg>' + t.tables.map(([n, ic, f], k) =>
-      `<div class="tbl t${k}"><div class="tbl-h">${TI[ic]}${n}<small>${f.length} fields</small></div>${
-        f.map(([fn, ty, nw]) => `<div class="fld${nw ? " nf" : ""}"><span>${fn}</span><span class="badge">+ new field</span><span class="ty">${ty}</span></div>`).join("")}</div>`).join("");
+      `<div class="tbl t${k}"><div class="tbl-h">${TI[ic]}${n}<small>${tx("{n} fields", {n:f.length})}</small></div>${
+        f.map(([fn, ty, nw]) => `<div class="fld${nw ? " nf" : ""}"><span>${fn}</span><span class="badge">${tx("+ new field")}</span><span class="ty">${ty}</span></div>`).join("")}</div>`).join("");
     qt.textContent = "";
     checks.innerHTML = t.uses.map(() => `<div class="ck"><i>${CHECK}</i><span class="ct"></span><span class="cf"></span></div>`).join("");
     nAlone.textContent = "0"; nWith.textContent = "0"; mAlone.style.width = "0"; mWith.style.width = "0";

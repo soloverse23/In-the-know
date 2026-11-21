@@ -66,6 +66,12 @@ def test_public_pages(tmp_path, monkeypatch):
         p = c.get("/privacy")
         assert "Aurora Digital SRL" in p.text and "Limited Use" in p.text and "drive.file" in p.text
         assert "Files.ReadWrite.AppFolder" in p.text and "never written to our disks" in p.text
+        for page in ("privacy", "pricing", "terms", "refunds"):     # the Romanian site links with ?lang=ro
+            ro = c.get(f"/{page}?lang=ro")
+            assert ro.status_code == 200 and '<html lang="ro">' in ro.text and "?lang=ro" in ro.text
+        assert "Aurora Digital SRL" in c.get("/privacy", headers={"Accept-Language": "ro-RO"}).text
+        assert "Politica de confidențialitate" in c.get("/privacy", headers={"Accept-Language": "ro-RO"}).text
+        assert '<html lang="en">' in c.get("/terms?lang=xx", headers={"Accept-Language": "de"}).text
 
 
 def test_container_settings():
