@@ -500,42 +500,63 @@ footer a{text-decoration:none}
 @media (max-width:860px){.topbar .tb-in{padding:0 12px}}
 @media (max-width:640px){.tb-links{display:none}.tb-cta{margin-left:auto}.topbar .tb-in{gap:12px}}
 
-/* ===== person file panel (same language as the tools hub) ===== */
-.pf-tabs{display:flex;justify-content:center;gap:4px;margin:6px auto 0;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px;width:max-content}
-.pf-tabs button{border:0;background:none;border-radius:6px;padding:7px 14px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;transition:background .25s,color .25s}
-.pf-tabs button.on{background:var(--ink);color:var(--paper)}
-.pf{margin-top:28px}
-.pf + .rules{margin-top:36px}
-.pf-chat{position:relative;height:300px;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 70px);mask-image:linear-gradient(to bottom,transparent 0,#000 70px)}
-.pf-msgs{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
-.pf-b{max-width:92%;background:var(--ink);color:var(--paper);border-radius:10px;border-bottom-right-radius:3px;padding:10px 14px;font-size:15px;line-height:1.4;opacity:0;transform:translateY(8px);transition:opacity .4s,transform .4s}
-.pf-b.show{opacity:1;transform:none}
-.pf-b.show.old{opacity:.35}
-.pf-file{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.pf-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--paper)}
-.pf-av{width:40px;height:40px;border-radius:8px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-weight:700;font-size:16px;flex:none}
-.pf-head b{display:block;font-size:16px}
-.pf-head small{display:block;font-size:12.5px;color:var(--muted)}
-.pf-drive{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
-.pf-drive svg{width:14px;height:14px}
-.pf-r{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:10px;align-items:center;height:64px;padding:10px 16px;border-top:1px solid #F1EEE8;transition:background .6s}
-.pf-r:first-child{border-top:0}
-.pf-r .lb{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;gap:4px}
-.pf-r .lb .lock{align-self:flex-start;letter-spacing:0}
-.pf-r .vl{font-size:15px;line-height:1.3;font-weight:500;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.pf-r .vl s{color:var(--muted);font-weight:400;text-decoration-color:var(--muted);margin-right:8px}
-.pf-r .vl .ph{display:block;height:10px;width:60%;border-radius:3px;background:#F1EEE8}
-.pf-r .fsrc{font-size:11.5px;color:var(--muted);white-space:nowrap;opacity:0;transition:opacity .4s}
-.pf-r.seen .fsrc{opacity:1}
-.pf-r.hit{background:#F3F2FF}
+
+/* ===== flexible database -> complete answers ===== */
+.db-tabs{display:flex;justify-content:center;gap:4px;margin:6px auto 0;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:3px;width:max-content}
+.db-tabs button{border:0;background:none;border-radius:6px;padding:7px 14px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;transition:background .25s,color .25s}
+.db-tabs button.on{background:var(--ink);color:var(--paper)}
+.db{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;margin-top:28px;align-items:start}
+.db-cap{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.db-cap svg{width:14px;height:14px}
+.schema{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto;gap:22px 34px}
+.schema svg.rel{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.schema svg.rel path{fill:none;stroke:#CFCAC0;stroke-width:1.5;stroke-dasharray:4 4;transition:stroke .4s}
+.schema svg.rel path.on{stroke:var(--signal);stroke-dasharray:none}
+.tbl{position:relative;z-index:1;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tbl.t0{grid-row:1 / span 2}
+.tbl-h{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--paper);border-bottom:1px solid var(--line);font-size:13px;font-weight:600}
+.tbl-h svg{width:14px;height:14px;color:var(--muted)}
+.tbl-h small{margin-left:auto;font-size:11px;font-weight:500;color:var(--muted)}
+.fld{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border-top:1px solid #F1EEE8;font-size:13.5px;transition:background .4s,box-shadow .4s}
+.fld:first-of-type{border-top:0}
+.fld .ty{margin-left:auto;font:500 11px ui-monospace,Menlo,monospace;color:var(--muted)}
+.fld.nf{opacity:.3}
+.fld.nf .ty{visibility:hidden}
+.fld.born{opacity:1;animation:born .6s ease}
+.fld .badge{display:none;font-size:10.5px;font-weight:600;color:var(--signal);background:#ECEBFD;border-radius:4px;padding:1px 6px}
+.fld.born .badge{display:inline-block}
+.fld.lit{background:#F3F2FF;box-shadow:inset 2px 0 0 var(--signal)}
+@keyframes born{0%{background:#ECEBFD}100%{background:transparent}}
+.ask{display:flex;align-items:center;gap:10px;height:48px;padding:0 14px;background:var(--card);border:1px solid var(--line);border-radius:8px;font-size:15px;font-weight:500}
+.ask svg{width:16px;height:16px;color:var(--muted);flex:none}
+.ask .qt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ask .qt:empty::before{content:"";display:block;width:70%;height:10px;border-radius:3px;background:#F1EEE8}
+.checks{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:8px}
+.ck{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:10px;align-items:center;height:44px;padding:0 14px;border-top:1px solid #F1EEE8;font-size:14px}
+.ck:first-child{border-top:0}
+.ck i{width:18px;height:18px;border-radius:4px;border:1.5px solid #DAD5CB;display:grid;place-items:center;transition:background .3s,border-color .3s}
+.ck i svg{width:11px;height:11px;opacity:0}
+.ck .ct{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ck .ct:empty::before{content:"";display:block;width:65%;height:9px;border-radius:3px;background:#F1EEE8}
+.ck .cf{font:500 11px ui-monospace,Menlo,monospace;color:var(--muted);white-space:nowrap}
+.ck.on i{background:var(--signal);border-color:var(--signal)}
+.ck.on i svg{opacity:1}
+.meter{margin-top:14px;display:grid;gap:8px}
+.mrow{display:grid;grid-template-columns:128px minmax(0,1fr) 34px;gap:10px;align-items:center;font-size:12.5px;color:var(--muted)}
+.mrow b{font-weight:600;color:var(--ink)}
+.mtrack{height:8px;border-radius:4px;background:#ECE8E0;overflow:hidden}
+.mfill{height:100%;width:0;border-radius:4px;background:#B9B3A7;transition:width .5s ease}
+.mrow.me .mfill{background:var(--signal)}
+.mrow span:last-child{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
 @media (max-width:860px){
-  .pf-tabs{width:100%;justify-content:space-between}.pf-tabs button{flex:1;padding:7px 4px}
-  .pf-chat{height:150px}
-  .pf-r{grid-template-columns:72px minmax(0,1fr) auto;padding:8px 12px;gap:8px}
-  .pf-r .vl{font-size:14px}
-  .pf-r .st{font-size:10.5px;padding:2px 5px}
-  .pf-drive{display:none}
+  .db-tabs{width:100%;justify-content:space-between}.db-tabs button{flex:1;padding:7px 4px}
+  .db{grid-template-columns:minmax(0,1fr);gap:22px}
+  .schema{grid-template-columns:minmax(0,1fr);gap:10px}
+  .tbl.t0{grid-row:auto}
+  .schema svg.rel{display:none}
+  .mrow{grid-template-columns:110px minmax(0,1fr) 30px}
 }
+.db + .rules{margin-top:40px}
 </style>
 </head>
 <body>
@@ -627,20 +648,21 @@ footer a{text-decoration:none}
 
 <section class="how" id="how">
   <div class="wrap">
-    <h2 class="serif reveal center">A file for <em>every person</em></h2>
-    <div class="pf-tabs reveal" id="pftabs" role="tablist" aria-label="Example person"></div>
-    <div class="hub pf reveal" id="pf" aria-label="Each thing you say about a person goes through Claude to In The Know and lands in the right line of that person's file; a change is asked first and the old value kept">
-      <div class="pf-chat"><div class="pf-msgs" id="pfmsgs"></div></div>
-      <div class="mid">
-        <div class="wire" aria-hidden="true"><i></i></div>
-        <div class="node"><svg class="spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.18 12.31L22.50 13.48M13.73 13.35L18.62 17.17M12.82 14.04L15.97 21.83M11.69 14.18L10.83 20.32M10.65 13.73L5.47 20.35M9.96 12.82L4.21 15.15M9.82 11.69L1.50 10.52M10.27 10.65L5.38 6.83M11.18 9.96L8.03 2.17M12.31 9.82L13.17 3.68M13.35 10.27L18.53 3.65M14.04 11.18L19.79 8.85" stroke="#D97757" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg><span>Claude</span></div>
-        <div class="wire" aria-hidden="true"><i></i></div>
-        <div class="node itk"><svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg><span>In The Know</span></div>
-        <div class="wire" aria-hidden="true"><i></i></div>
+    <h2 class="serif reveal center">Built around your business. <em>Nothing missed.</em></h2>
+    <div class="db-tabs reveal" id="dbtabs" role="tablist" aria-label="Example business"></div>
+    <div class="db reveal" id="dbx" aria-label="In The Know shapes a database around your business as you talk, adding fields like budget or allergies. Any question then uses every relevant field, so the answer misses nothing.">
+      <div>
+        <div class="db-cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg>Your database</div>
+        <div class="schema" id="schema"></div>
       </div>
-      <div class="pf-file">
-        <div class="pf-head"><span class="pf-av" id="pfav"></span><div><b id="pfname"></b><small id="pfrole"></small></div><span class="pf-drive"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Your Drive</span></div>
-        <div id="pfrows"></div>
+      <div>
+        <div class="db-cap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>Any question</div>
+        <div class="ask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="qt" id="dbq"></span></div>
+        <div class="checks" id="checks"></div>
+        <div class="meter">
+          <div class="mrow"><span>AI alone</span><div class="mtrack"><div class="mfill" id="malone"></div></div><span id="nalone">0</span></div>
+          <div class="mrow me"><span><b>With In The Know</b></span><div class="mtrack"><div class="mfill" id="mwith"></div></div><span id="nwith">0</span></div>
+        </div>
       </div>
     </div>
     <div class="rules">
@@ -904,69 +926,101 @@ else loop();
 <script>
 (()=>{const t=document.getElementById('topbar');const f=()=>t.classList.toggle('scrolled',scrollY>8);addEventListener('scroll',f,{passive:true});f();})();
 
-/* ================= person file: each sentence lands in the right line ================= */
+
+/* ================= flexible database -> nothing missed ================= */
 (() => {
-  const root = document.getElementById("pf"); if (!root) return;
-  const LOCK = '<span class="lock">private</span>';
-  const P = [
-    { tab:"Buyer", init:"S", name:"Sara Ionescu", role:"Buyer · Casa Nord", rows:["Wants","Must not","People","Next"], priv:1,
-      says:[["Sara wants 3 rooms, 120–140k €.", 0, "3 rooms · 120–140k €"],
-            ["No ground floor, ever.", 1, "Ground floor"],
-            ["Her husband Mihai decides.", 2, "Mihai · husband, decides"],
-            ["Viewing at Teilor 14 on Thursday.", 3, "Teilor 14 · Thu"]],
-      change:["She can go up to 150k now.", 0, "120–140k €", "3 rooms · up to 150k €"] },
-    { tab:"Athlete", init:"M", name:"Mihai Radu", role:"Athlete · Fit Studio", rows:["Goal","Must not","People","Next"], priv:1,
-      says:[["Mihai wants a half marathon in April.", 0, "Half marathon · April"],
-            ["Deep lunges hurt his knee.", 1, "Deep lunges · knee"],
-            ["He trains with Andrei.", 2, "Andrei · training partner"],
-            ["Next session Thursday at 6.", 3, "Thu · 18:00"]],
-      change:["Move him to Tuesdays and Thursdays.", 3, "Thu", "Tue · Thu · 18:00"] },
-    { tab:"Traveler", init:"A", name:"Ana Pop", role:"Traveler · Delta Tours", rows:["Trip","Must not","People","Next"], priv:1,
-      says:[["Ana's on the Delta trip, window seat.", 0, "Delta · Fri · window seat"],
-            ["She's allergic to nuts.", 1, "Nuts · allergy"],
-            ["She rooms with her sister Ioana.", 2, "Ioana · sister, same room"],
-            ["Her deposit is due Wednesday.", 3, "Deposit · due Wed"]],
-      change:["Ana paid the deposit.", 3, "due Wed", "Deposit · paid"] }
+  const root = document.getElementById("dbx"); if (!root) return;
+  const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+  const TI = {
+    person:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>',
+    home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 11l8-6 8 6v9H4z"/></svg>',
+    cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+    chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg>',
+    map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/></svg>',
+    card:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>'
+  };
+  /* tables: [name, icon, [[field, type, isNew]]]; t0 is the big one; links: [fromTable, fromField] -> table */
+  const T = [
+    { tab:"Broker", tables:[
+        ["Buyers", "person", [["name","text"],["budget","range",1],["rooms","number"],["must not","list",1],["decides with","person"],["areas","tags"]]],
+        ["Listings", "home", [["price","money"],["floor","number"],["to school","minutes",1]]],
+        ["Viewings", "cal", [["buyer","→ Buyers"],["listing","→ Listings"],["feedback","note"]]]],
+      links:[[2,0,0],[2,1,1]],
+      q:"Which listing should I show Sara first?",
+      uses:[[0,1,"Budget up to 140k €","budget"],[0,3,"No ground floor","must not"],[0,4,"Mihai has to be there","decides with"],[1,2,"Teilor 14 · 4 min to school","to school"],[2,2,"Liked the light at Dacia 7","feedback"]] },
+    { tab:"Coach", tables:[
+        ["Athletes", "person", [["name","text"],["goal","text"],["injuries","list",1],["package","sessions"],["trains with","person"],["prefers","tags"]]],
+        ["Sessions", "cal", [["athlete","→ Athletes"],["load","kg"],["pain","scale",1]]],
+        ["Results", "chart", [["athlete","→ Athletes"],["squat 5×5","kg"],["10 km","time",1]]]],
+      links:[[1,0,0],[2,0,0]],
+      q:"What should Mihai do on Thursday?",
+      uses:[[0,1,"Half marathon in 20 weeks","goal"],[0,2,"Old knee injury","injuries"],[1,2,"Knee pain 3× in 2 weeks","pain"],[2,1,"Squat up 20 kg since March","squat 5×5"],[0,3,"2 sessions left","package"]] },
+    { tab:"Tour leader", tables:[
+        ["Travelers", "person", [["name","text"],["passport until","date",1],["allergies","list",1],["rooms with","person"],["not with","person"],["seat","text"]]],
+        ["Trips", "map", [["date","date"],["places","list"],["menu","note"]]],
+        ["Payments", "card", [["traveler","→ Travelers"],["deposit","money"],["paid","yes/no"]]]],
+      links:[[2,0,0]],
+      q:"Is the Delta group ready for Friday?",
+      uses:[[0,1,"Radu's passport expires 2 Dec","passport until"],[0,2,"Ana: nuts","allergies"],[1,2,"Saturday lunch has walnut sauce","menu"],[0,4,"Paul and Victor apart","not with"],[2,2,"2 deposits still missing","paid"]] }
   ];
-  const tabs = document.getElementById("pftabs"), msgs = document.getElementById("pfmsgs"), rowsEl = document.getElementById("pfrows");
-  tabs.innerHTML = P.map((p, i) => `<button type="button" role="tab" data-i="${i}">${p.tab}</button>`).join("");
-  let token = 0, started = false;
+  const tabs = document.getElementById("dbtabs"), schema = document.getElementById("schema"),
+        qt = document.getElementById("dbq"), checks = document.getElementById("checks"),
+        mAlone = document.getElementById("malone"), mWith = document.getElementById("mwith"),
+        nAlone = document.getElementById("nalone"), nWith = document.getElementById("nwith");
+  tabs.innerHTML = T.map((t, i) => `<button type="button" role="tab" data-i="${i}">${t.tab}</button>`).join("");
+  let cur = 0, token = 0, started = false;
   function setup(i){
-    const p = P[i];
+    cur = i; const t = T[i];
     [...tabs.children].forEach(b => { b.classList.toggle("on", b.dataset.i == i); b.setAttribute("aria-selected", b.dataset.i == i); });
-    document.getElementById("pfav").textContent = p.init;
-    document.getElementById("pfname").textContent = p.name;
-    document.getElementById("pfrole").textContent = p.role;
-    rowsEl.innerHTML = p.rows.map((r, k) => `<div class="pf-r"><span class="lb">${r}${k === p.priv ? LOCK : ""}</span><span class="vl"><span class="ph"></span></span><span class="fsrc"></span></div>`).join("");
-    msgs.innerHTML = "";
+    schema.innerHTML = '<svg class="rel" aria-hidden="true"></svg>' + t.tables.map(([n, ic, f], k) =>
+      `<div class="tbl t${k}"><div class="tbl-h">${TI[ic]}${n}<small>${f.length} fields</small></div>${
+        f.map(([fn, ty, nw]) => `<div class="fld${nw ? " nf" : ""}"><span>${fn}</span><span class="badge">+ new field</span><span class="ty">${ty}</span></div>`).join("")}</div>`).join("");
+    qt.textContent = "";
+    checks.innerHTML = t.uses.map(() => `<div class="ck"><i>${CHECK}</i><span class="ct"></span><span class="cf"></span></div>`).join("");
+    nAlone.textContent = "0"; nWith.textContent = "0"; mAlone.style.width = "0"; mWith.style.width = "0";
+    requestAnimationFrame(drawLinks);
   }
-  function say(text){
-    [...msgs.children].forEach(m => m.classList.add("old"));
-    const b = document.createElement("div"); b.className = "pf-b"; b.textContent = text; msgs.appendChild(b);
-    while (msgs.children.length > 4) msgs.firstElementChild.remove();
-    requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add("show")));
-    root.classList.remove("pulse"); void root.offsetWidth; root.classList.add("pulse");
+  function fieldEl(tk, fk){ return schema.querySelectorAll(".tbl")[tk].querySelectorAll(".fld")[fk]; }
+  function drawLinks(){
+    const svg = schema.querySelector("svg.rel"); if (!svg || getComputedStyle(svg).display === "none") return;
+    const box = schema.getBoundingClientRect();
+    svg.innerHTML = T[cur].links.map(([ft, ff, tt], n) => {
+      const a = fieldEl(ft, ff).getBoundingClientRect(), b = schema.querySelectorAll(".tbl")[tt].getBoundingClientRect();
+      const y1 = a.top + a.height / 2 - box.top;
+      if (b.right <= a.left + 1){                       /* target is to the left: elbow into its right edge */
+        const x1 = a.left - box.left, x2 = b.right - box.left, mx = (x1 + x2) / 2, y2 = Math.min(Math.max(y1, b.top - box.top + 20), b.bottom - box.top - 20);
+        return `<path data-l="${n}" d="M${x1} ${y1}H${mx}V${y2}H${x2}"/>`;
+      }
+      const x1 = a.right - box.left, x2 = b.right - box.left, y2 = b.top - box.top + 18, ex = Math.max(x1, x2) + 14;   /* same column: bracket on the right */
+      return `<path data-l="${n}" d="M${x1} ${y1}H${ex}V${y2}H${x2}"/>`;
+    }).join("");
   }
-  function land(k, html, src){
-    const r = rowsEl.children[k];
-    [...rowsEl.children].forEach(x => x.classList.remove("hit"));
-    r.querySelector(".vl").innerHTML = html; r.querySelector(".fsrc").innerHTML = src;
-    r.classList.add("seen", "hit");
-  }
+  addEventListener("resize", () => requestAnimationFrame(drawLinks));
   async function play(i, t){
-    setup(i);
-    const p = P[i];
-    await wait(500);
-    for (const [text, k, val] of p.says){
+    setup(i); const T_ = T[i];
+    await wait(700);
+    for (const el of schema.querySelectorAll(".fld.nf")){            /* the database grows as you talk */
       if (t !== token) return false;
-      say(text); await wait(1100); if (t !== token) return false;
-      land(k, val, "today"); await wait(1300);
+      el.classList.add("born"); await wait(650);
     }
-    if (t !== token) return false;
-    const [text, k, old, nu] = p.change;
-    say(text); await wait(1100); if (t !== token) return false;
-    land(k, `<s>${old}</s>${nu}`, '<span class="st st-u">asked · updated</span>');
-    await wait(3200);
+    await wait(600);
+    for (let c = 1; c <= T_.q.length; c++){ if (t !== token) return false; qt.textContent = T_.q.slice(0, c); await wait(28); }
+    await wait(500);
+    nAlone.textContent = "1"; mAlone.style.width = (100 / T_.uses.length) + "%";
+    for (let k = 0; k < T_.uses.length; k++){
+      if (t !== token) return false;
+      const [tk, fk, text, ref] = T_.uses[k];
+      schema.querySelectorAll(".fld.lit").forEach(x => x.classList.remove("lit"));
+      fieldEl(tk, fk).classList.add("lit");
+      schema.querySelectorAll("svg.rel path").forEach(p => {
+        const L = T_.links[+p.dataset.l]; p.classList.toggle("on", L[0] === tk || L[2] === tk);
+      });
+      const ck = checks.children[k]; ck.querySelector(".ct").textContent = text; ck.querySelector(".cf").textContent = ref; ck.classList.add("on");
+      nWith.textContent = k + 1; mWith.style.width = ((k + 1) / T_.uses.length * 100) + "%";
+      await wait(1000);
+    }
+    schema.querySelectorAll(".fld.lit").forEach(x => x.classList.remove("lit"));
+    await wait(3800);
     return true;
   }
   async function loop(start){
@@ -974,15 +1028,16 @@ else loop();
     while (t === token){
       if (document.hidden){ await wait(1000); continue; }
       if (!(await play(i, t))) return;
-      i = (i + 1) % P.length;
+      i = (i + 1) % T.length;
     }
   }
   tabs.addEventListener("click", e => { const b = e.target.closest("button"); if (b){ started = true; loop(+b.dataset.i); } });
   setup(0);
   if (reduce){
-    P[0].says.forEach(([, k, val]) => land(k, val, "today"));
-    const [, k, old, nu] = P[0].change; land(k, `<s>${old}</s>${nu}`, '<span class="st st-u">asked · updated</span>');
-    rowsEl.querySelectorAll(".hit").forEach(x => x.classList.remove("hit"));
+    schema.querySelectorAll(".fld.nf").forEach(x => x.classList.add("born"));
+    qt.textContent = T[0].q;
+    T[0].uses.forEach(([, , text, ref], k) => { const ck = checks.children[k]; ck.querySelector(".ct").textContent = text; ck.querySelector(".cf").textContent = ref; ck.classList.add("on"); });
+    nAlone.textContent = "1"; nWith.textContent = T[0].uses.length; mAlone.style.width = "20%"; mWith.style.width = "100%";
     return;
   }
   new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !started){ started = true; o.disconnect(); loop(0); } }, {threshold:.3}).observe(root);
