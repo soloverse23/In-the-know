@@ -1623,8 +1623,7 @@ function after(){
     $("stipk").textContent = `Story ${k} of ${stories.length} done ✓`; $("stipt").textContent = stories[k].title;
     ui();
     /* let the ending be read first, then point at New chat */
-    const said = steps[st - 1].out.filter(o => o[0] === "ai").map(o => o[1].replace(/<[^>]+>/g, "")).join(" ");
-    const t = tok, readMs = reduce ? 0 : Math.min(5000, 2600 + said.length * 22);
+    const t = tok, readMs = reduce ? 0 : 2000;
     setTimeout(() => {
       if (t !== tok || phase !== "between") return;
       win.classList.add("between"); spot(true); point();
