@@ -16,8 +16,8 @@
     }
   ],
   "rewrites": [
-    { "source": "/ro", "destination": "/index.html" },
-    { "source": "/ro/", "destination": "/index.html" }
+    { "source": "/ro", "destination": "/" },
+    { "source": "/ro/", "destination": "/" }
   ],
   "headers": [
     {
