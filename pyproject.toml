@@ -9,6 +9,7 @@ dependencies = [
     "cryptography>=43",
     "httpx2>=2.16",
     "uvicorn>=0.30",
+    "google-cloud-firestore>=2.16",
 ]
 
 [dependency-groups]

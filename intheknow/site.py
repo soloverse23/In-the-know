@@ -70,7 +70,69 @@ def routes(base_url: str, show_connector: bool = True) -> list[tuple[str, list[s
     async def privacy(request: Request) -> Response:
         return _doc("en", "In The Know: Privacy policy", privacy_html(base), https)
 
-    return [("/", ["GET"], home), ("/privacy", ["GET"], privacy)]
+    async def pricing(request: Request) -> Response:
+        return _doc("en", "In The Know: Pricing", pricing_html(), https)
+
+    async def terms(request: Request) -> Response:
+        return _doc("en", "In The Know: Terms", terms_html(), https)
+
+    async def refunds(request: Request) -> Response:
+        return _doc("en", "In The Know: Refunds", refunds_html(), https)
+
+    return [("/", ["GET"], home), ("/privacy", ["GET"], privacy), ("/pricing", ["GET"], pricing),
+            ("/terms", ["GET"], terms), ("/refunds", ["GET"], refunds)]
+
+
+def pricing_html() -> str:
+    contact = html.escape(_env("ITK_CONTACT", "the contact address on the home page"))
+    return f"""<h1>Pricing</h1><p class="lead">One plan, everything included.</p>
+<ul><li><b>€4.99 per month</b>, or <b>€49 per year</b> (two months free). Prices include VAT.</li>
+<li><b>14 days free</b> when you add a card. Cancel before the 14 days end and you are never charged.</li>
+<li>No limits on customers, records or files.</li></ul>
+<h2>Have a code?</h2><p>A promo code gives 3 months free with no card. Enter it when you connect In The Know to Claude or ChatGPT.</p>
+<h2>If you stop</h2><p>Your memory is a file in your own Google Drive or OneDrive, so it stays yours. Without an active plan, your assistant can
+still read everything; saving new things is paused until you subscribe again.</p>
+<p>Payments are handled by Paddle, the seller of record. Questions: {contact}.</p>
+<footer><a href="/">In The Know</a> · <a href="/terms">Terms</a> · <a href="/refunds">Refunds</a> · <a href="/privacy">Privacy</a></footer>"""
+
+
+def terms_html() -> str:
+    op = html.escape(_env("ITK_OPERATOR", "the operator of In The Know"))
+    contact = html.escape(_env("ITK_CONTACT", "the contact address on the home page"))
+    date = html.escape(_env("ITK_POLICY_DATE", "2026-11-20"))
+    return f"""<h1>Terms of service</h1><p class="lead">Last updated {date}. In The Know is operated by {op}. Contact: {contact}.</p>
+<h2>The service</h2><p>In The Know is a connector that gives AI assistants such as Claude and ChatGPT a lasting, exact memory of your
+business. The memory is a file in your own Google Drive or OneDrive. You need an account with one of them and with your AI assistant.</p>
+<h2>Your data</h2><p>Your data stays yours. We do not claim any rights over it. You are responsible for what you put in it, including having a
+lawful basis to keep your customers' personal data. See the <a href="/privacy">privacy policy</a>.</p>
+<h2>Plans, trial and renewal</h2>
+<ul><li>The plan costs €4.99 per month or €49 per year, VAT included, and renews automatically until you cancel.</li>
+<li>Adding a card starts a 14-day free trial, available once per person. If you do not cancel before it ends, the first payment is taken.</li>
+<li>A promo code gives 3 months free without a card, once per person. When the period ends nothing is charged; saving pauses until you subscribe.</li>
+<li>You can cancel at any time from your account page; the plan then runs to the end of the period you paid for.</li>
+<li>Payments, invoices and VAT are handled by Paddle as the seller of record. Paddle's terms apply to the purchase.</li>
+<li>We may change prices for future renewals and will tell you in advance. Early users may keep an agreed price.</li></ul>
+<h2>Without an active plan</h2><p>Reading and exporting your memory keeps working. Saving new information is paused. Nothing is deleted.</p>
+<h2>Acceptable use</h2><p>Do not misuse the service: no attempts to break, overload or reverse-engineer it, no unlawful use, and no sharing of one
+plan by several businesses.</p>
+<h2>Availability and liability</h2><p>The service is provided “as is”. We work to keep it available and your data safe, but we cannot promise it will never be
+interrupted. Please keep your own backup; the file is in your Drive. To the extent the law allows, our liability is limited to the
+amount you paid in the last 12 months. Nothing here limits rights you have under mandatory consumer law.</p>
+<h2>AI answers</h2><p>The answers come from your AI assistant using your data. Check important decisions yourself.</p>
+<h2>Changes and law</h2><p>We will update these terms when needed and change the date above. Romanian law applies, without affecting the mandatory consumer
+protections of your country of residence.</p>
+<footer><a href="/">In The Know</a> · <a href="/pricing">Pricing</a> · <a href="/refunds">Refunds</a> · <a href="/privacy">Privacy</a></footer>"""
+
+
+def refunds_html() -> str:
+    contact = html.escape(_env("ITK_CONTACT", "the contact address on the home page"))
+    return f"""<h1>Refund policy</h1><p class="lead">Simple and fair.</p>
+<ul><li><b>The 14-day trial is free.</b> Cancel before it ends and you are not charged.</li>
+<li><b>Monthly plan:</b> if you were charged and did not mean to continue, ask within 14 days of the payment and we refund it in full.</li>
+<li><b>Yearly plan:</b> ask within 30 days of the payment for a full refund. After that, you can cancel at any time and keep the service until the year ends.</li></ul>
+<p>To ask, write to {contact} from the address you used to buy, or use the link in your Paddle receipt. Refunds are made by Paddle to the
+original payment method. Where the law gives you a longer withdrawal right, that right applies.</p>
+<footer><a href="/">In The Know</a> · <a href="/pricing">Pricing</a> · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></footer>"""
 
 
 def privacy_html(base: str) -> str:
@@ -82,7 +144,8 @@ def privacy_html(base: str) -> str:
 
 <h2>In short</h2>
 <ul><li>Your business memory is a single file in <b>your own</b> Google Drive (folder “In The Know”) or OneDrive (folder “Apps/In The Know”).</li>
-<li>We keep <b>no copy</b> of it and no database of users or businesses.</li>
+<li>We keep <b>no copy</b> of it and no database of your customers or business data. The only thing we record about you is a small
+billing record (see “Plans and payments”).</li>
 <li>We only touch that file while you, through your AI assistant, ask In The Know to do something.</li></ul>
 
 <h2>What In The Know does</h2>
@@ -120,12 +183,21 @@ for advertising, do not transfer it to others except as needed to provide the se
 train AI models. No person at In The Know reads your data, except with your explicit permission for support, for security
 reasons, or where the law requires it.</p>
 
+<h2>Plans and payments</h2>
+<p>In The Know has one paid plan (see <a href="/pricing">pricing</a>). Payments are handled by <b>Paddle</b>, which is the seller of
+record: it collects your card details, charges you, handles VAT and sends your invoices. We never see or store your card number.</p>
+<p>To know whether saving is switched on for you, we keep a small record in a database in the EU (Google Cloud Firestore): a
+one-way hash of your account id, your plan status and its end date, whether you already used the free trial, Paddle's
+subscription and customer reference numbers, and which promo code you used. It contains <b>no name, no email and nothing from your
+business memory</b>. We delete it on request. Promo codes are stored only as hashes.</p>
+
 <h2>Your AI assistant</h2>
 <p>The answers In The Know gives to your assistant (for example a customer's history when you ask about them) are processed by
 that assistant's provider (such as Anthropic or OpenAI) under their own privacy terms.</p>
 
 <h2>Who else is involved</h2>
-<p>Our server runs at {hosting}. We do not sell or share your data, and we use no advertising or analytics trackers.</p>
+<p>Our server and billing record run at {hosting}. Paddle processes payments. We do not sell or share your data, and we use no
+advertising or analytics trackers.</p>
 
 <h2>Your rights</h2>
 <p>Under the GDPR you may ask for access, correction, deletion, restriction or portability of your personal data, and you may

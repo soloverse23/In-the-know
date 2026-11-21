@@ -28,8 +28,9 @@ from mcp.server.auth.provider import AccessToken
 from mcp.server.auth.settings import AuthSettings, ClientRegistrationOptions, RevocationOptions
 from mcp.server.transport_security import TransportSecuritySettings
 
-from .auth import IdentityProvider, StatelessAuthProvider, providers_from_env
-from . import site
+from .auth import IdentityProvider, StatelessAuthProvider, providers_from_env, subject_of
+from . import billing as billing_mod, billing_pages, site
+from .billing import Billing
 from .cloud import cloud_store_factory
 from .context import ContextEngine
 from .mcp_server import build_server
@@ -83,9 +84,19 @@ def dev_store_factory(directory: str | Path) -> StoreFactory:
 
 def create_app(base_url: str, sealer: Sealer, providers: dict[str, IdentityProvider], store_factory: StoreFactory,
                http_factory=None, today=None, extra_hosts: Optional[list[str]] = None,
-               picker: Optional[PickerConfig] = None) -> Starlette:
+               picker: Optional[PickerConfig] = None, billing: Optional[Billing] = None) -> Starlette:
+    """`billing` None: everything is free (beta). Otherwise new owners pick a plan while connecting, and
+    saving needs an active plan (trial, paid or code)."""
     base_url = base_url.rstrip("/")
-    kw = {"http_factory": http_factory} if http_factory else {}
+    kw: dict[str, Any] = {"http_factory": http_factory} if http_factory else {}
+    if billing is not None:
+        def after_sign_in(pending: dict, identity: dict, lang: str) -> Optional[str]:
+            subject = subject_of(identity)
+            if not billing.needs_plan(subject):
+                return None
+            blob = billing_pages.plan_blob(billing, billing_mod.owner_key(subject), identity.get("em", ""), lang, pending, identity)
+            return f"{base_url}/plan?s={blob}"
+        kw["after_sign_in"] = after_sign_in
     auth = StatelessAuthProvider(sealer, base_url, providers, **kw)
     engines = EngineCache(store_factory, today=today)
 
@@ -107,15 +118,25 @@ def create_app(base_url: str, sealer: Sealer, providers: dict[str, IdentityProvi
         token = get_access_token()
         log_call(tool, ms, ok, owner_hash(token.subject or "") if token else "")
 
+    def billing_call(fn: Callable[[str, str], Optional[str]]) -> Optional[str]:
+        token = get_access_token()
+        if token is None:
+            raise PermissionError("not signed in")
+        identity = (token.claims or {})["identity"]
+        return fn(subject_of(identity), identity.get("em", ""))
+
     mcp = build_server(
         current,
         upload_link=upload_link,
         on_call=on_call,
+        guard=(lambda: billing_call(billing.guard)) if billing else None,
+        notice=(lambda: billing_call(billing.notice)) if billing else None,
         auth_server_provider=auth,
         auth=AuthSettings(issuer_url=base_url, resource_server_url=auth.resource, validate_token_resource=True,
                           client_registration_options=ClientRegistrationOptions(enabled=True),
                           revocation_options=RevocationOptions(enabled=False)))
-    for path, methods, handler in auth.routes() + uploads.routes() + site.routes(base_url):
+    extra = billing_pages.routes(billing, auth.finish) if billing else []
+    for path, methods, handler in auth.routes() + uploads.routes() + site.routes(base_url) + extra:
         mcp.custom_route(path, methods)(handler)
 
     @mcp.custom_route("/health", ["GET"])
@@ -197,7 +218,9 @@ def main() -> None:
     stores = dev_store_factory(args.dev_store) if args.dev_store else cloud_store_factory(providers)
     picker = (PickerConfig(os.environ["ITK_GOOGLE_API_KEY"], os.environ["ITK_GOOGLE_APP_ID"])
               if os.environ.get("ITK_GOOGLE_API_KEY") and os.environ.get("ITK_GOOGLE_APP_ID") else None)
-    app = create_app(args.base_url, Sealer.from_env(), providers, stores, picker=picker)
+    sealer = Sealer.from_env()
+    billing = billing_mod.from_env(dict(os.environ), sealer, args.base_url)
+    app = create_app(args.base_url, sealer, providers, stores, picker=picker, billing=billing)
     import uvicorn
     uvicorn.run(app, host=args.host, port=args.port, proxy_headers=True, forwarded_allow_ips="*",
                 access_log=False, log_config=None)       # no request lines (URLs carry sign-in data); our handlers stay

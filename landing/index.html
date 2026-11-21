@@ -200,6 +200,30 @@ ul.timeline{gap:2px;position:relative;padding-left:24px}
 footer{padding:40px 0 56px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
 footer a{text-decoration:none}
 
+/* pricing */
+.pricing{background:var(--soft);border-top:1px solid var(--line)}
+.price-card{max-width:520px;margin:36px auto 0;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:32px 28px;text-align:center;box-shadow:0 24px 48px -32px rgba(20,22,31,.35)}
+.bill{display:inline-grid;grid-template-columns:1fr 1fr;background:var(--soft);border-radius:999px;padding:4px;margin-bottom:24px}
+.bill button{border:0;background:none;font:600 15px Inter,sans-serif;color:var(--muted);padding:9px 20px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.bill button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.bill button:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.bill button{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}
+.bill em{font-style:normal;font-size:12px;color:var(--mint);font-weight:700;margin-top:2px;white-space:nowrap}
+.bill button[aria-pressed="true"] em{color:#7BE3C3}
+.amount{font-size:clamp(52px,9vw,68px);font-weight:750;letter-spacing:-2px;line-height:1}
+.amount small{font-size:18px;font-weight:500;letter-spacing:0;color:var(--muted);margin-left:4px}
+.price-sub{color:var(--muted);font-size:15px;margin:10px 0 24px;min-height:23px}
+.price-list{list-style:none;text-align:left;display:grid;gap:12px;margin:0 0 28px;font-size:16px}
+.price-list li{display:flex;gap:12px;align-items:flex-start}
+.price-list svg{flex:none;width:20px;height:20px;margin-top:2px;stroke:var(--mint)}
+.price-cta{display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;background:var(--signal);color:#fff;font-weight:600;text-decoration:none;transition:background .2s}
+.price-cta:hover{background:#4338CA}.price-cta:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+.price-fine{font-size:13.5px;color:var(--muted);margin-top:14px}
+.price-code{max-width:520px;margin:20px auto 0;text-align:center;color:var(--muted);font-size:15px}
+.add-note{margin-top:20px;font-size:14.5px;color:rgba(250,248,244,.62)}
+.add-note b{color:var(--paper);font-weight:600}
+footer .legal-links{display:flex;gap:16px;flex-wrap:wrap}
+
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
 .reveal.in{opacity:1;transform:none}
 
@@ -431,9 +455,6 @@ html.touring{overflow:hidden}
 .tour[data-stage="demo"] .tour-prog{display:none}
 .rail{display:none;align-items:center;gap:14px}
 .tour[data-stage="demo"] .rail{display:flex}
-.rail-back{width:30px;height:30px;border:1px solid var(--line);background:var(--card);border-radius:8px;display:grid;place-items:center;cursor:pointer;color:var(--ink);flex:none}
-.rail-back svg{width:15px;height:15px}
-.rail-back:disabled{opacity:.35;cursor:default}
 .rail-chs{display:flex;gap:14px}
 .rail-ch{display:flex;flex-direction:column;gap:5px}
 .rail-ch small{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;transition:color .3s}
@@ -444,7 +465,10 @@ html.touring{overflow:hidden}
 .rail-seg i.on::after{transform:none}
 .rail-seg i.cur::after{transform:scaleX(.35);animation:breathe 1.6s ease-in-out infinite}
 @keyframes breathe{50%{opacity:.45}}
-.tour-skip-w{display:flex;justify-content:flex-end}
+.tour-skip-w{display:flex;justify-content:flex-end;align-items:center;gap:4px}
+.tour-back{display:inline-flex;align-items:center;gap:5px;border:0;background:none;border-radius:8px;padding:8px 10px;font-size:13.5px;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;transition:color .2s,background .2s}
+.tour-back:hover{color:var(--ink);background:var(--soft)}
+.tour-back:disabled{visibility:hidden}
 .tour-skip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 14px;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap;transition:border-color .2s}
 .tour-skip:hover{border-color:var(--ink)}
 .tour-body{flex:1;min-height:0;position:relative}
@@ -791,6 +815,7 @@ html.touring{overflow:hidden}
   .tour-prog button{padding:6px 4px}
   .tour-prog li+li::before{width:10px}
   .tour-skip .long{display:none}
+  .tour-back .lbl{display:none}
   .rail{gap:10px}.rail-chs{gap:8px}
   .rail-seg i{width:14px}
   .rail-ch small{display:none}
@@ -845,11 +870,10 @@ html.touring{overflow:hidden}
         <li data-s="demo"><button type="button"><b>3</b><span>See it work</span></button></li>
       </ol>
       <div class="rail" id="rail">
-        <button type="button" class="rail-back" id="rback" aria-label="Back one step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
         <div class="rail-chs" id="rchs"></div>
       </div>
     </div>
-    <div class="tour-skip-w"><button type="button" class="tour-skip" id="tskip"><span>Skip<span class="long"> to the site</span></span><span aria-hidden="true">→</span></button></div>
+    <div class="tour-skip-w"><button type="button" class="tour-back" id="tback" aria-label="Back one step" disabled><span aria-hidden="true">←</span><span class="lbl">Back</span></button><button type="button" class="tour-skip" id="tskip"><span>Skip<span class="long"> to the site</span></span><span aria-hidden="true">→</span></button></div>
   </div>
   <div class="tour-body">
     <div class="qs qa">
@@ -926,6 +950,7 @@ html.touring{overflow:hidden}
       <a href="#one">Why</a>
       <a href="#how">How it works</a>
       <a href="#tools">Your tools</a>
+      <a href="#pricing">Pricing</a>
     </div>
     <a class="tb-cta" id="tbcta" href="#connect">Add to Claude</a>
   </div>
@@ -943,6 +968,7 @@ html.touring{overflow:hidden}
         <button class="tab" data-app="chatgpt" role="tab" aria-selected="false">Add to ChatGPT</button>
       </div>
       <ol class="add-steps" id="steps"></ol>
+      <p class="add-note"><b>14 days free</b>, then €4.99 a month. <a href="#pricing" style="color:inherit">See pricing</a></p>
     </div>
   </div>
 </section>
@@ -1016,9 +1042,34 @@ html.touring{overflow:hidden}
   </div>
 </section>
 
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <p class="eyebrow center">Pricing</p>
+    <h2 class="serif reveal center">One plan. <em>Nothing locked away.</em></h2>
+    <div class="price-card reveal">
+      <div class="bill" role="group" aria-label="Billing period">
+        <button type="button" id="bill-y" aria-pressed="true">Yearly<em>2 months free</em></button>
+        <button type="button" id="bill-m" aria-pressed="false">Monthly</button>
+      </div>
+      <div class="amount" aria-live="polite"><span id="p-amt">€49</span><small id="p-per">/ year</small></div>
+      <p class="price-sub" id="p-sub">That's €4.08 a month. VAT included.</p>
+      <ul class="price-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span><b>14 days free</b>. Add a card, cancel any time before and you pay nothing.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Every customer, every file, every tool. No limits.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Your memory stays in <b>your own Drive or OneDrive</b>, even if you stop.</span></li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Works in Claude and ChatGPT, on phone and computer.</span></li>
+      </ul>
+      <a class="price-cta" href="#connect" id="p-cta">Start 14 days free</a>
+      <p class="price-fine">Without a plan you can still read everything. Only saving new things pauses.</p>
+    </div>
+    <p class="price-code">Have a code? Enter it when you connect In The Know. It gives you 3 months free, no card needed.</p>
+  </div>
+</section>
+
 <div class="wrap">
   <footer>
     <span>In The Know · the memory of your business</span>
+    <span class="legal-links"><a href="#pricing">Pricing</a><a data-app="/terms" href="#">Terms</a><a data-app="/refunds" href="#">Refunds</a><a data-app="/privacy" href="#">Privacy</a></span>
     <a href="#">Back to top ↑</a>
     <span class="legal">Claude is a trademark of Anthropic. ChatGPT is a trademark of OpenAI. In The Know is an independent connector, not affiliated with either.</span>
     </footer>
@@ -1028,6 +1079,22 @@ html.touring{overflow:hidden}
 <script>
 /* ===== Set your live connector address here ===== */
 const MCP_URL = "https://app.intheknow.example/mcp";
+
+/* legal pages live on the app's own address */
+const APP_URL = MCP_URL.replace(/\/mcp$/, "");
+document.querySelectorAll("a[data-app]").forEach(a => { a.href = APP_URL + a.dataset.app; });
+/* pricing: monthly / yearly */
+(() => {
+  const y = document.getElementById("bill-y"), m = document.getElementById("bill-m");
+  if (!y || !m) return;
+  const set = yearly => {
+    y.setAttribute("aria-pressed", yearly); m.setAttribute("aria-pressed", !yearly);
+    document.getElementById("p-amt").textContent = yearly ? "€49" : "€4.99";
+    document.getElementById("p-per").textContent = yearly ? "/ year" : "/ month";
+    document.getElementById("p-sub").textContent = yearly ? "That's €4.08 a month. VAT included." : "Or €49 a year, two months free. VAT included.";
+  };
+  y.addEventListener("click", () => set(true)); m.addEventListener("click", () => set(false));
+})();
 const MARK = '<svg aria-hidden="true" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg>';
 
 /* ---------- connect steps ---------- */
@@ -1472,6 +1539,7 @@ function showStage(s){
     li.classList.toggle("on", n === k); li.classList.toggle("done", n < k);
     li.querySelector("button").disabled = n >= k;
   });
+  $("tback").disabled = k === 0;
 }
 function pickAI(a){
   ai = a; const A = AIS[a];
@@ -1577,7 +1645,6 @@ function ui(){
       seg.classList.toggle("cur", idx[m] === st && (phase === "typing" || phase === "ready"));
     });
   });
-  $("rback").disabled = st === 0;
   if (st < n) hint.innerHTML = `<b>${st + 1}/${n}</b>${steps[st].hint}<kbd>${st ? "Send" : "Press send"}</kbd>`;
 }
 async function prepare(instant){
@@ -1657,6 +1724,11 @@ function back(){
   setStory(steps[st].story); renderChat(steps[st].story, st);
   prepare(true);
 }
+function goBack(){   /* the top-bar Back: one step back from wherever the visitor is */
+  if (stage === "demo" && st > 0) return back();
+  const k = ORDER.indexOf(stage); if (k <= 0) return;
+  stop(); spot(false); showStage(ORDER[k - 1]);
+}
 
 /* spotlight the app's own "New chat": sidebar on wide screens, header icon on phones */
 function spot(on){
@@ -1719,7 +1791,7 @@ win.addEventListener("click", e => { if (phase === "between" && e.target.closest
 addEventListener("resize", () => { if (win.classList.contains("between")) { spot(true); point(); } });
 $("eother").addEventListener("click", () => { stop(); showStage("work"); });
 $("replay").addEventListener("click", openTour);
-$("rback").addEventListener("click", back);
+$("tback").addEventListener("click", goBack);
 csend.addEventListener("click", e => { e.stopPropagation(); send(); });
 comp.addEventListener("click", send);
 addEventListener("keydown", e => {

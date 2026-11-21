@@ -28,6 +28,13 @@ The server is one Docker image (`Dockerfile`). It keeps no database and writes n
 | `ITK_GOOGLE_API_KEY` / `ITK_GOOGLE_APP_ID` | optional | Enables "Choose from Google Drive" on the upload page |
 | `ITK_OPERATOR`, `ITK_CONTACT`, `ITK_HOSTING`, `ITK_POLICY_DATE` | yes for launch | Shown on `/privacy` and `/` |
 | `ITK_LOG_LEVEL` | optional | Default `INFO`. Libraries that could log content stay capped at WARNING. |
+| `ITK_BILLING` | optional | `on` turns on plans (see section 3b). Off: everything stays free, as in the beta. |
+| `ITK_PADDLE_ENV` | with billing | `sandbox` (default) or `production` |
+| `ITK_PADDLE_CLIENT_TOKEN` | with billing | Public token for Paddle.js (starts `test_` in sandbox, `live_` in production) |
+| `ITK_PADDLE_API_KEY` / `ITK_PADDLE_WEBHOOK_SECRET` | with billing | **Secrets.** Kept in Secret Manager by `deploy/cloudrun.sh` |
+| `ITK_PADDLE_PRICE_MONTHLY` / `_YEARLY` | with billing | Paddle price ids (`pri_…`) **with** the 14-day trial |
+| `ITK_PADDLE_PRICE_MONTHLY_NOTRIAL` / `_YEARLY_NOTRIAL` | optional | Same prices **without** a trial, used when someone already had their trial once. If missing, the trial prices are used. |
+| `ITK_FIRESTORE_PROJECT` | CLI only | Project for `python -m intheknow.billing codes` when run on your computer |
 | `PORT` | set by host | Default 8080 in the image |
 
 **Secrets** (seal keys, client secrets) go into the host's secret store, never into the repo or the image.
@@ -81,6 +88,51 @@ During a deploy, Cloud Run briefly runs the old and the new revision side by sid
    - Enable the *Google Picker API*.
    - Create an API key restricted to *HTTP referrers* `https://<domain>/*` and to the Picker API.
    - Set `ITK_GOOGLE_API_KEY` to that key and `ITK_GOOGLE_APP_ID` to the project number.
+
+## 3b. Billing (Paddle)
+
+**Plan:** add a card → 14 days free → €4.99 a month or €49 a year (VAT included). A promo code gives 3 months free with no card. With no active plan the memory is read-only; the data stays in the owner's Drive.
+
+**What is stored:** a small Firestore database in the same project and EU region: per owner a hash, plan status, end date, "trial used", Paddle ids and the code used; and the hashes of promo codes. No email, no business data. (The privacy policy says exactly this.)
+
+**Why Paddle:** it is the seller of record. Paddle collects the card, charges the VAT of the buyer's country and issues the invoices, so there is no EU VAT (OSS) registration and no e-Factura per sale. You invoice Paddle once for the payout. Fees are about 5% + $0.50 per payment.
+
+### Set up (do it in the sandbox first)
+1. Create a Paddle account (it asks for your Romanian company details; approval can take days, so start early). Use **sandbox** while testing: `sandbox-vendors.paddle.com`.
+2. **Catalog → Products:** one product "In The Know". Add **four prices**, all in **EUR, tax inclusive** (VAT included in the shown price):
+   | Price | Amount | Billing | Trial |
+   |---|---|---|---|
+   | Monthly | 4.99 | every month | 14 days |
+   | Yearly | 49.00 | every year | 14 days |
+   | Monthly, no trial | 4.99 | every month | none |
+   | Yearly, no trial | 49.00 | every year | none |
+
+   The no-trial pair is only for people who already had their trial once. Copy each `pri_…` id into `.env`.
+3. **Developer tools → Authentication:** create a **client-side token** (`ITK_PADDLE_CLIENT_TOKEN`) and a **server API key** (`ITK_PADDLE_API_KEY`, needs customers and portal sessions write access).
+4. **Developer tools → Notifications:** destination `https://<your-domain>/billing/paddle`, events `subscription.created`, `.updated`, `.canceled`, `.past_due`, `.paused`. Copy the **secret key** into `ITK_PADDLE_WEBHOOK_SECRET`.
+5. **Checkout → Checkout settings → Default payment link / approved domains:** add your domain. Paddle must also approve the website: it checks `/pricing`, `/terms` and `/refunds` (they exist on the app's own address).
+6. In `.env`: `ITK_BILLING=on`, `ITK_PADDLE_ENV=sandbox`, the values above; then `./deploy/cloudrun.sh`. It enables Firestore, creates the database, gives the service access and stores the secrets.
+7. **Test in the sandbox** with card `4242 4242 4242 4242`, any future date, any CVC: connect from Claude → plan page → trial starts → saving works. Cancel from the account link → still works until the end of the period.
+8. **Go live:** switch to the live Paddle account, repeat steps 2 to 4 there, set `ITK_PADDLE_ENV=production` with the live ids, redeploy.
+
+### Promo codes (3 months free, no card)
+```
+gcloud auth application-default login
+ITK_FIRESTORE_PROJECT=<project-id> uv run python -m intheknow.billing codes --n 5 --note "Ana, Salon Aurora"
+ITK_FIRESTORE_PROJECT=<project-id> uv run python -m intheknow.billing codes --list
+```
+Each code looks like `ITK-7F3K-9QPA`, works once, and is entered on the plan page while connecting (or later on the account page). Only a hash is stored, so **copy the codes when they are printed**. The note is only for you.
+
+### What owners see
+| Situation | What happens |
+|---|---|
+| New owner connects | After Google sign-in: plan page (Yearly / Monthly, "Start 14 days free", "Have a code?"). Connecting finishes only when a plan or code is active. |
+| Owner who connected before billing was on | Keeps working with the sign-in they already have, but has no plan yet: reading works, the first save shows their plan link, and reconnecting shows the plan page. Announce billing to beta users first and give them a code. |
+| Free period ends, nothing active | Reading works. Saving answers "Not saved…" with their account link. Dry-run previews still work. |
+| Card fails | 7 days of grace while Paddle retries, then read-only. |
+| 3 free months about to end | The assistant mentions it during the last 3 days. |
+
+**Beta users:** to keep them free, create codes for them. Anyone already connected sees the plan link the first time they try to save.
 
 ## 4. Microsoft
 

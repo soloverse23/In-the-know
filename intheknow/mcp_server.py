@@ -122,10 +122,14 @@ PROMPTS = {
 
 
 def build_server(engine: ContextEngine | Callable[[], ContextEngine], upload_link: Optional[Callable[[], str]] = None,
-                 on_call: Optional[Callable[[str, float, bool], None]] = None, **server_kw: Any) -> MCPServer:
+                 on_call: Optional[Callable[[str, float, bool], None]] = None,
+                 guard: Optional[Callable[[], Optional[str]]] = None, notice: Optional[Callable[[], Optional[str]]] = None,
+                 **server_kw: Any) -> MCPServer:
     """`engine` is one business (local mode) or a function returning the calling owner's engine (hosted mode).
     `upload_link` (hosted) makes a link to the owner's upload page; local paths are then not offered.
     `on_call(tool, ms, ok)` is told about every tool call (operations logging; never arguments or results).
+    `guard()` (hosted billing) returns a message when the owner may not save: tools that change the memory
+    return it instead of running, reads keep working. `notice()` may add a line to get_started / get_data_status.
     `server_kw` is passed to MCPServer (auth settings, auth provider)."""
     current: Callable[[], ContextEngine] = (lambda: engine) if isinstance(engine, ContextEngine) else engine
     hosted = not isinstance(engine, ContextEngine)
@@ -148,10 +152,21 @@ def build_server(engine: ContextEngine | Callable[[], ContextEngine], upload_lin
             return fn
         return deco
 
+    def writes() -> set[str]:
+        names = {fn.__name__ for fn, kw in ui_tools + plain_tools if kw.get("annotations") in (WRITE, DESTRUCTIVE)}
+        return names | {"upload_card"}           # the upload page saves files
+
     def run(name: str, args: dict) -> CallToolResult:
         t0 = time.perf_counter()
+        if guard is not None and name in writes() and not args.get("dry_run"):
+            if (stop := guard()) is not None:
+                if on_call:
+                    on_call(name, (time.perf_counter() - t0) * 1000, True)
+                return CallToolResult(content=[TextContent(type="text", text=stop)])
         try:
             text, view = current().call_view(name, args)
+            if notice is not None and name in ("get_started", "get_data_status") and (note := notice()):
+                text = f"{text}\n\n{note}"
         except Exception as exc:  # noqa: BLE001 - errors go back to the model as text it can act on
             if on_call:
                 on_call(name, (time.perf_counter() - t0) * 1000, False)

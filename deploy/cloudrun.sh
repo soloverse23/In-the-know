@@ -6,7 +6,11 @@
 #   ./deploy/cloudrun.sh
 #
 # Reads ITK_GOOGLE_CLIENT_ID / ITK_GOOGLE_CLIENT_SECRET (and optional ITK_GOOGLE_API_KEY, ITK_GOOGLE_APP_ID,
-# ITK_OPERATOR, ITK_CONTACT) from .env. The production seal key is generated once in Secret Manager and never
+# ITK_OPERATOR, ITK_CONTACT) from .env.
+#
+# Billing is off unless .env has ITK_BILLING=on. Then it also needs (see docs/launch-checklist.md, "Billing"):
+#   ITK_PADDLE_ENV=sandbox|production   ITK_PADDLE_CLIENT_TOKEN   ITK_PADDLE_API_KEY   ITK_PADDLE_WEBHOOK_SECRET
+#   ITK_PADDLE_PRICE_MONTHLY  ITK_PADDLE_PRICE_YEARLY  [ITK_PADDLE_PRICE_MONTHLY_NOTRIAL  ITK_PADDLE_PRICE_YEARLY_NOTRIAL] The production seal key is generated once in Secret Manager and never
 # printed; it is NOT the one in .env.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -19,6 +23,14 @@ SERVICE="${SERVICE:-intheknow}"
 set -a; . ./.env; set +a
 : "${ITK_GOOGLE_CLIENT_ID:?ITK_GOOGLE_CLIENT_ID is missing in .env}"
 : "${ITK_GOOGLE_CLIENT_SECRET:?ITK_GOOGLE_CLIENT_SECRET is missing in .env}"
+
+BILLING_ON=""
+case "${ITK_BILLING:-}" in on|1|true|yes) BILLING_ON=1 ;; esac
+if [ -n "$BILLING_ON" ]; then
+  for v in ITK_PADDLE_CLIENT_TOKEN ITK_PADDLE_API_KEY ITK_PADDLE_WEBHOOK_SECRET ITK_PADDLE_PRICE_MONTHLY ITK_PADDLE_PRICE_YEARLY; do
+    [ -n "${!v:-}" ] || { echo "ITK_BILLING=on but $v is missing in .env"; exit 1; }
+  done
+fi
 
 NUMBER="$(gcloud projects describe "$PROJECT" --format='value(projectNumber)')"
 URL="https://${SERVICE}-${NUMBER}.${REGION}.run.app"
@@ -33,6 +45,16 @@ fi
 echo "1/4 Enabling services…"
 gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com \
   secretmanager.googleapis.com --project "$PROJECT" --quiet
+if [ -n "$BILLING_ON" ]; then
+  gcloud services enable firestore.googleapis.com --project "$PROJECT" --quiet
+  # the billing record (plan status, used codes): one small EU database, no business data
+  if ! gcloud firestore databases describe --project "$PROJECT" >/dev/null 2>&1; then
+    gcloud firestore databases create --project "$PROJECT" --location="$REGION" --type=firestore-native --quiet >/dev/null
+    echo "   created the Firestore database in $REGION"
+  fi
+  gcloud projects add-iam-policy-binding "$PROJECT" --member "serviceAccount:$RUNTIME_SA" \
+    --role roles/datastore.user --condition=None --quiet >/dev/null
+fi
 
 echo "2/4 Secrets…"
 ensure_secret() {   # name value create_only
@@ -50,18 +72,31 @@ ensure_secret() {   # name value create_only
 SEAL="k1:$(python3 -c 'import base64,secrets;print(base64.urlsafe_b64encode(secrets.token_bytes(32)).rstrip(b"=").decode())')"
 ensure_secret itk-seal-keys "$SEAL" create_only        # never replaced: replacing it would sign every owner out
 ensure_secret itk-google-client-secret "$ITK_GOOGLE_CLIENT_SECRET"
+SECRETS="ITK_SEAL_KEYS=itk-seal-keys:latest,ITK_GOOGLE_CLIENT_SECRET=itk-google-client-secret:latest"
+if [ -n "$BILLING_ON" ]; then
+  ensure_secret itk-paddle-api-key "$ITK_PADDLE_API_KEY"
+  ensure_secret itk-paddle-webhook-secret "$ITK_PADDLE_WEBHOOK_SECRET"
+  SECRETS="$SECRETS,ITK_PADDLE_API_KEY=itk-paddle-api-key:latest,ITK_PADDLE_WEBHOOK_SECRET=itk-paddle-webhook-secret:latest"
+fi
 
 ENV="ITK_BASE_URL=$URL@ITK_GOOGLE_CLIENT_ID=$ITK_GOOGLE_CLIENT_ID@ITK_HOSTING=Google Cloud Run in $REGION (EU)@ITK_LOG_LEVEL=INFO"
 for v in ITK_GOOGLE_API_KEY ITK_GOOGLE_APP_ID ITK_OPERATOR ITK_CONTACT ITK_POLICY_DATE; do
   [ -n "${!v:-}" ] && ENV="$ENV@$v=${!v}"
 done
+if [ -n "$BILLING_ON" ]; then
+  ENV="$ENV@ITK_BILLING=on@ITK_PADDLE_ENV=${ITK_PADDLE_ENV:-sandbox}@ITK_PADDLE_CLIENT_TOKEN=$ITK_PADDLE_CLIENT_TOKEN"
+  ENV="$ENV@ITK_PADDLE_PRICE_MONTHLY=$ITK_PADDLE_PRICE_MONTHLY@ITK_PADDLE_PRICE_YEARLY=$ITK_PADDLE_PRICE_YEARLY"
+  for v in ITK_PADDLE_PRICE_MONTHLY_NOTRIAL ITK_PADDLE_PRICE_YEARLY_NOTRIAL; do
+    [ -n "${!v:-}" ] && ENV="$ENV@$v=${!v}"
+  done
+fi
 
 echo "3/4 Building and deploying (a few minutes)…"
 gcloud run deploy "$SERVICE" --project "$PROJECT" --region "$REGION" --source . --quiet \
   --allow-unauthenticated --min-instances 1 --max-instances 1 --cpu 1 --memory 1Gi \
   --concurrency 80 --timeout 3600 \
   --set-env-vars "^@^$ENV" \
-  --set-secrets "ITK_SEAL_KEYS=itk-seal-keys:latest,ITK_GOOGLE_CLIENT_SECRET=itk-google-client-secret:latest"
+  --set-secrets "$SECRETS"
 
 echo "4/4 Checking…"
 for i in $(seq 1 20); do curl -sf "$URL/health" >/dev/null && break; sleep 3; done
@@ -76,3 +111,12 @@ Next:
        $URL/callback/google
   2. In Claude: Settings → Connectors → Add custom connector → $URL/mcp
 EOF
+if [ -n "$BILLING_ON" ]; then
+  cat <<EOF
+  3. Paddle → Developer tools → Notifications → add a destination:
+       $URL/billing/paddle
+     events: subscription.created, subscription.updated, subscription.canceled, subscription.past_due, subscription.paused
+  4. Make promo codes:  uv run python -m intheknow.billing codes --n 5 --note "who they are for"
+     (needs: gcloud auth application-default login, and ITK_FIRESTORE_PROJECT=$PROJECT)
+EOF
+fi

@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable, Optional
 from urllib.parse import urlencode
 
+import anyio.to_thread
 import httpx2 as httpx
 from pydantic import AnyUrl
 from starlette.requests import Request
@@ -87,7 +88,7 @@ class ProviderRefused(Exception):
 
 def _id_claims(id_token: str) -> dict[str, Any]:
     # Received straight from the provider's token endpoint over TLS, so the signature check may be
-    # skipped (OpenID Connect Core 3.1.3.7). We only read `sub`.
+    # skipped (OpenID Connect Core 3.1.3.7). We read `sub`, and the email to prefill checkout.
     payload = id_token.split(".")[1]
     return json.loads(base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4)))
 
@@ -133,10 +134,14 @@ class StatelessAuthProvider:
     """OAuthAuthorizationServerProvider for the MCP SDK, keeping no records."""
 
     def __init__(self, sealer: Sealer, base_url: str, providers: dict[str, IdentityProvider],
-                 http_factory: Callable[[], httpx.AsyncClient] = lambda: httpx.AsyncClient(timeout=15)):
+                 http_factory: Callable[[], httpx.AsyncClient] = lambda: httpx.AsyncClient(timeout=15),
+                 after_sign_in: Optional[Callable[[dict, dict, str], Optional[str]]] = None):
+        """`after_sign_in(pending, identity, lang)` may return a URL to show before finishing (billing's plan page);
+        that page later calls `finish(pending, identity)`. It runs in a worker thread (it may call a database)."""
         if not providers:
             raise ValueError("configure at least one identity provider (Google or Microsoft)")
         self.sealer, self.base, self.providers, self.http_factory = sealer, base_url.rstrip("/"), providers, http_factory
+        self.after_sign_in = after_sign_in
         self.resource = f"{self.base}/mcp"
         self._used: dict[str, float] = {}
         self._used_lock = threading.Lock()
@@ -289,15 +294,30 @@ class StatelessAuthProvider:
             async with self.http_factory() as http:
                 tok = await provider_token(http, p, {"grant_type": "authorization_code", "code": q["code"],
                                                      "redirect_uri": f"{self.base}/callback/{p.name}", "code_verifier": st["v"]})
-            sub = _id_claims(tok["id_token"])["sub"]
+            claims = _id_claims(tok["id_token"])
+            sub = claims["sub"]
         except Exception:  # noqa: BLE001 - never show provider details to the owner
             return page(st.get("l", lang), error=True, status=502)
         if not tok.get("refresh_token"):
             return page(st.get("l", lang), error=True, status=502)
         identity = {"p": p.name, "sub": sub, "rt": tok["refresh_token"]}
+        email = claims.get("email") or (claims.get("preferred_username") if "@" in str(claims.get("preferred_username", "")) else "")
+        if email:                                        # sealed in the tokens, never stored: prefills checkout
+            identity["em"] = str(email)
+        if self.after_sign_in is not None:
+            hook = self.after_sign_in
+            try:
+                detour = await anyio.to_thread.run_sync(lambda: hook(pending, identity, st.get("l", lang)))
+            except Exception:  # noqa: BLE001
+                return page(st.get("l", lang), error=True, status=502)
+            if detour:
+                return RedirectResponse(detour, status_code=302, headers=NO_STORE)
+        return RedirectResponse(self.finish(pending, identity), status_code=302, headers=NO_STORE)
+
+    def finish(self, pending: dict, identity: dict) -> str:
+        """Mint the single-use authorization code and return the redirect back to the client."""
         code = self.sealer.seal("code", {**pending, "u": identity, "jti": secrets.token_urlsafe(16)}, CODE_TTL)
-        return RedirectResponse(construct_redirect_uri(pending["r"], code=code, state=pending["st"]),
-                                status_code=302, headers=NO_STORE)
+        return construct_redirect_uri(pending["r"], code=code, state=pending["st"])
 
 
 # ---------------------------------------------------------------- page
