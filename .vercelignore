@@ -1,0 +1,4 @@
+# Vercel deploys only the landing page; never upload the rest of the repo
+/*
+!/landing
+/landing/.env*
