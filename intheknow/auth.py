@@ -326,11 +326,10 @@ LOGOS = {
                   '<rect x="11" y="1" width="9" height="9" fill="#7FBA00"/><rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>'
                   '<rect x="11" y="11" width="9" height="9" fill="#FFB900"/></svg>'),
 }
-MARK = ('<svg viewBox="0 0 32 32" width="44" height="44" aria-hidden="true"><rect x=".5" y=".5" width="31" height="31" rx="8.5" fill="#FAF8F4" stroke="#14161F" stroke-opacity=".12"/>'
-        '<path d="M6.5 10V22M20.5 10V22M20.5 16L25.5 10M20.5 16L25.5 22" fill="none" stroke="#14161F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>'
-        '<path d="M6.5 10H20.5M13.5 10V22" fill="none" stroke="#FF6B4A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+MARK = ('<svg viewBox="0 0 32 32" width="44" height="44" aria-hidden="true">'
+        '<rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg>')
 CSS = """
-:root{--bg:#FAF8F4;--card:#fff;--ink:#14161F;--muted:#5d6070;--line:#e6e2da;--accent:#FF6B4A}
+:root{--bg:#FAF8F4;--card:#fff;--ink:#14161F;--muted:#5d6070;--line:#e6e2da;--accent:#4F46E5}
 @media (prefers-color-scheme:dark){:root{--bg:#101218;--card:#181b23;--ink:#f3f1ec;--muted:#a3a6b3;--line:#2a2e3a}}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--ink);
 font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding:16px}

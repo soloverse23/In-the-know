@@ -5,12 +5,10 @@
 **Voice:** a calm, precise business assistant. It uses short sentences, real names and real numbers. It never shows hype and never invents anything. In the owner's language it sounds like a trusted bookkeeper who also knows the customers.
 
 ## Mark
-A light paper rounded square (with a faint ink hairline) with "ITK" drawn as one minimal monoline wordmark. The letters are joined: the signal-coral T's crossbar runs from the top of the I to the top of the K, so the three letters read as one connected shape.
+A soft paper rounded square with the lowercase wordmark "itk", set in Inter Bold and converted to outlines (so it looks the same where Inter is not installed). The letters are ink; the only colour is the dot of the i, in signal indigo: the insight.
 
 ```
-<svg viewBox="0 0 32 32"><rect x=".5" y=".5" width="31" height="31" rx="8.5" fill="#FAF8F4" stroke="#14161F" stroke-opacity=".12"/>
-<path d="M6.5 10V22M20.5 10V22M20.5 16L25.5 10M20.5 16L25.5 22" fill="none" stroke="#14161F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M6.5 10H20.5M13.5 10V22" fill="none" stroke="#FF6B4A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#F5F3EE"/><path d="M6.52 22.37V13.24H9.05V22.37ZM15.59 13.24V15.14H13.87V19.57Q13.87 19.92 13.98 20.11Q14.09 20.3 14.28 20.38Q14.48 20.46 14.73 20.46Q14.91 20.46 15.09 20.42Q15.27 20.39 15.36 20.37L15.76 22.26Q15.57 22.32 15.22 22.4Q14.88 22.48 14.39 22.5Q13.47 22.53 12.78 22.25Q12.1 21.97 11.72 21.38Q11.34 20.8 11.34 19.9V15.14H10.09V13.24H11.34V11.05H13.87V13.24ZM16.9 22.37V10.2H19.44V16.71H19.57L22.5 13.24H25.41L22.02 17.19L25.58 22.37H22.61L20.12 18.69L19.44 19.47V22.37Z" fill="#14161F"/><path d="M7.79 12.06Q7.22 12.06 6.82 11.68Q6.42 11.31 6.42 10.78Q6.42 10.26 6.82 9.88Q7.22 9.5 7.79 9.5Q8.35 9.5 8.75 9.88Q9.16 10.26 9.16 10.78Q9.16 11.31 8.75 11.68Q8.35 12.06 7.79 12.06Z" fill="#4F46E5"/></svg>
 ```
 
 `packaging/icon.png` is the 512 px version of the mark. The same mark is the connector icon in Claude, sent through the MCP `icons` field.
@@ -18,9 +16,9 @@ A light paper rounded square (with a faint ink hairline) with "ITK" drawn as one
 ## Colours
 | Token | Hex | Use |
 |---|---|---|
-| Ink | `#14161F` | mark I and K, hero background |
-| Paper | `#FAF8F4` | mark background, hero text |
-| Signal | `#FF6B4A` | mark T (the joining stroke), hero glow |
+| Ink | `#14161F` | mark letters, text |
+| Paper | `#FAF8F4` / `#F5F3EE` | page background / mark tile |
+| Signal | `#4F46E5` | the i's dot, accents, buttons, hero glow |
 | Mint | `#16B98A` | live/working pulse |
 
 The owner's own brand colours (`brand.primary`, `brand.accent`) colour the content: KPIs, charts and buttons. The In The Know signature stays in the mark and the footer.

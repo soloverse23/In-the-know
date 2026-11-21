@@ -914,7 +914,7 @@ class ContextEngine(WriteOps, EditOps, OnboardingOps, PeopleOps):
             "top_lapsed": [{"name": x.name, "spend": x.total_spend, "last_visit": x.last_visit} for x in M.segment(stats, "lapsed_regulars")[:10]],
             "labels": {r: {"singular": self.label(r, False, self.lang), "plural": self.label(r, True, self.lang)} for r in ("party", "staff", "offering", "transaction")},
             "design": {"brand": {k: v for k, v in spec["brand"].items() if k != "logo"}, "has_logo": bool(spec["brand"].get("logo")),
-                       "in_the_know": {"ink": "#14161F", "signal": "#FF6B4A", "mint": "#2BD9A8", "font": "Inter"}},
+                       "in_the_know": {"ink": "#14161F", "signal": "#4F46E5", "mint": "#2BD9A8", "font": "Inter"}},
         }
         if kind == "customers":
             data["customers"] = [s_.as_dict() for s_ in sorted(stats, key=lambda x: -x.total_spend)[:100]]
