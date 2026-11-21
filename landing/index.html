@@ -557,6 +557,47 @@ footer a{text-decoration:none}
   .mrow{grid-template-columns:110px minmax(0,1fr) 30px}
 }
 .db + .rules{margin-top:40px}
+
+/* ===== hero tutorial: overview card + step bar ===== */
+.tut-intro{position:absolute;inset:78px 0 0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:0 20px}
+.app.chat.intro .tut-intro{opacity:1;pointer-events:auto}
+.app.chat.intro .viewport{opacity:0}
+.ti-card{width:min(540px,100%);background:#fff;border:1px solid var(--cline);border-radius:12px;padding:22px 24px;box-shadow:0 10px 30px -20px rgba(41,38,27,.35)}
+.ti-kick{font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cmuted)}
+.ti-card h3{font:400 28px/1.15 "Instrument Serif",Georgia,serif;margin:6px 0 14px}
+.ti-card ol{list-style:none;counter-reset:s;display:grid;gap:8px;margin-bottom:18px}
+.ti-card li{counter-increment:s;display:flex;align-items:center;gap:10px;font-size:14.5px}
+.ti-card li::before{content:counter(s);width:22px;height:22px;flex:none;border-radius:6px;background:#F1EEE6;color:var(--ctext);display:grid;place-items:center;font-size:12px;font-weight:600}
+.ti-go{border:0;background:var(--ink);color:var(--paper);border-radius:8px;height:38px;padding:0 16px;font-size:14px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.tut-bar{flex:none;display:none;align-items:center;gap:10px;width:min(720px,calc(100% - 32px));margin:0 auto 10px}
+.app.chat .tut-bar{display:flex}
+.tb-btn{flex:none;height:36px;padding:0 14px;border:1px solid var(--cline);background:#fff;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--ctext)}
+.tb-btn:disabled{opacity:.35;cursor:default}
+.tb-btn.next{background:var(--ink);color:var(--paper);border-color:var(--ink);min-width:92px;justify-content:center}
+.tb-mid{flex:1;min-width:0}
+.tb-prog{display:flex;gap:4px;margin-bottom:6px}
+.tb-prog i{flex:1;height:3px;border-radius:2px;background:#E2DED4;transition:background .3s}
+.tb-prog i.on{background:var(--signal)}
+.tb-cap{font-size:13.5px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-cap b{font-weight:600;color:var(--cmuted);margin-right:8px;font-variant-numeric:tabular-nums}
+.ex-label{text-align:center;font-size:12.5px;color:var(--cmuted);padding-top:16px}
+.ctas{padding-top:8px}
+.cta.ex{gap:9px}
+.cta.ex svg{width:16px;height:16px;color:var(--cmuted)}
+.mini{text-align:center;font-size:13px;color:var(--cmuted);margin-top:12px;transition:opacity .35s}
+.mini a{color:var(--ctext);text-decoration:none;border-bottom:1px solid var(--cline)}
+.app.chat .mini,.app.chat .ex-label{opacity:0;pointer-events:none}
+.s-new{cursor:pointer}
+@media (max-width:860px){
+  .tut-intro{inset:94px 0 0}
+  .ti-card{padding:18px}
+  .ti-card h3{font-size:24px}
+  .tut-bar{width:calc(100% - 20px);gap:8px}
+  .tb-btn{padding:0 11px}
+  .tb-btn .bl{display:none}
+  .tb-btn.next{min-width:76px}
+  .tb-cap{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:12.5px;height:2.6em}
+}
 </style>
 </head>
 <body>
@@ -600,8 +641,14 @@ footer a{text-decoration:none}
         <div class="pin-tabs" id="pintabs" role="tablist" aria-label="Examples"></div>
       </div>
       <div class="viewport" aria-hidden="true"><div class="msgs" id="msgs"></div></div>
+      <div class="tut-intro" id="tintro"></div>
     </div>
 
+    <div class="tut-bar" id="tbar" role="group" aria-label="Tutorial steps">
+      <button type="button" class="tb-btn" id="tback"><span aria-hidden="true">←</span><span class="bl">Back</span></button>
+      <div class="tb-mid"><div class="tb-prog" id="tprog"></div><div class="tb-cap" id="tcap" aria-live="polite"></div></div>
+      <button type="button" class="tb-btn next" id="tnext">Next</button>
+    </div>
     <div class="composer" aria-hidden="true">
       <div class="c-input" id="cinput"></div>
       <div class="c-bar">
@@ -613,11 +660,13 @@ footer a{text-decoration:none}
     </div>
 
     <div class="below">
+      <p class="ex-label">See it work, step by step</p>
       <div class="ctas">
-        <a class="cta primary" href="#connect" data-app-link="claude">Add to Claude</a>
-        <a class="cta" href="#connect" data-app-link="chatgpt">Add to ChatGPT</a>
-        <a class="cta" href="#how">How it remembers <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+        <button type="button" class="cta ex" data-ex="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 11l8-6 8 6v9H4z"/><path d="M10 20v-5h4v5"/></svg>Broker</button>
+        <button type="button" class="cta ex" data-ex="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/></svg>Coach</button>
+        <button type="button" class="cta ex" data-ex="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>Tour leader</button>
       </div>
+      <p class="mini"><a href="#connect" data-app-link="claude">Add to Claude</a> · <a href="#connect" data-app-link="chatgpt">Add to ChatGPT</a></p>
     </div>
   </div>
 </header>
@@ -826,81 +875,127 @@ slist.innerHTML = CHATS.map((c, i) => `<li data-i="${i}" style="--c:${c.brand}">
   + `<li class="old"><i></i><span>Listings to re-price</span></li><li class="old"><i></i><span>Group for March</span></li>`;
 pintabs.innerHTML = CHATS.map((c, i) => `<button type="button" data-i="${i}" role="tab">${c.tab}</button>`).join("");
 
-let run = 0;
 const wait = ms => new Promise(r => setTimeout(r, ms));
+
+/* ---------- step-by-step tutorial: the visitor drives it ---------- */
+const TUT = [
+  { intro:"A broker meets a new buyer couple.", groups:[[0],[1,2],[3],[4,5],[6]],
+    caps:["You tell Claude what happened", "In The Know files every fact in its place", "Later, you ask a question", "It checks each listing against her file", "Claude answers. Nothing missed."] },
+  { intro:"A coach logs today's session.", groups:[[0],[1,2],[3]],
+    caps:["You note how the session went", "It updates his file and spots a pattern", "Claude plans the next session"] },
+  { intro:"A tour leader gets ready for Friday.", groups:[[0],[1,2],[3],[4,5],[6]],
+    caps:["You ask before the trip", "It builds the brief from every traveler's file", "You add a traveler", "Saved, and linked to her sister", "Claude confirms"] }
+];
+const tintro = document.getElementById("tintro"), tprog = document.getElementById("tprog"), tcap = document.getElementById("tcap"),
+      tback = document.getElementById("tback"), tnext = document.getElementById("tnext");
+let ci = -1, st = 0, tok = 0, busy = false;
+
 function setChat(i){
-  const c = CHATS[i];
   [...slist.children].forEach(li => li.classList.toggle("on", li.dataset.i == i));
   [...pintabs.children].forEach(b => { b.classList.toggle("on", b.dataset.i == i); b.setAttribute("aria-selected", b.dataset.i == i); });
   document.getElementById("snew").classList.toggle("on", i < 0);
   if (i < 0) return;
+  const c = CHATS[i];
   app.style.setProperty("--brand", c.brand); app.style.setProperty("--brand2", c.brand2);
   document.getElementById("mtitle").textContent = c.title;
   document.getElementById("sname").textContent = c.biz;
   document.getElementById("sav").textContent = c.av;
 }
-function add(kind, html){
+function add(kind, html, instant){
   const el = document.createElement("div");
   el.className = kind === "tool" ? "tool msg" : kind === "k" ? "k msg" : `msg ${kind}`;
   el.innerHTML = kind === "tool"
-    ? `${MARK.replace("<svg", '<svg class="mark"')}<span>In The Know · <b>${html}</b></span><span class="st"><span class="spin"></span></span>`
+    ? `${MARK.replace("<svg", '<svg class="mark"')}<span>In The Know · <b>${html}</b></span><span class="st">${instant ? OK : '<span class="spin"></span>'}</span>`
     : html;
   msgs.appendChild(el);
   /* older messages slide up under the top fade; nothing outside the window moves */
   while (msgs.children.length > 1 && msgs.offsetHeight - msgs.firstElementChild.offsetHeight - 14 > msgs.parentElement.offsetHeight) msgs.firstElementChild.remove();
-  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("show")));
+  if (instant) el.classList.add("show");
+  else requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("show")));
   return el;
 }
-async function type(text, token){
+function clearInput(){ input.textContent = ""; input.classList.remove("typing"); send.classList.remove("on", "press"); }
+async function type(text, t){
   input.classList.add("typing");
   for (let i = 1; i <= text.length; i++){
-    if (token !== run) return false;
+    if (t !== tok) return false;
     input.textContent = text.slice(0, i); send.classList.add("on");
-    await wait(24 + Math.random()*28);
+    await wait(14 + Math.random()*18);
   }
-  await wait(350); if (token !== run) return false;
-  send.classList.add("press"); await wait(140); send.classList.remove("press","on");
-  input.textContent = ""; input.classList.remove("typing");
+  await wait(220); if (t !== tok) return false;
+  send.classList.add("press"); await wait(120);
+  clearInput();
   return true;
 }
-async function clearMsgs(){ msgs.classList.add("fade"); await wait(400); msgs.innerHTML = ""; msgs.classList.remove("fade"); }
-async function playChat(i, token, fromGreeting){
-  if (!fromGreeting){ await clearMsgs(); if (token !== run) return false; }
-  setChat(i);
-  for (const [kind, html] of CHATS[i].steps){
-    if (token !== run) return false;
+function renderUpTo(step){
+  msgs.innerHTML = "";
+  TUT[ci].groups.slice(0, step).flat().forEach(idx => { const [k, h] = CHATS[ci].steps[idx]; add(k, h, true); });
+}
+function ui(){
+  const T = TUT[ci], n = T.groups.length;
+  app.classList.toggle("intro", st === 0);
+  tprog.innerHTML = T.groups.map((_, k) => `<i class="${k < st ? "on" : ""}"></i>`).join("");
+  tcap.innerHTML = st === 0 ? `<b>${CHATS[ci].tab}</b>Overview` : `<b>${st} / ${n}</b>${T.caps[st - 1]}`;
+  tback.disabled = st === 0;
+  tnext.textContent = st === 0 ? "Start" : st < n ? "Next" : ci < CHATS.length - 1 ? "Next example" : "Start over";
+}
+function select(i){
+  tok++; busy = false; clearInput();
+  ci = i; st = 0;
+  setChat(i); app.classList.add("chat");
+  msgs.innerHTML = "";
+  const T = TUT[i];
+  tintro.innerHTML = `<div class="ti-card">
+    <div class="ti-kick">Example · ${CHATS[i].tab}</div>
+    <h3>${T.intro}</h3>
+    <ol>${T.caps.map(c => `<li>${c}</li>`).join("")}</ol>
+    <button type="button" class="ti-go" id="tigo">Start <span aria-hidden="true">→</span></button>
+  </div>`;
+  document.getElementById("tigo").addEventListener("click", next);
+  ui();
+}
+async function next(){
+  if (ci < 0) return select(0);
+  const n = TUT[ci].groups.length;
+  if (busy){ tok++; busy = false; clearInput(); renderUpTo(st); return; }   /* finish the step at once */
+  if (st === n) return select((ci + 1) % CHATS.length);
+  st++; ui();
+  const t = ++tok; busy = true;
+  for (const idx of TUT[ci].groups[st - 1]){
+    if (t !== tok) return;
+    const [kind, html] = CHATS[ci].steps[idx];
     if (kind === "me"){
-      if (!(await type(html, token))) return false;
-      if (!app.classList.contains("chat")){ app.classList.add("chat"); await wait(450); }
-      add("me", html); await wait(450);
+      if (!reduce && !(await type(html, t))) return;
+      add("me", html, reduce); await wait(reduce ? 0 : 250);
     } else if (kind === "tool"){
-      const t = add("tool", html); await wait(1000); t.querySelector(".st").innerHTML = OK; await wait(250);
-    } else { add(kind, html); await wait(kind === "k" ? 2600 : 2000); }
+      const e = add("tool", html, reduce); await wait(reduce ? 0 : 750);
+      if (t !== tok) return; e.querySelector(".st").innerHTML = OK; await wait(reduce ? 0 : 200);
+    } else { add(kind, html, reduce); await wait(reduce ? 0 : 250); }
   }
-  return true;
+  if (t === tok) busy = false;
 }
-async function loop(start){
-  const token = ++run;
-  input.textContent = ""; input.classList.remove("typing"); send.classList.remove("on");
-  let i = start ?? 0, fromGreeting = start == null;
-  if (fromGreeting){ app.classList.remove("chat"); setChat(-1); await clearMsgs(); await wait(3000); }
-  else app.classList.add("chat");
-  while (token === run){
-    if (!(await playChat(i, token, fromGreeting))) return;
-    fromGreeting = false;
-    await wait(3200); if (token !== run) return;
-    i++;
-    if (i === CHATS.length){         /* back to the greeting, then start over */
-      app.classList.remove("chat"); setChat(-1); await clearMsgs();
-      await wait(4500); if (token !== run) return;
-      i = 0; fromGreeting = true;
-    }
-  }
+function back(){
+  if (ci < 0 || st === 0) return;
+  tok++; busy = false; clearInput();
+  st--; renderUpTo(st); ui();
 }
-slist.addEventListener("click", e => { const li = e.target.closest("li[data-i]"); if (li) loop(+li.dataset.i); });
-pintabs.addEventListener("click", e => { const b = e.target.closest("button"); if (b) loop(+b.dataset.i); });
-if (reduce){ setChat(0); app.classList.add("chat"); CHATS[0].steps.slice(-3).forEach(([k, h]) => { const el = add(k, h); if (k === "tool") el.querySelector(".st").innerHTML = OK; }); }
-else loop();
+function greeting(){
+  tok++; busy = false; clearInput(); ci = -1; st = 0;
+  app.classList.remove("chat", "intro"); setChat(-1); msgs.innerHTML = "";
+}
+tnext.addEventListener("click", next);
+tback.addEventListener("click", back);
+slist.addEventListener("click", e => { const li = e.target.closest("li[data-i]"); if (li) select(+li.dataset.i); });
+pintabs.addEventListener("click", e => { const b = e.target.closest("button"); if (b) select(+b.dataset.i); });
+document.querySelectorAll("[data-ex]").forEach(b => b.addEventListener("click", () => select(+b.dataset.ex)));
+document.getElementById("snew").addEventListener("click", greeting);
+document.querySelector(".composer").addEventListener("click", () => { if (ci < 0) select(0); });
+addEventListener("keydown", e => {
+  if (ci < 0 || e.target.closest("input,textarea,[contenteditable]")) return;
+  const r = app.getBoundingClientRect(); if (r.bottom < 120 || r.top > innerHeight / 2) return;
+  if (e.key === "ArrowRight"){ e.preventDefault(); next(); }
+  else if (e.key === "ArrowLeft"){ e.preventDefault(); back(); }
+});
 
 /* ================= tools hub: an item travels from a tool into its row ================= */
 (() => {
